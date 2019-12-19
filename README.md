@@ -33,7 +33,7 @@
  aims to be a reusable platform for handling game objects,
  user inputs, 2D sprite rendering, and audio feedback.
  
- As such, much of the work in this project will be amatuer,
+ Much of the work in this project will be amatuer,
  functional but amatuer none the less. As such if you find
  this project and feel so inclined to critique my work any
  and all feedback is apriciated.
