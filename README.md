@@ -1,4 +1,14 @@
- A simple game engine developed in C++ build off of SDL
+# CR-Engine (WIP)
+ A simple game engine developed in C++ build off of SDL.
+ 
+# Contents
+ Overview
+ Purpose
+ 
+# Overview
+ The CR-Engine is a simple C++ game engine build off of SDL
+ which contains "relatively" simple ways to handle game
+ objects, draw sprites to a screen, play sound effects and
  music, and interpret user inputs. It should be noted that
  this project is a very early work in progress, as such it
  is subject to change as I further develop it and learn
@@ -26,4 +36,5 @@
  functional but amatuer none the less. As such if you find
  this project and feel so inclined to critique my work any
  and all feedback is apriciated.
+ 
  
