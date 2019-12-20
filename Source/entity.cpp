@@ -7,66 +7,70 @@ entity::entity()
 	posZ = 0;
 }
 
-entity::entity(SDL_Renderer*& rend)
+void entity::setTexture(const std::string& path, SDL_Rect source, SDL_Rect dest, const int& xOffset, const int& yOffset)
 {
-	posX = 0;
-	posY = 0;
-	posZ = 0;
-
-	renderer = rend;
-
-	eTexture.setRenderer(renderer);
+	if (!rectIsUndefined(source) && !rectIsUndefined(dest))
+	{
+		//UNDEFINED_RECT passed for source and dest
+		dest.x = dest.x - xOffset;
+		dest.y = dest.y - yOffset;
+		eTexture.loadTexture(path, source, dest);
+	}
+	else if (rectIsUndefined(source) && !rectIsUndefined(dest))
+	{
+		eTexture.loadTexture(path, eTexture.getSourceRect(), dest);
+	}
+	else if (!rectIsUndefined(source) && rectIsUndefined(dest))
+	{
+		eTexture.loadTexture(path, source, eTexture.getDestRect());
+	}
+	else
+	{
+		eTexture.loadTexture(path, eTexture.getSourceRect(), eTexture.getDestRect());
+	}
 }
 
-void entity::setTexture(const std::string& path, SDL_Rect* source, SDL_Rect* dest)
+bool entity::rectIsUndefined(SDL_Rect rect)
 {
-	if (source == NULL)
-	{
-		source = eTexture.getSourceRect();
-	}
-
-	if (dest == NULL)
-	{
-		dest = eTexture.getDestRect();
-	}
-
-	eTexture.loadTexture(path, source, dest);
+	return (rect.x < 0)||(rect.y < 0)||(rect.w < 0)||(rect.h < 0);
 }
 
 void entity::setTexture(const texture& text)
 {
 	eTexture = text;
-	eTexture.setRenderer(renderer);
 }
 
-texture entity::getTexture()
+texture* entity::getTexture()
 {
-	return eTexture;
+	texture tempTexture = eTexture;
+	SDL_Rect tempRect = tempTexture.getDestRect();
+
+
+	return &eTexture;
 }
 
 
 void entity::setPosition(int x, int y, int z)
 {
-	SDL_Rect* temp = eTexture.getDestRect();
-
-	
-	
+	SDL_Rect temp = eTexture.getDestRect();
 
 	if (x != NULL)
 	{
-		temp->x += (x - posX);
+		temp.x += (x - posX);
 		posX = x;
 	}
 		
 	
 	if (y != NULL)
 	{
-		temp->y += (y - posY);
+		temp.y += (y - posY);
 		posY = y;
 	}
 		
 	if(z != NULL)
 		posZ = z;
+
+	eTexture.setRect(eTexture.getSourceRect(), temp);
 }
 
 
@@ -79,5 +83,5 @@ void entity::getPosition(int pos[3])
 
 void entity::setTextureDest(SDL_Rect* dest)
 {
-	eTexture.setRect(eTexture.getSourceRect(), dest);
+	eTexture.setRect(eTexture.getSourceRect(), *dest);
 }

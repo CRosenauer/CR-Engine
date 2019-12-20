@@ -32,7 +32,6 @@ private:
 	//to be implemented.
 	//reads stored keymaps from file and applies said keys to pollInputs logic.
 
-	SDL_Event e;
 	//internal event for storing events from event queue.
 
 	short numberOfInputs = 3;

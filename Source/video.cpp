@@ -1,26 +1,29 @@
 #include "video.h"
 
+extern SDL_Renderer* CRERenderer;
 
 video::video()
 {
 	title =  "Test Game";
 	screenWidth = 640;
 	screenHeight = 480;
+	cameraPosX = 0;
+	cameraPosY = 0;
 	windowFlag = SDL_WINDOW_SHOWN;
 
-	CREVRenderer = NULL;
 	CREVWindow = NULL;
 	CREVSurface = NULL;
 }
 
-video::video(const std::string& TITLE , const int& SCREENWIDTH, const int& SCREENHEIGHT, const Uint32& WINDOWFLAG, SDL_Renderer*& renderer)
+video::video(const std::string& TITLE , const int& SCREENWIDTH, const int& SCREENHEIGHT, const Uint32& WINDOWFLAG)
 {
 	title = TITLE;
 	screenWidth = SCREENWIDTH;
 	screenHeight = SCREENHEIGHT;
+	cameraPosX = 0;
+	cameraPosY = 0;
 	windowFlag = WINDOWFLAG;
 
-	CREVRenderer = renderer;
 	CREVWindow = NULL;
 	CREVSurface = NULL;
 }
@@ -42,9 +45,8 @@ void video::init()
 		exit(-1);
 	}
 
-	CREVRenderer = SDL_CreateRenderer(CREVWindow, -1, SDL_RENDERER_ACCELERATED);
-
-	if (CREVRenderer == NULL)
+	CRERenderer = SDL_CreateRenderer(CREVWindow, -1, SDL_RENDERER_ACCELERATED);
+	if (CRERenderer == NULL)
 	{
 		printf("Renderer cannot be established. Error: %s", SDL_GetError());
 		exit(-1);
@@ -53,8 +55,10 @@ void video::init()
 
 void video::render()
 {
-	SDL_RenderClear(CREVRenderer);
+	SDL_RenderClear(CRERenderer);
 	//clear the frame to blank for renderering
+
+	int i = 0;
 
 	/***  Render queued backgrounds  ***/
 	//Backgrounds queued to allow paralax b.g.
@@ -67,10 +71,11 @@ void video::render()
 		backgroundQueue.pop();
 		//load background layer from queue for renderering
 
-		SDL_RenderCopy(CREVRenderer, tempTexture.getTexture(), tempTexture.getSourceRect(), tempTexture.getDestRect());
+		//unsure how to handle math for this
+		
+		SDL_RenderCopy(CRERenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), &tempTexture.getDestRect());
 		//render set up background layer for renderering.
 	}
-
 
 	/***  Render queued sprites  ***/
 
@@ -79,17 +84,21 @@ void video::render()
 	
 	while(!spriteQueue.empty())
 	{
-		
 		tempTexture = *spriteQueue.front();
+
 		spriteQueue.pop();
+
 		//load entity from entity rendering queue
 		//and pop front element from queue
+		
+		SDL_Rect tempRect = tempTexture.getDestRect();
 
-		SDL_RenderCopy(CREVRenderer, tempTexture.getTexture(), tempTexture.getSourceRect(), tempTexture.getDestRect());
+		tempRect.x = tempRect.x - cameraPosX;
+		tempRect.y = tempRect.y - cameraPosY;
+
+		SDL_RenderCopy(CRERenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), &tempRect);
 		//render set up entity texture for renderering.
-
 	}
-
 	/***  Render queued foregrounds  ***/
 	//Backgrounds queued to allow paralax b.g.
 
@@ -99,13 +108,14 @@ void video::render()
 		foregroundQueue.pop();
 		//load background layer from queue for renderering
 
-		SDL_RenderCopy(CREVRenderer, tempTexture.getTexture(), tempTexture.getSourceRect(), tempTexture.getDestRect());
+		//unsure how to handle math for this
+
+		SDL_RenderCopy(CRERenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), &tempTexture.getDestRect());
 		//render set up background layer for renderering.
 	}
-
 	
 
-	SDL_RenderPresent(CREVRenderer);
+	SDL_RenderPresent(CRERenderer);
 	//render frame to screen.
 }
 

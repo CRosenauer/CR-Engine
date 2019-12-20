@@ -1,23 +1,21 @@
 #include "texture.h"
 
+extern SDL_Renderer* CRERenderer;
+
 texture::texture()
 {
-	tRenderer = NULL;
-	tTexture  = NULL;
-	tSource   = NULL;
-	tDest     = NULL;
+
 }
 
-texture::texture(const std::string& path, SDL_Rect* source, SDL_Rect* dest, SDL_Renderer* renderer)
+texture::texture(const std::string& path, SDL_Rect source, SDL_Rect dest)
 {
 	std::string tempString = getFilePath(path, GRAPHICS);
 	loadTexture(tempString.c_str(), source, dest);
 	tSource = source;
 	tDest   = dest;
-	tRenderer = renderer;
 }
 
-void texture::loadTexture(const std::string& path, SDL_Rect* source, SDL_Rect* dest)
+void texture::loadTexture(const std::string& path, SDL_Rect source, SDL_Rect dest)
 {
 	std::string tempString = getFilePath(path, GRAPHICS);
 	SDL_Surface* tempSurface = IMG_Load(tempString.c_str());
@@ -28,7 +26,7 @@ void texture::loadTexture(const std::string& path, SDL_Rect* source, SDL_Rect* d
 	}
 	else
 	{
-		tTexture = SDL_CreateTextureFromSurface(tRenderer, tempSurface);
+		tTexture = SDL_CreateTextureFromSurface(CRERenderer, tempSurface);
 
 		if (tTexture == NULL)
 		{
@@ -43,33 +41,28 @@ void texture::loadTexture(const std::string& path, SDL_Rect* source, SDL_Rect* d
 	tDest   = dest;
 }
 
-void texture::setRenderer(SDL_Renderer* renderer)
-{
-	tRenderer = renderer;
-}
-
 SDL_Texture* texture::getTexture()
 {
 	return tTexture;
 }
 
-SDL_Rect* texture::getSourceRect()
+SDL_Rect texture::getSourceRect()
 {
 	return tSource;
 }
 
-SDL_Rect* texture::getDestRect()
+SDL_Rect texture::getDestRect()
 {
 	return tDest;
 }
 
 void texture::autoSetRect()
 {
-	tSource = NULL;
-	tDest   = NULL;
+	tSource = {};
+	tDest   = {};
 }
 
-void texture::setRect(SDL_Rect* source, SDL_Rect* dest)
+void texture::setRect(SDL_Rect source, SDL_Rect dest)
 {
 	tSource = source;
 	tDest   = dest;

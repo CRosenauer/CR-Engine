@@ -14,49 +14,44 @@ class entity
 public:
 	entity();
 
-	entity(SDL_Renderer*& rend);
-	//creater that associates entity with renderer
-	//Note: no alternative renderer mutator function exists as renderer is only intended to be set once at the beginning of game
-
-	void setTexture(const std::string& path, SDL_Rect* source, SDL_Rect* dest);
 	//sets texture data based on passed data
 	//loads texture of .png image of path
 	//loads source to draw from source
 	//loads location to draw to from dest
+	void setTexture(const std::string& path, SDL_Rect source, SDL_Rect dest, const int& xOffset, const int& yOffset);
 
 	void setTextureDest(SDL_Rect* dest);
 
-	void setTexture(const texture& text);
 	//sets eTexture to passed texture.
+	void setTexture(const texture& text);
 
-	texture getTexture();
 	//returns the texture associated with the entity
+	texture* getTexture();
 
-	void setPosition(int x, int y, int z);
 	//sets posX to x, posY to y, posZ to z
-
-	void getPosition(int pos[3]);
+	void setPosition(int x, int y, int z);
+	
 	//returns position array {posX, posY, posZ}
-
-	void entityLogic();
+	void getPosition(int pos[3]);
+	
 	//virtual function for entity logic
 	//child classes created for individual entities (player char, npcs, etc)
+	void entityLogic();
 
 private:
-	int posX, posY, posZ;
 	//horizontal, vertical, and depth position of the entity respectively.
 	//by default texture is centered on the xyz position on the entity.
 	//this can be overwritten with setTexture()
-
-	SDL_Renderer* renderer;
+	int posX, posY, posZ;
 
 	texture eTexture;
+
+	bool rectIsUndefined(SDL_Rect);
 
 	//animation eAnimation;
 
 	//Entity is a combination of logic and texture data
-	//Entities internal logic handles 
-
+	//Entities internal logic handles
 };
 
 #endif //ENTITY_H

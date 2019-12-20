@@ -3,9 +3,6 @@
 
 int main(int argc, char* argv[])
 {
-
-	printf(SDL_GetBasePath());
-
 	CREMain();
 
 	return 0;

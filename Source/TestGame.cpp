@@ -1,22 +1,22 @@
 #include "TestGame.h"
 
 //Buses to hold user inputs, and entities respectively
-static __int8* input = NULL;
-static entity* entityBus = NULL;
+__int8* input;
+entity* entityBus;
 
 //Handlers for input and video.
-static video* Video;
-static audio* Audio;
+video* Video;
+audio* Audio;
 
 entity PlayerEntity;
 
 enum GAME_SCREEN
 {
-	NO_MUSIC_LOADED,
-	MUSIC_LOADED
+	NOT_INITIALIZED,
+	INITIALIZED
 };
 
-
+const SDL_Rect UNDEFINED_RECT = { -1, -1, -1, -1 };
 
 void gameLogicInit(__int8*& inputB, entity*& entityB, video* video, audio* audio)
 {
@@ -32,19 +32,44 @@ void TestGame()
 	
 	if (gameScreen == NULL)
 	{
-		gameScreen = NO_MUSIC_LOADED;
+		gameScreen = NOT_INITIALIZED;
 	}
 		
+	SDL_Rect tempSource;
+	tempSource.x = 0;
+	tempSource.y = 0;
+	tempSource.w = 16;
+	tempSource.h = 16;
+	SDL_Rect tempDest;
+	tempDest.x = 0;
+	tempDest.y = 0;
+	tempDest.w = 16;
+	tempDest.h = 16;
+	int tempPos[3];
 
 	switch (gameScreen)
 	{
 	default:
-	case NO_MUSIC_LOADED:
+	case NOT_INITIALIZED:
 		Audio->loadMusic("Friday_Chinatown.mp3");
-		Audio->loadSFX("Shine.wav");
-		gameScreen = MUSIC_LOADED;
+		entityBus[0].setTexture("ship.png", tempSource, tempDest, 8, 8);
+		entityBus[0].setPosition(32, 32, 0);
+
+		Video->loadTexture(entityBus[0].getTexture(), CRE_V_TEXTURE_SPRITE);
+		gameScreen = INITIALIZED;
 		break;
-	case MUSIC_LOADED:
+	case INITIALIZED:
+		entityBus[0].getPosition(tempPos);
+		if (tempPos[0] < 100)
+			tempPos[0]++;
+		else if (tempPos[0] >= 100 && tempPos[1] < 100)
+			tempPos[1]++;
+		else if (tempPos[0] < 0 && tempPos[1] >= 100)
+			tempPos[0]--;
+		else
+			tempPos[1]--;
+		entityBus[0].setPosition(tempPos[0], tempPos[1], tempPos[2]);
+		Video->loadTexture(entityBus[0].getTexture(), CRE_V_TEXTURE_SPRITE);
 		break;
 	}
 

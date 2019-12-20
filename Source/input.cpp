@@ -20,6 +20,8 @@ void inputHandler::pollInputs()
 	for (int i = 0; i < numberOfInputs; i++)
 		inputBus[i] = 0;
 
+	SDL_Event e;
+
 	while (SDL_PollEvent(&e) != 0)
 	{
         if(e.type == SDL_KEYDOWN)

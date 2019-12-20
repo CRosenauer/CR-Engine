@@ -13,26 +13,24 @@ class texture
 public:
 	texture();
 
-	texture(const std::string& path, SDL_Rect* source, SDL_Rect* dest, SDL_Renderer* renderer);
+	texture(const std::string& path, SDL_Rect source, SDL_Rect dest);
 
-	void loadTexture(const std::string& path, SDL_Rect* source, SDL_Rect* dest);
-
-	void setRenderer(SDL_Renderer* renderer);
+	void loadTexture(const std::string& path, SDL_Rect source, SDL_Rect dest);
 
 	SDL_Texture* getTexture();
 
-	SDL_Rect* getSourceRect();
-	SDL_Rect* getDestRect();
+	SDL_Rect getSourceRect();
+
+	SDL_Rect getDestRect();
 
 	void autoSetRect();
 
-	void setRect(SDL_Rect* source, SDL_Rect* dest);
+	void setRect(SDL_Rect source, SDL_Rect dest);
 
 private:
 	SDL_Texture*  tTexture;
-	SDL_Rect*     tSource;
-	SDL_Rect*     tDest;
-	SDL_Renderer* tRenderer;
+	SDL_Rect     tSource;
+	SDL_Rect     tDest;
 };
 
 #endif //TEXTURE_H

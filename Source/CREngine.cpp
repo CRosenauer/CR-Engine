@@ -12,7 +12,7 @@ Uint32 windowFlag = SDL_WINDOW_SHOWN;
 //window flag, used to determine fullscreen etc.
 //should be able to be changed in the menu
 
-SDL_Renderer* CRERenderer = NULL;
+SDL_Renderer *CRERenderer = NULL;
 //main renderer for drawing to screen
 
 //Buses to hold user inputs, and entities respectively
@@ -41,6 +41,8 @@ void CREInit()
 		exit(1);
 	}
 
+	
+
 	//allocate enetiyBlock
 	try
 	{
@@ -57,19 +59,14 @@ void CREInit()
 		//if memory cannot be initialized then program exits.
 	}
 
-	//establish entity textures with renderering system
-	for (int i = 0; i < 64; i++)
-	{
-		entityBlock[i] = entity(CRERenderer);
-	}
-
 	/*** Engine Component Initialization Block ***/
+
+	//video window associated with current title, screen size, widescreen support, etc.
+	CREVideo = video(TITLE, screenWidth, screenHeight, windowFlag);
+	
 	printf("Stub: Initializing inputHandler with stub inputBus, 3 inputBusWidth.\n");
 	CREinput = inputHandler(3, inputBus);
 	//inputHandler associated with inputBus.
-
-	CREVideo = video(TITLE, screenWidth, screenHeight, windowFlag, CRERenderer);
-	//video window associated with current title, screen size, widescreen support, etc.
 
 	const int IMG_FLAGS = IMG_INIT_PNG;
 
@@ -111,9 +108,9 @@ void CREInit()
 	CREVideo.init();
 
 	gameLogicInit(inputBus, entityBlock, &CREVideo, &CREAudio);
-
 	
 	//initalizes game logic to read and write inputs, entities, audio, video, etc.
+
 }
 
 void CREMain()
@@ -132,7 +129,7 @@ void CREMain()
 void CRELoop()
 {
 	SDL_Event e;
-
+	
 	do
 	{
 		//read inputs
@@ -144,6 +141,7 @@ void CRELoop()
 		//play user feedback
 		CREAudio.playAudio();
 
+		//draw queues textures to screen
 		CREVideo.render();
 
 		//poll for quit
