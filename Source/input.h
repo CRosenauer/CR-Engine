@@ -6,6 +6,7 @@
 
 #include <cstdio>
 
+extern __int8* inputBus;
 
 /*
 	Note to future me:
@@ -21,7 +22,7 @@ class inputHandler
 public:
 	inputHandler();
 
-	inputHandler(short numberOfInputs, __int8*& input);
+	inputHandler(short numberOfInputs);
 
 	void pollInputs();
 	//reads inputs from user and 
@@ -36,7 +37,8 @@ private:
 
 	short numberOfInputs = 3;
 
-	__int8* inputBus;
+	const Uint8* currentInputs = SDL_GetKeyboardState(NULL);
+
 	// Boolean array to store inputs for button presses
 	// 0: up/down    (+/-)
 	// 1: left/right (+/-)

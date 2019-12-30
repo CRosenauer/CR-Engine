@@ -7,15 +7,12 @@
 #include <queue>
 #include <string>
 
+#include "entity.h"
 #include "texture.h"
+#include "timer.h"
+#include "renderingFlags.hpp"
 
-
-enum CREVRenderingFlag
-{
-	CRE_V_TEXTURE_SPRITE,
-	CRE_V_TEXTURE_BACKGROUND,
-	CRE_V_TEXTURE_FOREGROUND
-};
+extern entity* entityBlock;
 
 /* video.h, main class used to write images to the screen
  * 

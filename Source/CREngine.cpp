@@ -19,6 +19,8 @@ SDL_Renderer *CRERenderer = NULL;
 __int8* inputBus = NULL;
 entity* entityBlock = NULL;
 
+unsigned int entityBlockSize = 64;
+
 //Handlers for input and video.
 inputHandler CREinput;
 video        CREVideo;
@@ -40,8 +42,6 @@ void CREInit()
 		printf("CREngine init error. Failed to initialize inputBus. Exiting program\n");
 		exit(1);
 	}
-
-	
 
 	//allocate enetiyBlock
 	try
@@ -65,7 +65,7 @@ void CREInit()
 	CREVideo = video(TITLE, screenWidth, screenHeight, windowFlag);
 	
 	printf("Stub: Initializing inputHandler with stub inputBus, 3 inputBusWidth.\n");
-	CREinput = inputHandler(3, inputBus);
+	CREinput = inputHandler(3);
 	//inputHandler associated with inputBus.
 
 	const int IMG_FLAGS = IMG_INIT_PNG;
@@ -106,11 +106,10 @@ void CREInit()
 	Mix_VolumeMusic(MIX_MAX_VOLUME/4);
 
 	CREVideo.init();
-
-	gameLogicInit(inputBus, entityBlock, &CREVideo, &CREAudio);
 	
 	//initalizes game logic to read and write inputs, entities, audio, video, etc.
 
+	pollFrameTimer();
 }
 
 void CREMain()

@@ -1,30 +1,21 @@
 #include "TestGame.h"
 
 //Buses to hold user inputs, and entities respectively
-__int8* input;
-entity* entityBus;
+extern __int8* inputBus;
+extern entity* entityBlock;
 
 //Handlers for input and video.
-video* Video;
-audio* Audio;
+extern audio CREAudio;
 
-entity PlayerEntity;
+entity* Player;
+
+const SDL_Rect UNDEFINED_RECT = { -1, -1, -1, -1 };
 
 enum GAME_SCREEN
 {
 	NOT_INITIALIZED,
 	INITIALIZED
 };
-
-const SDL_Rect UNDEFINED_RECT = { -1, -1, -1, -1 };
-
-void gameLogicInit(__int8*& inputB, entity*& entityB, video* video, audio* audio)
-{
-	input = inputB;
-	entityBus = entityB;
-	Video = video;
-	Audio = audio;
-}
 
 void TestGame()
 {	
@@ -40,40 +31,45 @@ void TestGame()
 	tempSource.y = 0;
 	tempSource.w = 16;
 	tempSource.h = 16;
-	SDL_Rect tempDest;
-	tempDest.x = 0;
-	tempDest.y = 0;
-	tempDest.w = 16;
-	tempDest.h = 16;
 	int tempPos[3];
 
 	switch (gameScreen)
 	{
 	default:
 	case NOT_INITIALIZED:
-		Audio->loadMusic("Friday_Chinatown.mp3");
-		entityBus[0].setTexture("ship.png", tempSource, tempDest, 8, 8);
-		entityBus[0].setPosition(32, 32, 0);
+		Player = &entityBlock[0];
+		Player->define();
+		entityBlock[1].define();
 
-		Video->loadTexture(entityBus[0].getTexture(), CRE_V_TEXTURE_SPRITE);
+		CREAudio.loadMusic("Friday_Chinatown.mp3");
+
+		Player->setTexture("ship.png", tempSource, 8, 8);
+		Player->setPosition(32, 32, 0); 
+
+		entityBlock[1].setAnimation(&testAnimation00, ANIMATION_LOOP);
+		entityBlock[1].setPosition(128, 128, 0);
+
 		gameScreen = INITIALIZED;
 		break;
 	case INITIALIZED:
-		entityBus[0].getPosition(tempPos);
-		if (tempPos[0] < 100)
+		Player->getPosition(tempPos);
+
+		if (inputBus[0] > 0)
 			tempPos[0]++;
-		else if (tempPos[0] >= 100 && tempPos[1] < 100)
-			tempPos[1]++;
-		else if (tempPos[0] < 0 && tempPos[1] >= 100)
+		else if (inputBus[0] < 0)
 			tempPos[0]--;
-		else
+			
+		if (inputBus[1] > 0)
+			tempPos[1]++;
+		else if (inputBus[1] < 0)
 			tempPos[1]--;
-		entityBus[0].setPosition(tempPos[0], tempPos[1], tempPos[2]);
-		Video->loadTexture(entityBus[0].getTexture(), CRE_V_TEXTURE_SPRITE);
+			
+		Player->setPosition(tempPos[0], tempPos[1], tempPos[2]);
+
 		break;
 	}
 
-	if (input[2] == 1)
+	if (inputBus[2] == 1)
 	{
 		SDL_Event e;
 		e.type = SDL_QUIT;

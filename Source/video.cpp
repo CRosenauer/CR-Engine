@@ -1,6 +1,8 @@
 #include "video.h"
+#include <cassert>
 
 extern SDL_Renderer* CRERenderer;
+extern unsigned int entityBlockSize;
 
 video::video()
 {
@@ -51,6 +53,9 @@ void video::init()
 		printf("Renderer cannot be established. Error: %s", SDL_GetError());
 		exit(-1);
 	}
+
+	setFrameRate(60);
+	setFrameTimer();
 }
 
 void video::render()
@@ -58,13 +63,41 @@ void video::render()
 	SDL_RenderClear(CRERenderer);
 	//clear the frame to blank for renderering
 
-	int i = 0;
+	//TODO: implement depth based rendering priority
+
+	//fix no change bug
+	//loops through defined entities
+	//addes defined entities to rendering queues depending on internal
+	//rendering flags (SPRITE, BACKGROUND, FOREGROUND, etc)
+	for (unsigned int i = 0; i < entityBlockSize; i++)
+	{
+		entity* tempEntity;
+		tempEntity = &entityBlock[i];
+
+		if (!tempEntity->isDefined())
+			continue;
+
+		switch (tempEntity->getRenderingFlag())
+		{
+		case RENDERINGFLAG_SPRITE:
+		default:
+			spriteQueue.push(tempEntity->getTexture());
+			break;
+		case RENDERINGFLAG_BACKGROUND:
+			backgroundQueue.push(tempEntity->getTexture());
+			break;
+		case RENDERINGFLAG_FOREGROUND:
+			foregroundQueue.push(tempEntity->getTexture());
+			break;
+		}
+	}
+
+	//temperary texture for renderering
+	//use to place entities from rendering queue and to render to frame
+	texture tempTexture;
 
 	/***  Render queued backgrounds  ***/
 	//Backgrounds queued to allow paralax b.g.
-
-	texture tempTexture;
-
 	while (!backgroundQueue.empty())
 	{
 		tempTexture = *backgroundQueue.front();
@@ -72,16 +105,12 @@ void video::render()
 		//load background layer from queue for renderering
 
 		//unsure how to handle math for this
-		
+
 		SDL_RenderCopy(CRERenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), &tempTexture.getDestRect());
 		//render set up background layer for renderering.
 	}
 
 	/***  Render queued sprites  ***/
-
-	//temperary texture for renderering
-	//use to place entities from rendering queue and to render to frame
-	
 	while(!spriteQueue.empty())
 	{
 		tempTexture = *spriteQueue.front();
@@ -99,9 +128,9 @@ void video::render()
 		SDL_RenderCopy(CRERenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), &tempRect);
 		//render set up entity texture for renderering.
 	}
-	/***  Render queued foregrounds  ***/
-	//Backgrounds queued to allow paralax b.g.
 
+	/***  Render queued foregrounds  ***/
+	//Foregrounds queued to allow paralax f.g. or HUD.
 	while (!foregroundQueue.empty())
 	{
 		tempTexture = *foregroundQueue.front();
@@ -113,7 +142,9 @@ void video::render()
 		SDL_RenderCopy(CRERenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), &tempTexture.getDestRect());
 		//render set up background layer for renderering.
 	}
-	
+
+	pollFrameTimer();
+	setFrameTimer();
 
 	SDL_RenderPresent(CRERenderer);
 	//render frame to screen.
@@ -124,14 +155,14 @@ void video::loadTexture(texture* texture, CREVRenderingFlag flag)
 {
 	switch (flag)
 	{
-	case CRE_V_TEXTURE_SPRITE:
+	case RENDERINGFLAG_SPRITE:
 	default:
 		spriteQueue.push(texture);
 		break;
-	case CRE_V_TEXTURE_FOREGROUND:
+	case RENDERINGFLAG_BACKGROUND:
 		foregroundQueue.push(texture);
 		break;
-	case CRE_V_TEXTURE_BACKGROUND:
+	case RENDERINGFLAG_FOREGROUND:
 		backgroundQueue.push(texture);
 		break;
 	}

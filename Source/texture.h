@@ -13,9 +13,9 @@ class texture
 public:
 	texture();
 
-	texture(const std::string& path, SDL_Rect source, SDL_Rect dest);
+	texture(const std::string& path, SDL_Rect source, SDL_Rect dest, const int& xOffset, const int& yOffset);
 
-	void loadTexture(const std::string& path, SDL_Rect source, SDL_Rect dest);
+	void loadTexture(const std::string& path, SDL_Rect source, SDL_Rect dest, const int& xOffset, const int& yOffset);
 
 	SDL_Texture* getTexture();
 
@@ -31,6 +31,8 @@ private:
 	SDL_Texture*  tTexture;
 	SDL_Rect     tSource;
 	SDL_Rect     tDest;
+
+	int xOffset, yOffset;
 };
 
 #endif //TEXTURE_H

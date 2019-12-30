@@ -7,15 +7,15 @@ texture::texture()
 
 }
 
-texture::texture(const std::string& path, SDL_Rect source, SDL_Rect dest)
+texture::texture(const std::string& path, SDL_Rect source, SDL_Rect dest, const int& xOffset, const int& yOffset)
 {
 	std::string tempString = getFilePath(path, GRAPHICS);
-	loadTexture(tempString.c_str(), source, dest);
+	loadTexture(tempString.c_str(), source, dest, xOffset, yOffset);
 	tSource = source;
 	tDest   = dest;
 }
 
-void texture::loadTexture(const std::string& path, SDL_Rect source, SDL_Rect dest)
+void texture::loadTexture(const std::string& path, SDL_Rect source, SDL_Rect dest, const int& xOffset, const int& yOffset)
 {
 	std::string tempString = getFilePath(path, GRAPHICS);
 	SDL_Surface* tempSurface = IMG_Load(tempString.c_str());
@@ -39,6 +39,9 @@ void texture::loadTexture(const std::string& path, SDL_Rect source, SDL_Rect des
 
 	tSource = source;
 	tDest   = dest;
+
+	tDest.x -= xOffset;
+	tDest.y -= yOffset;
 }
 
 SDL_Texture* texture::getTexture()

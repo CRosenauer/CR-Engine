@@ -6,11 +6,9 @@
 #include "audio.h"
 #include "video.h"
 #include "entity.h"
+#include "testAnim.hpp"
+#include "testAnim.hpp"
 
-
-
-void gameLogicInit(__int8*& inputB, entity*& entityB, video* video, audio* audio);
-//initalizes game logic to read and write inputs, entities, audio, video, etc.
 
 void TestGame();
 //logic for the game

@@ -6,6 +6,8 @@
 #include <cstdio>
 
 #include "texture.h"
+#include "animation.h"
+#include "renderingFlags.hpp"
 
 using namespace std;
 
@@ -18,12 +20,13 @@ public:
 	//loads texture of .png image of path
 	//loads source to draw from source
 	//loads location to draw to from dest
-	void setTexture(const std::string& path, SDL_Rect source, SDL_Rect dest, const int& xOffset, const int& yOffset);
-
-	void setTextureDest(SDL_Rect* dest);
+	void setTexture(const std::string& path, SDL_Rect source, const int& xOffset, const int& yOffset);
 
 	//sets eTexture to passed texture.
 	void setTexture(const texture& text);
+
+	//sets rendering flag of the entity. See renderingFlags.hpp for rendering flag information.
+	void setRenderingFlag(CREVRenderingFlag flag);
 
 	//returns the texture associated with the entity
 	texture* getTexture();
@@ -36,7 +39,27 @@ public:
 	
 	//virtual function for entity logic
 	//child classes created for individual entities (player char, npcs, etc)
-	void entityLogic();
+	//void entityLogic();
+
+	//loads passed animation into memory.
+	void setAnimation(const animation* anim, const CREAnimationFlag& flag);
+
+	//returns the value of defined
+	//used to determine if the entity in memory is currently defined.
+	bool isDefined();
+
+	//sets the entity to defined and the internal ID number of the entity.
+	//should be used when the user intends to use an entity in memory.
+	void define();
+
+	//returns ID of the entity
+	unsigned int getEntityID();
+
+	//returns the z value of the entity. used to speed up entity texture rendering
+	int getDepth();
+
+	//returns current rendering mode of the entity
+	CREVRenderingFlag getRenderingFlag();
 
 private:
 	//horizontal, vertical, and depth position of the entity respectively.
@@ -46,9 +69,18 @@ private:
 
 	texture eTexture;
 
+	bool defined;
+
 	bool rectIsUndefined(SDL_Rect);
 
-	//animation eAnimation;
+	const animation* eAnimation;
+	const animation* eFirstAnimation;
+
+	int animFrameCount;
+
+	CREVRenderingFlag renderingFlag;
+
+	unsigned int entityID;
 
 	//Entity is a combination of logic and texture data
 	//Entities internal logic handles
