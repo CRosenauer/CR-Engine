@@ -19,6 +19,20 @@ enum GAME_SCREEN
 
 void TestGame()
 {	
+	/* General overview of game loop:
+	 *
+	 * Read inputs
+	 * loop reading and writing events
+	 * handle read events, update entities etc
+	 * 
+	 * read scripts
+	 * post script events
+	 * update script events
+	 * exit
+	 *
+	 * exit at anypoint a quit command is given
+	*/
+
 	static GAME_SCREEN gameScreen;
 	
 	if (gameScreen == NULL)
