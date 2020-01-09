@@ -22,9 +22,10 @@ entity* entityBlock = NULL;
 unsigned int entityBlockSize = 64;
 
 //Handlers for input and video.
-inputHandler CREinput;
-video        CREVideo;
-audio        CREAudio;
+inputHandler   CREinput;
+video          CREVideo;
+audio          CREAudio;
+scriptHandler  CREScript;
 
 const int INPUTWIDTH = 3;
 

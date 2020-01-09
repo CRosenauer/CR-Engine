@@ -1,8 +1,15 @@
 #ifndef SCRIPT_H
 #define SCRIPT_H
 
-#include <SDL_events.h>
+#include "event.h"
 #include <list>
+
+// Developer designed event codes:
+// This will be in events but this is here for now to 
+
+#define CRE_EVENTTYPE_QUIT        0
+#define CRE_EVENTTYPE_TEST_PRINT  1
+#define CRE_EVENTTYPE_ENTITY_MOVE 2
 
 // Struct used to hold script frames for scripting functionality
 // stricpts work very similar to animations and by extension, linked lists
@@ -22,9 +29,10 @@
 //
 // script* nextScript:
 // Finally, nextScript is a pointer to the next event to take place.
+
 struct script
 {
-	SDL_Event event;
+	CRE_Event event;
 	int frameCount;
 	unsigned int entityID;
 
@@ -39,7 +47,7 @@ class scriptHandler
 public:
 
 	//loads a script into the linked list and pushes the event located in the script
-	void loadScript(script eScript, int ID);
+	void loadScript(script eScript, unsigned int ID);
 
 	//goes through every script stored in the current scriptList
 	//advances the frame count of each script

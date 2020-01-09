@@ -3,19 +3,27 @@
 
 #include "script.h"
 
-const SDL_Event testEvent02 =
+const CRE_Event testEvent02 =
 {
 
+	CRE_EVENTTYPE_ENTITY_MOVE,
+	128,
+	128
 };
 
-const SDL_Event testEvent01 =
+const CRE_Event testEvent01 =
 {
-
+	CRE_EVENTTYPE_TEST_PRINT,
+	2,
+	NULL
 };
 
-const SDL_Event testEvent00 =
+const CRE_Event testEvent00 =
 {
 
+	CRE_EVENTTYPE_TEST_PRINT,
+	1,
+	NULL
 };
 
 const struct script testScript02 =

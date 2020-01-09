@@ -1,6 +1,6 @@
 #include "script.h"
 
-void scriptHandler::loadScript(script eScript, int ID)
+void scriptHandler::loadScript(script eScript, unsigned int ID)
 {
 	//script is pushed to the front of the list
 	//order of this list doesn't really matter
@@ -9,6 +9,8 @@ void scriptHandler::loadScript(script eScript, int ID)
 
 	if (ID != NULL)
 		scriptIndex->entityID = ID;
+
+	//wait we need something more here.
 
 	//pushes iterator of the added script list to event queue
 	//the iterator is used to edit the value of the script
@@ -21,7 +23,10 @@ void scriptHandler::pushEvent(const std::list<script>::iterator& scriptLoc)
 	//Note: I don't know if this will work or not as im passing a stack
 	//memory value as a pointer.
 	//according to SDL documentation this should work but well see.
-	SDL_Event e = scriptLoc->event;
+	SDL_Event e;
+
+	e = convertCREtoSDL(scriptLoc->event);
+
 	SDL_PushEvent(&e);
 }
 

@@ -1,13 +1,20 @@
 #include "TestGame.h"
 
+
+
+#define TEST_SCRIPT
+
 //Buses to hold user inputs, and entities respectively
 extern __int8* inputBus;
 extern entity* entityBlock;
 
 //Handlers for input and video.
-extern audio CREAudio;
+extern audio         CREAudio;
+extern scriptHandler CREScript;
 
 entity* Player;
+
+
 
 const SDL_Rect UNDEFINED_RECT = { -1, -1, -1, -1 };
 
@@ -21,7 +28,7 @@ void TestGame()
 {	
 	/* General overview of game loop:
 	 *
-	 * Read inputs
+	 * interpret inputs
 	 * loop reading and writing events
 	 * handle read events, update entities etc
 	 * 
@@ -47,6 +54,8 @@ void TestGame()
 	tempSource.h = 16;
 	int tempPos[3];
 
+
+
 	switch (gameScreen)
 	{
 	default:
@@ -63,6 +72,11 @@ void TestGame()
 		entityBlock[1].setAnimation(&testAnimation00, ANIMATION_LOOP);
 		entityBlock[1].setPosition(128, 128, 0);
 
+#ifdef TEST_SCRIPT
+
+
+		//pass script to CREScript
+#endif
 		gameScreen = INITIALIZED;
 		break;
 	case INITIALIZED:
