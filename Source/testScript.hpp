@@ -5,25 +5,24 @@
 
 const CRE_Event testEvent02 =
 {
-
-	CRE_EVENTTYPE_ENTITY_MOVE,
+	CRE_EVENT_ENTITY_MOVE,
 	128,
 	128
 };
 
 const CRE_Event testEvent01 =
 {
-	CRE_EVENTTYPE_TEST_PRINT,
-	2,
-	NULL
+	CRE_EVENT_TEST_PRINT,
+	1,
+	NULL //NULL as value should not be used in print test
 };
 
 const CRE_Event testEvent00 =
 {
 
-	CRE_EVENTTYPE_TEST_PRINT,
-	1,
-	NULL
+	CRE_EVENT_TEST_PRINT,
+	0,
+	NULL //NULL as value should not be used in print test
 };
 
 const struct script testScript02 =

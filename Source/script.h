@@ -4,12 +4,6 @@
 #include "event.h"
 #include <list>
 
-// Developer designed event codes:
-// This will be in events but this is here for now to 
-
-#define CRE_EVENTTYPE_QUIT        0
-#define CRE_EVENTTYPE_TEST_PRINT  1
-#define CRE_EVENTTYPE_ENTITY_MOVE 2
 
 // Struct used to hold script frames for scripting functionality
 // stricpts work very similar to animations and by extension, linked lists
