@@ -1,5 +1,7 @@
 #include "script.h"
 
+extern eventHandler CREEventHandler;
+
 void scriptHandler::loadScript(script eScript, unsigned int ID)
 {
 	//script is pushed to the front of the list
@@ -19,31 +21,33 @@ void scriptHandler::loadScript(script eScript, unsigned int ID)
 
 void scriptHandler::pushEvent(const std::list<script>::iterator& scriptLoc)
 {
-	//pushes event to SDL event queue
-	//Note: I don't know if this will work or not as im passing a stack
-	//memory value as a pointer.
-	//according to SDL documentation this should work but well see.
-	SDL_Event e;
-
-	e = convertCREtoSDL(scriptLoc->event);
-
-	SDL_PushEvent(&e);
+	CREEventHandler.queueEvent(scriptLoc->event, scriptLoc->entityID);
 }
 
+//broken function
+//the iterator gets unhappy when i start changing things and deleting things
+//theres also a memory leak. maybe not in this function but somewhere
 void scriptHandler::proccessScripts()
 {
 	//traverses script list
 	for (scriptIndex = scriptList.begin(); scriptIndex != scriptList.end(); scriptIndex++)
 	{
+		bool scriptDeleted = false;
+
 		//if frameCount of a given script == 0 (script last for 0 frames (instant) or script has passed its delay)
 		while (scriptIndex->frameCount == 0)
 		{
 			//if there is no next event to push in the script
 			if (scriptIndex->nextScript == NULL)
 			{
-				//
+				//erases complete script from memory
 				scriptIndex = scriptList.erase(scriptIndex);
-				scriptIndex--;
+				
+				if(!scriptList.empty())
+					scriptIndex--;
+
+				scriptDeleted = true;
+
 				break;
 			}
 			else
@@ -58,7 +62,10 @@ void scriptHandler::proccessScripts()
 			}
 		}
 
-		//reduces the number of frames the script delays before continuing by 1.
-		(scriptIndex->frameCount)--;
+		if(!scriptDeleted)
+			(scriptIndex->frameCount)--;
+
+		if (scriptList.empty())
+			break;
 	}
 }

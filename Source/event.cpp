@@ -2,36 +2,7 @@
 
 extern entity* entityBlock;
 
-queue<CRE_Event> CREEventQueue;
-
-SDL_Event convertCREtoSDL(const CRE_Event& event)
-{
-	SDL_Event e;
-	e.type = SDL_USEREVENT;
-	e.user.type      = NULL;
-	e.user.timestamp = NULL;
-	e.user.windowID  = NULL;
-	e.user.code      = event.eventType;
-
-	int* tempData1 = new int;
-	*tempData1 = event.data1;
-
-	int* tempData2 = new int;
-	*tempData2 = event.data2;
-
-	e.user.data1 = tempData1;
-	e.user.data2 = tempData2;
-
-	return e;
-}
-
-void freeSDLUserEvent(SDL_Event* e)
-{
-	delete e->user.data1;
-	delete e->user.data2;
-}
-
-void queueEvent(CRE_Event e, unsigned int ID)
+void eventHandler::queueEvent(CRE_Event e, unsigned int ID)
 {
 	e.entityID = ID;
 	CREEventQueue.push(e);
@@ -46,24 +17,46 @@ void passQuitEvent()
 /* Everything after here is for testing and verification of events and scripts. */
 /* Read at the risk fo your own mental health */
 
-// Developer designed event codes:
-// This will be in events but this is here for now to 
+//developer helper functions
+//not included in event.h because these functions will likely sit in other files
+//in an actual game.
 
+void eventHandler::moveEntity(const CRE_Event& e)
+{
+	int tempPosArray[3];
+	entityBlock[e.entityID].getPosition(tempPosArray);
 
-bool interpretEvents()
+	tempPosArray[0] += e.data1;
+	tempPosArray[1] += e.data2;
+
+	entityBlock[e.entityID].setPosition(tempPosArray[0], tempPosArray[1], tempPosArray[2]);
+}
+
+void eventHandler::setEntityPos(const CRE_Event& e)
+{
+	int tempPosArray[3];
+	entityBlock[e.entityID].getPosition(tempPosArray);
+
+	tempPosArray[0] = e.data1;
+	tempPosArray[1] = e.data2;
+
+	entityBlock[e.entityID].setPosition(tempPosArray[0], tempPosArray[1], tempPosArray[2]);
+}
+
+bool eventHandler::interpretEvents()
 {
 	CRE_Event e;
 
 	while (!CREEventQueue.empty())
 	{
 		e = CREEventQueue.front();
+		CREEventQueue.pop();
 
 		switch (e.eventType)
 		{
 		case CRE_EVENT_QUIT:
 			passQuitEvent();
 			return false;
-
 			break;
 
 		case CRE_EVENT_TEST_PRINT:
@@ -77,21 +70,18 @@ bool interpretEvents()
 				printf("Test 1\n");
 				break;
 			}
-
 			break;
 
 		case CRE_EVENT_ENTITY_MOVE:
-			//set pos function
-
+			moveEntity(e);
 			break;
 
-		case CRE_EVENT_ENTITY_ABS_MOVE:
-			//absolute set pos function
-
+		case CRE_EVENT_ENTITY_SET_POS:
+			setEntityPos(e);
 			break;
 
 		default:
-			printf("Unknown event code: %i. Skipping event.\nPlease refer to ", e.eventType);
+			printf("Unknown event code: %i. Skipping event.\nPlease refer to event.h, enum CREEventCode\n", e.eventType);
 			break;
 		}
 	}

@@ -24,43 +24,45 @@ struct CRE_Event
 	unsigned int entityID;
 };
 
-//converts CRE_Event to an SDL_Event
-//copies over data from CRE_Event to SDL_UserEvent member of SDL_Event
-SDL_Event convertCREtoSDL(const CRE_Event& event);
-
-//converts SDL_Event to an CRE_Event
-//copies over data from SDL_UserEvent member of SDL_Event to CRE_Event 
-
-//frees the dynamic memory portion of user part of the passed SDL_Event*
-void freeSDLUserEvent(SDL_Event* e);
-
-//queues event with the given target entity ID
-//passed ID is applied to a copy of the passed event
-//event is pushed onto the internal event queue
-void queueEvent(CRE_Event e, unsigned int ID);
-
-//cycles through and interprets every event in the event queue
-//unless a quit event is found
-//if a quit event is found function returns false, else returns true
-//cycles through each event applying the correct logic to the entity ID
-//specified within the event.
-bool interpretEvents();
-
 //event codes used for testing.
 //should be located in the "eventType" member of CRE_Event
 enum CREEventCode
 {
-	CRE_EVENT_QUIT,           //0 
-	CRE_EVENT_TEST_PRINT,     //1
-	CRE_EVENT_ENTITY_MOVE,    //2
-	CRE_EVENT_ENTITY_ABS_MOVE //3
+	CRE_EVENT_QUIT,           //0 pushes SDL event to quit game
+	CRE_EVENT_TEST_PRINT,     //1 prints a message to the command line. will likely be removes after testing
+	CRE_EVENT_ENTITY_MOVE,    //2 moves an entity by data1 in the x dir, data2 in the y dir
+	CRE_EVENT_ENTITY_SET_POS  //3 sets an entity's x pos to data1, y pos to data2
 };
 
-//
+//Just a bunch of test printing functions.
+//will likely be removed after testing.
 enum EventPrintType
 {
 	TEST_0, //0
 	TEST_1  //1
+};
+
+class eventHandler
+{
+public:
+	//queues event with the given target entity ID
+//passed ID is applied to a copy of the passed event
+//event is pushed onto the internal event queue
+	void queueEvent(CRE_Event e, unsigned int ID);
+
+	//cycles through and interprets every event in the event queue
+	//unless a quit event is found
+	//if a quit event is found function returns false, else returns true
+	//cycles through each event applying the correct logic to the entity ID
+	//specified within the event.
+	bool interpretEvents();
+
+private:
+	//i dont even know where im going to put these.
+	void moveEntity(const CRE_Event& e);
+	void setEntityPos(const CRE_Event& e);
+
+	queue<CRE_Event> CREEventQueue;
 };
 
 #endif //EVENT_HPP

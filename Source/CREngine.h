@@ -15,25 +15,26 @@
 #include "video.h"
 #include "audio.h"
 
+const std::string TITLE = "Test Game";
 
-void CREInit();
 //initialized anything that needs to be set up in CR Engine
 //first initialized memory
 //then creates handling objects
 //then setups SDL
+void CREInit();
 
-void CREMain();
 //initializes CREInit then enters CRELoop game loop
 //after exiting CRELoop cleans up memory used
 //then exits CREMain returning to the standard int main
 //Note: Should be the only thing in int main aside from return 0;
+void CREMain();
 
-void CRELoop();
 //game loop that will constantly be repeated
 //loop exits when exit event is pushed.
+void CRELoop();
 
-void CRECleanup();
 //cleans up memory allocated to heap and finishes up anything else
 //that needs to be finished before exiting the program.
+void CRECleanup();
 
 #endif //CRENGINE_H

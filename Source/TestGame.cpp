@@ -72,6 +72,8 @@ void TestGame()
 		entityBlock[1].setAnimation(&testAnimation00, ANIMATION_LOOP);
 		entityBlock[1].setPosition(128, 128, 0);
 
+		CREScript.loadScript(testScript00, Player->getEntityID());
+
 #ifdef TEST_SCRIPT
 
 
