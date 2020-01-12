@@ -7,7 +7,8 @@
 #include "video.h"
 #include "entity.h"
 #include "testAnim.hpp"
-#include "testAnim.hpp"
+#include "script.h"
+#include "testScript.hpp"
 
 
 void TestGame();

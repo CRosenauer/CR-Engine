@@ -1,11 +1,16 @@
 #include "TestGame.h"
 
+#define TESTSCRIPT
+
 //Buses to hold user inputs, and entities respectively
 extern __int8* inputBus;
 extern entity* entityBlock;
 
-//Handlers for input and video.
+//Handler for audio.
 extern audio CREAudio;
+
+//handler for scripts
+extern scriptHandler CREScript;
 
 entity* Player;
 
@@ -48,6 +53,13 @@ void TestGame()
 
 		entityBlock[1].setAnimation(&testAnimation00, ANIMATION_LOOP);
 		entityBlock[1].setPosition(128, 128, 0);
+
+		printf("Entity IDs:\n0: %i\n1: %i\n", entityBlock[0].getEntityID(), entityBlock[1].getEntityID());
+		printf("Player entity ID: %i\n", Player->getEntityID());
+
+#ifdef TESTSCRIPT
+		CREScript.loadScript(testScript00, Player->getEntityID());
+#endif //TESTSCRIPT
 
 		gameScreen = INITIALIZED;
 		break;
