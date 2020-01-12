@@ -3,6 +3,102 @@
  updates to the CR-Engine. For a more general overview see
  repository notes.
  
+# January, 11, 2020
+ In this update event and script handling were implemented
+ and tested. These proccesses are handled by the classes
+ "eventHandler" and "scriptHandler" respectively.
+ 
+ Events are passed with an internal structure, "CRE_Event."
+ CRE_Events have four internal pieces of data: int
+ eventType, int data1, int data2, and unsigned int
+ entityID.
+ 
+ CRE_Events have been modelled after SDL_Events
+ with the removal of unnecessary information and with the
+ replacement of void pointers data1 and data2 with regular
+ integers. The removal of void pointers was done to allowed
+ events to be stored easily in the program for use with
+ scripting (as opposed to storing them in working memory).
+ 
+ eventType tells the event handler what type of event this
+ and how the internal data should be used. Some current
+ events include CRE_EVENT_QUIT, CRE_TEST_PRINT,
+ CRE_ENTITY_MOVE, and CRE_ENTITY_SET_POS. All of these
+ event codes have been defined under enum CREEventCode in
+ "event.h". During game development the programmer will
+ likely need to define events as they build the game to
+ suit their own game's specific needs.
+ 
+ data1 and data2 are general purpose integers to store
+ information that the event handler may need to process
+ the event. In the case of CRE_EVENT_ENTITY_POS_MOVE, the
+ event handler reads the data1 and data2 integers for x 
+ and y positions to move a specific entity.
+ 
+ entityID is the ID of the entity the event will be
+ affecting (if applicible). The lowest entity ID and entity
+ should have is 1, as such if an event does not effect a
+ specific entity set the entityID to NULL or 0.
+ 
+ Events may be stored in the program as const structs or
+ may be created as needed. Regardless, when passing an
+ event through the event handler make sure the event has
+ an entityID assigned to it.
+ 
+ Scripts function similarly to animations and by extension
+ linked lists. Scripts are stored in the structure "script"
+ and contain four pieces of information: a CRE_Event event,
+ int frameCount, unsigned int entityID, and a const script*
+ nextScript.
+ 
+ event is the event that is queued to the event handler
+ when the script is loaded into memory. frameCount is the
+ number of frames that the script handler will delay before
+ loading the next event in the script. For the case of
+ frameCount = 0 the next event will be played instantly
+ after the current script is loaded. entityID is a
+ reference ID to have the script occur to a specific
+ entity, much like how event entityID's function. The
+ script's entityID will be automatically assigned to all
+ events in the script. Finally, nextScript is a const
+ pointer to the next script frame used in the script.
+ 
+ The class eventHandler has two main function: void
+ queueEvent(CRE_Event e, unsigned int ID), and bool
+ interpretEvents(). queueEvent queues the passed event
+ with a given ID for an entity which the event will
+ effect. interpretEvents is called near the end of a given
+ tick, before audio is played and graphics are drawn.
+ internpretEvents processes all events queued this tick
+ and applies them to the given entity(s). interpretEvents
+ will return false if a quit event is passed, in which
+ case the game loop exits and begins the cleanup and
+ shutdown procedure. In all other cases interpretEvents
+ returns true.
+ 
+ The class scriptHandler also has two main functions: void
+ loadScript(script eScript, unsigned int ID), and void 
+ processScripts(). loadScript works very similarly to
+ eventHandler's loadEvent, it loads a script into
+ scriptHandler's internal linked list passing the script's
+ internal event. processScripts iterates through the
+ scriptHandler's internal linked list, queueing script's
+ who's frame count is 0 and decrementing the frame count
+ of all other scripts.
+ 
+ Updates in the near future will include a change of how
+ texture data is contained, will change the entityBlock
+ from a fixed array to a vector to allow for easier entity
+ management in larger games, and will alter how foreground
+ and background images are established and process to allow
+ for easier background and foreground usage along with
+ foreground and background that don't rely on viewport
+ positioning (like HUDs).
+ 
+ Additionally, I have discovered a memory leak in
+ video::render() which I intend to attend to fix in the next
+ update.
+ 
 # January, 1, 2020
  Happy new year!
  
