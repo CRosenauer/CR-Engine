@@ -25,8 +25,8 @@ unsigned int entityBlockSize = 64;
 inputHandler   CREinput;
 video          CREVideo;
 audio          CREAudio;
-eventHandler   CREEventHandler;
-scriptHandler  CREScript;
+//eventHandler   CREEventHandler;
+//scriptHandler  CREScript;
 
 const int INPUTWIDTH = 3;
 
@@ -138,7 +138,7 @@ void CRELoop()
 		TestGame();
 
 		//performs nessicary actions on currently loaded scripts
-		CREScript.proccessScripts();
+		//CREScript.proccessScripts();
 
 		//interprets and acts upon all events queued this frame
 		//if(!CREEventHandler.interpretEvents())
@@ -148,6 +148,8 @@ void CRELoop()
 		CREAudio.playAudio();
 
 		//draw queues textures to screen
+		//memory leak in this function
+		//possibly another memory leak?
 		CREVideo.render();
 	}
 }

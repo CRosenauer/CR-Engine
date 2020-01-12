@@ -1,6 +1,6 @@
 #include "script.h"
 
-extern eventHandler CREEventHandler;
+//extern eventHandler CREEventHandler;
 
 void scriptHandler::loadScript(script eScript, unsigned int ID)
 {
@@ -21,7 +21,7 @@ void scriptHandler::loadScript(script eScript, unsigned int ID)
 
 void scriptHandler::pushEvent(const std::list<script>::iterator& scriptLoc)
 {
-	CREEventHandler.queueEvent(scriptLoc->event, scriptLoc->entityID);
+	//CREEventHandler.queueEvent(scriptLoc->event, scriptLoc->entityID);
 }
 
 //broken function

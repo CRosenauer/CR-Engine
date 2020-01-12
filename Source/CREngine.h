@@ -14,6 +14,8 @@
 #include "input.h"
 #include "video.h"
 #include "audio.h"
+//#include "event.h"
+//#include "script.h"
 
 const std::string TITLE = "Test Game";
 

@@ -6,8 +6,8 @@
 #include "audio.h"
 #include "video.h"
 #include "entity.h"
-#include "script.h"
-#include "testScript.hpp"
+//#include "script.h"
+//#include "testScript.hpp"
 #include "animation.h"
 #include "testAnim.hpp"
 

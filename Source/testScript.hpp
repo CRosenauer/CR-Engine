@@ -3,6 +3,7 @@
 
 #include "script.h"
 
+
 const CRE_Event testEvent02 =
 {
 	CRE_EVENT_ENTITY_MOVE,

@@ -2,10 +2,6 @@
 
 inputHandler::inputHandler()
 {
-	//load keymap from file.
-
-	inputBus = NULL;
-
 	printf("CREngine Warning: inputHandler default constructor called. For initialization usage only.\n");
 }
 
@@ -43,5 +39,11 @@ void inputHandler::pollInputs()
 	{
 		inputBus[2]++;
 	}
+
+	for (int i = 0; i < numberOfInputs; i++)
+	{
+		printf("inputsBus[%i]: %i ", i, inputBus[i]);
+	}
+	printf("\n");
 }
 

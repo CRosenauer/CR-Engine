@@ -1,7 +1,5 @@
 #include "TestGame.h"
 
-
-
 #define TEST_SCRIPT
 
 //Buses to hold user inputs, and entities respectively
@@ -10,7 +8,7 @@ extern entity* entityBlock;
 
 //Handlers for input and video.
 extern audio         CREAudio;
-extern scriptHandler CREScript;
+//extern scriptHandler CREScript;
 
 entity* Player;
 
@@ -18,7 +16,7 @@ entity* Player;
 
 const SDL_Rect UNDEFINED_RECT = { -1, -1, -1, -1 };
 
-enum GAME_SCREEN
+enum GAME_STATE
 {
 	NOT_INITIALIZED,
 	INITIALIZED
@@ -40,7 +38,7 @@ void TestGame()
 	 * exit at anypoint a quit command is given
 	*/
 
-	static GAME_SCREEN gameScreen;
+	static GAME_STATE gameScreen;
 	
 	if (gameScreen == NULL)
 	{
@@ -67,20 +65,18 @@ void TestGame()
 		CREAudio.loadMusic("Friday_Chinatown.mp3");
 
 		Player->setTexture("ship.png", tempSource, 8, 8);
-		Player->setPosition(32, 32, 0); 
+		Player->setPosition(32, 32, 0);
 
 		entityBlock[1].setAnimation(&testAnimation00, ANIMATION_LOOP);
 		entityBlock[1].setPosition(128, 128, 0);
 
-		CREScript.loadScript(testScript00, Player->getEntityID());
-
 #ifdef TEST_SCRIPT
-
-
-		//pass script to CREScript
+		//CREScript.loadScript(testScript00, Player->getEntityID());
 #endif
+
 		gameScreen = INITIALIZED;
 		break;
+
 	case INITIALIZED:
 		Player->getPosition(tempPos);
 
@@ -101,8 +97,8 @@ void TestGame()
 
 	if (inputBus[2] == 1)
 	{
-		SDL_Event e;
-		e.type = SDL_QUIT;
-		SDL_PushEvent(&e);
+		//CRE_Event e;
+		//e.eventCode = CRE_EVENT_QUIT;
+		//CREEvent.queueEvent(e);
 	}
 }
