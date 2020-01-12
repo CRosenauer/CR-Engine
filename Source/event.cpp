@@ -24,23 +24,43 @@ void passQuitEvent()
 void eventHandler::moveEntity(const CRE_Event& e)
 {
 	int tempPosArray[3];
-	entityBlock[e.entityID].getPosition(tempPosArray);
 
-	tempPosArray[0] += e.data1;
-	tempPosArray[1] += e.data2;
+	//********************************hard coded value, change later
+	for (int i = 0; i < 64; i++)
+	{
+		if (entityBlock[i].getEntityID() == e.entityID)
+		{
+			entityBlock[i].getPosition(tempPosArray);
 
-	entityBlock[e.entityID].setPosition(tempPosArray[0], tempPosArray[1], tempPosArray[2]);
+			tempPosArray[0] += e.data1;
+			tempPosArray[1] += e.data2;
+
+			entityBlock[i].setPosition(tempPosArray[0], tempPosArray[1], tempPosArray[2]);
+
+			break;
+		}
+	}
 }
 
 void eventHandler::setEntityPos(const CRE_Event& e)
 {
 	int tempPosArray[3];
-	entityBlock[e.entityID].getPosition(tempPosArray);
 
-	tempPosArray[0] = e.data1;
-	tempPosArray[1] = e.data2;
+	//********************************hard coded value, change later
+	for (int i = 0; i < 64; i++)
+	{
+		if (entityBlock[i].getEntityID() == e.entityID)
+		{
+			entityBlock[i].getPosition(tempPosArray);
 
-	entityBlock[e.entityID].setPosition(tempPosArray[0], tempPosArray[1], tempPosArray[2]);
+			tempPosArray[0] = e.data1;
+			tempPosArray[1] = e.data2;
+
+			entityBlock[i].setPosition(tempPosArray[0], tempPosArray[1], tempPosArray[2]);
+
+			break;
+		}
+	}
 }
 
 bool eventHandler::interpretEvents()
