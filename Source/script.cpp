@@ -1,6 +1,6 @@
 #include "script.h"
 
-//extern eventHandler CREEventHandler;
+extern eventHandler CREEventHandler;
 
 void scriptHandler::loadScript(script eScript, unsigned int ID)
 {
@@ -21,13 +21,14 @@ void scriptHandler::loadScript(script eScript, unsigned int ID)
 
 void scriptHandler::pushEvent(const std::list<script>::iterator& scriptLoc)
 {
-	//CREEventHandler.queueEvent(scriptLoc->event, scriptLoc->entityID);
+	CREEventHandler.queueEvent(scriptLoc->event, scriptLoc->entityID);
+	printf("Event queued. Entity ID: %i\n", scriptLoc->entityID);
 }
 
 //broken function
 //the iterator gets unhappy when i start changing things and deleting things
 //theres also a memory leak. maybe not in this function but somewhere
-void scriptHandler::proccessScripts()
+void scriptHandler::processScripts()
 {
 	//traverses script list
 	for (scriptIndex = scriptList.begin(); scriptIndex != scriptList.end(); scriptIndex++)

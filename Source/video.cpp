@@ -58,22 +58,20 @@ void video::init()
 	setFrameTimer();
 }
 
-
 void video::render()
 {
-	//clear the frame to blank for renderering
 	SDL_RenderClear(CRERenderer);
+	//clear the frame to blank for renderering
 
 	//TODO: implement depth based rendering priority
 
+	//fix no change bug
 	//loops through defined entities
 	//addes defined entities to rendering queues depending on internal
 	//rendering flags (SPRITE, BACKGROUND, FOREGROUND, etc)
-
-	entity* tempEntity;
-
 	for (unsigned int i = 0; i < entityBlockSize; i++)
 	{
+		entity* tempEntity;
 		tempEntity = &entityBlock[i];
 
 		if (!tempEntity->isDefined())
@@ -112,12 +110,7 @@ void video::render()
 		//render set up background layer for renderering.
 	}
 
-
 	/***  Render queued sprites  ***/
-	//Todo:
-	//create depth based sprite rendering
-	
-	//memory leak here
 	while(!spriteQueue.empty())
 	{
 		tempTexture = *spriteQueue.front();
@@ -131,11 +124,10 @@ void video::render()
 
 		tempRect.x = tempRect.x - cameraPosX;
 		tempRect.y = tempRect.y - cameraPosY;
-		
-		//render set up entity texture for renderering.
-		SDL_RenderCopy(CRERenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), &tempRect);
-	}
 
+		SDL_RenderCopy(CRERenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), &tempRect);
+		//render set up entity texture for renderering.
+	}
 
 	/***  Render queued foregrounds  ***/
 	//Foregrounds queued to allow paralax f.g. or HUD.

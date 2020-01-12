@@ -1,22 +1,22 @@
 #include "TestGame.h"
 
-#define TEST_SCRIPT
+#define TESTSCRIPT
 
 //Buses to hold user inputs, and entities respectively
 extern __int8* inputBus;
 extern entity* entityBlock;
 
-//Handlers for input and video.
-extern audio         CREAudio;
-//extern scriptHandler CREScript;
+//Handler for audio.
+extern audio CREAudio;
+
+//handler for scripts
+extern scriptHandler CREScript;
 
 entity* Player;
 
-
-
 const SDL_Rect UNDEFINED_RECT = { -1, -1, -1, -1 };
 
-enum GAME_STATE
+enum GAME_SCREEN
 {
 	NOT_INITIALIZED,
 	INITIALIZED
@@ -24,21 +24,7 @@ enum GAME_STATE
 
 void TestGame()
 {	
-	/* General overview of game loop:
-	 *
-	 * interpret inputs
-	 * loop reading and writing events
-	 * handle read events, update entities etc
-	 * 
-	 * read scripts
-	 * post script events
-	 * update script events
-	 * exit
-	 *
-	 * exit at anypoint a quit command is given
-	*/
-
-	static GAME_STATE gameScreen;
+	static GAME_SCREEN gameScreen;
 	
 	if (gameScreen == NULL)
 	{
@@ -52,8 +38,6 @@ void TestGame()
 	tempSource.h = 16;
 	int tempPos[3];
 
-
-
 	switch (gameScreen)
 	{
 	default:
@@ -65,18 +49,20 @@ void TestGame()
 		CREAudio.loadMusic("Friday_Chinatown.mp3");
 
 		Player->setTexture("ship.png", tempSource, 8, 8);
-		Player->setPosition(32, 32, 0);
+		Player->setPosition(32, 32, 0); 
 
 		entityBlock[1].setAnimation(&testAnimation00, ANIMATION_LOOP);
 		entityBlock[1].setPosition(128, 128, 0);
 
-#ifdef TEST_SCRIPT
-		//CREScript.loadScript(testScript00, Player->getEntityID());
-#endif
+		printf("Entity IDs:\n0: %i\n1: %i\n", entityBlock[0].getEntityID(), entityBlock[1].getEntityID());
+		printf("Player entity ID: %i\n", Player->getEntityID());
+
+#ifdef TESTSCRIPT
+		CREScript.loadScript(testScript00, Player->getEntityID());
+#endif //TESTSCRIPT
 
 		gameScreen = INITIALIZED;
 		break;
-
 	case INITIALIZED:
 		Player->getPosition(tempPos);
 
@@ -97,8 +83,8 @@ void TestGame()
 
 	if (inputBus[2] == 1)
 	{
-		//CRE_Event e;
-		//e.eventCode = CRE_EVENT_QUIT;
-		//CREEvent.queueEvent(e);
+		SDL_Event e;
+		e.type = SDL_QUIT;
+		SDL_PushEvent(&e);
 	}
 }

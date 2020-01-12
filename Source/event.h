@@ -47,8 +47,8 @@ class eventHandler
 {
 public:
 	//queues event with the given target entity ID
-//passed ID is applied to a copy of the passed event
-//event is pushed onto the internal event queue
+	//passed ID is applied to a copy of the passed event
+	//event is pushed onto the internal event queue
 	void queueEvent(CRE_Event e, unsigned int ID);
 
 	//cycles through and interprets every event in the event queue

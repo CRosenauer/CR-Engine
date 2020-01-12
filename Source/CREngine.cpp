@@ -1,6 +1,6 @@
 #include "CREngine.h"
 
-extern const std::string TITLE;
+const std::string TITLE = "Test Game";
 //as the title suggests, game title.
 
 int screenWidth = 640;
@@ -21,12 +21,12 @@ entity* entityBlock = NULL;
 
 unsigned int entityBlockSize = 64;
 
-//Handler classes for various internal systems.
-inputHandler   CREinput;
-video          CREVideo;
-audio          CREAudio;
-//eventHandler   CREEventHandler;
-//scriptHandler  CREScript;
+//Handlers for input and video.
+inputHandler  CREinput;
+video         CREVideo;
+audio         CREAudio;
+scriptHandler CREScript;
+eventHandler  CREEventHandler;
 
 const int INPUTWIDTH = 3;
 
@@ -129,7 +129,9 @@ void CREMain()
 
 void CRELoop()
 {
-	while(true)
+	SDL_Event e;
+	
+	do
 	{
 		//read inputs
 		CREinput.pollInputs();
@@ -137,21 +139,24 @@ void CRELoop()
 		//game logic function
 		TestGame();
 
-		//performs nessicary actions on currently loaded scripts
-		//CREScript.proccessScripts();
+		//process currently loaded scripts
+		CREScript.processScripts();
 
-		//interprets and acts upon all events queued this frame
-		//if(!CREEventHandler.interpretEvents())
-		//	break;
+		//updates game based on queued events
+		if (!CREEventHandler.interpretEvents())
+			break;
+		
 
 		//play user feedback
 		CREAudio.playAudio();
 
 		//draw queues textures to screen
-		//memory leak in this function
-		//possibly another memory leak?
 		CREVideo.render();
+
+		//poll for quit
+		SDL_PollEvent(&e);
 	}
+	while (e.type != SDL_QUIT);
 }
 
 void CRECleanup()

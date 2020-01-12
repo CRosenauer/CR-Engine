@@ -80,8 +80,6 @@ texture* entity::getTexture()
 		setTexture(eAnimation->path, eAnimation->source, eAnimation->xOffset, eAnimation->yOffset);
 	}
 
-	SDL_Rect source = eTexture.getDestRect();
-
 	return &eTexture;
 }
 
