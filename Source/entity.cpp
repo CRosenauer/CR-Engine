@@ -80,15 +80,6 @@ texture* entity::getTexture()
 		setTexture(eAnimation->path, eAnimation->source, eAnimation->xOffset, eAnimation->yOffset);
 	}
 
-	printf("Pass getTexture\nEntity ID: %i\n", entityID);
-
-	SDL_Rect source = eTexture.getDestRect();
-
-	printf("EntityID: %i, source.x: %i\n", entityID, source.x);
-	printf("EntityID: %i, source.y: %i\n", entityID, source.y);
-	printf("EntityID: %i, source.w: %i\n", entityID, source.w);
-	printf("EntityID: %i, source.h: %i\n", entityID, source.h);
-
 	return &eTexture;
 }
 

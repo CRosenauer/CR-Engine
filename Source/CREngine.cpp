@@ -22,10 +22,11 @@ entity* entityBlock = NULL;
 unsigned int entityBlockSize = 64;
 
 //Handlers for input and video.
-inputHandler   CREinput;
-video          CREVideo;
-audio          CREAudio;
-scriptHandler  CREScript;
+inputHandler  CREinput;
+video         CREVideo;
+audio         CREAudio;
+scriptHandler CREScript;
+eventHandler  CREEventHandler;
 
 const int INPUTWIDTH = 3;
 
@@ -137,6 +138,14 @@ void CRELoop()
 
 		//game logic function
 		TestGame();
+
+		//process currently loaded scripts
+		CREScript.processScripts();
+
+		//updates game based on queued events
+		if (!CREEventHandler.interpretEvents())
+			break;
+		
 
 		//play user feedback
 		CREAudio.playAudio();

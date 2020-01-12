@@ -1,20 +1,18 @@
 #include "TestGame.h"
 
-
-
-#define TEST_SCRIPT
+#define TESTSCRIPT
 
 //Buses to hold user inputs, and entities respectively
 extern __int8* inputBus;
 extern entity* entityBlock;
 
-//Handlers for input and video.
-extern audio         CREAudio;
+//Handler for audio.
+extern audio CREAudio;
+
+//handler for scripts
 extern scriptHandler CREScript;
 
 entity* Player;
-
-
 
 const SDL_Rect UNDEFINED_RECT = { -1, -1, -1, -1 };
 
@@ -26,20 +24,6 @@ enum GAME_SCREEN
 
 void TestGame()
 {	
-	/* General overview of game loop:
-	 *
-	 * interpret inputs
-	 * loop reading and writing events
-	 * handle read events, update entities etc
-	 * 
-	 * read scripts
-	 * post script events
-	 * update script events
-	 * exit
-	 *
-	 * exit at anypoint a quit command is given
-	*/
-
 	static GAME_SCREEN gameScreen;
 	
 	if (gameScreen == NULL)
@@ -53,8 +37,6 @@ void TestGame()
 	tempSource.w = 16;
 	tempSource.h = 16;
 	int tempPos[3];
-
-
 
 	switch (gameScreen)
 	{
@@ -72,11 +54,13 @@ void TestGame()
 		entityBlock[1].setAnimation(&testAnimation00, ANIMATION_LOOP);
 		entityBlock[1].setPosition(128, 128, 0);
 
-#ifdef TEST_SCRIPT
+		printf("Entity IDs:\n0: %i\n1: %i\n", entityBlock[0].getEntityID(), entityBlock[1].getEntityID());
+		printf("Player entity ID: %i\n", Player->getEntityID());
 
+#ifdef TESTSCRIPT
+		CREScript.loadScript(testScript00, Player->getEntityID());
+#endif //TESTSCRIPT
 
-		//pass script to CREScript
-#endif
 		gameScreen = INITIALIZED;
 		break;
 	case INITIALIZED:

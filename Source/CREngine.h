@@ -14,7 +14,8 @@
 #include "input.h"
 #include "video.h"
 #include "audio.h"
-
+#include "script.h"
+#include "event.h"
 
 void CREInit();
 //initialized anything that needs to be set up in CR Engine

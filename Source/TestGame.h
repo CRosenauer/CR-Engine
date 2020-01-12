@@ -6,9 +6,9 @@
 #include "audio.h"
 #include "video.h"
 #include "entity.h"
-#include "script.h"
-#include "animation.h"
 #include "testAnim.hpp"
+#include "script.h"
+#include "testScript.hpp"
 
 
 void TestGame();

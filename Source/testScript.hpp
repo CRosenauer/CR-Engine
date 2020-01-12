@@ -3,6 +3,7 @@
 
 #include "script.h"
 
+
 const CRE_Event testEvent02 =
 {
 	CRE_EVENT_ENTITY_MOVE,
@@ -19,7 +20,6 @@ const CRE_Event testEvent01 =
 
 const CRE_Event testEvent00 =
 {
-
 	CRE_EVENT_TEST_PRINT,
 	0,
 	NULL //NULL as value should not be used in print test

@@ -46,7 +46,7 @@ public:
 	//goes through every script stored in the current scriptList
 	//advances the frame count of each script
 	//when a script frame count reaches 0 the next script is loaded and its event is pushed.
-	void proccessScripts();
+	void processScripts();
 
 private:
 	//linked list that holds copies of scripts stored in rom
