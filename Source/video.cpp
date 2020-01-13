@@ -2,7 +2,6 @@
 #include <cassert>
 
 extern SDL_Renderer* CRERenderer;
-extern unsigned int entityBlockSize;
 
 video::video()
 {
@@ -69,25 +68,20 @@ void video::render()
 	//loops through defined entities
 	//addes defined entities to rendering queues depending on internal
 	//rendering flags (SPRITE, BACKGROUND, FOREGROUND, etc)
-	for (unsigned int i = 0; i < entityBlockSize; i++)
+
+	for (unsigned int i = 0; i < entityBlock.size(); i++)
 	{
-		entity* tempEntity;
-		tempEntity = &entityBlock[i];
-
-		if (!tempEntity->isDefined())
-			continue;
-
-		switch (tempEntity->getRenderingFlag())
+		switch (entityBlock[i]->getRenderingFlag())
 		{
 		case RENDERINGFLAG_SPRITE:
 		default:
-			spriteQueue.push(tempEntity->getTexture());
+			spriteQueue.push(entityBlock[i]->getTexture());
 			break;
 		case RENDERINGFLAG_BACKGROUND:
-			backgroundQueue.push(tempEntity->getTexture());
+			backgroundQueue.push(entityBlock[i]->getTexture());
 			break;
 		case RENDERINGFLAG_FOREGROUND:
-			foregroundQueue.push(tempEntity->getTexture());
+			foregroundQueue.push(entityBlock[i]->getTexture());
 			break;
 		}
 	}

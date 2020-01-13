@@ -4,38 +4,29 @@
 #include <SDL.h>
 #include <SDL_events.h>
 
+#include <new>
 #include <cstdio>
 
+extern const int INPUTWIDTH;
 extern __int8* inputBus;
-
-/*
-	Note to future me:
-	read SDL's implementation before you go messing around in stuff
-	like really.
-
-	read up on SDL_RegisterEvents
-*/
-
 
 class inputHandler
 {
 public:
 	inputHandler();
 
-	inputHandler(short numberOfInputs);
-
 	void pollInputs();
 	//reads inputs from user and 
 
+	//destructor
+	//deletes memory from inputbus
+	//will likely be removes later was inputBus doens't need to be heap memory
+	~inputHandler();
 
 private:
 	//void loadCustomKeys();
 	//to be implemented.
 	//reads stored keymaps from file and applies said keys to pollInputs logic.
-
-	//internal event for storing events from event queue.
-
-	short numberOfInputs = 3;
 
 	const Uint8* currentInputs = SDL_GetKeyboardState(NULL);
 

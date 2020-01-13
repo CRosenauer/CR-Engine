@@ -17,9 +17,10 @@ SDL_Renderer *CRERenderer = NULL;
 
 //Buses to hold user inputs, and entities respectively
 __int8* inputBus = NULL;
-entity* entityBlock = NULL;
+const int INPUTWIDTH = 3;
 
-unsigned int entityBlockSize = 64;
+//vector for storing entities (or rather entity ptrs)
+vector<entity*> entityBlock;
 
 //Handlers for input and video.
 inputHandler  CREinput;
@@ -28,46 +29,14 @@ audio         CREAudio;
 scriptHandler CREScript;
 eventHandler  CREEventHandler;
 
-const int INPUTWIDTH = 3;
 
 void CREInit()
 {
-	/*** Memory Allocation Block ***/
-	//allocate inputBus
-	try
-	{
-		printf("Stub: Initializing 3 inputs on inputBus");
-		inputBus = new __int8[INPUTWIDTH];
-	}
-	catch (std::bad_alloc)
-	{
-		printf("CREngine init error. Failed to initialize inputBus. Exiting program\n");
-		exit(1);
-	}
-
-	//allocate enetiyBlock
-	try
-	{
-		printf("Stub: Initializing 64 entities on entityBlock.\n");
-		entityBlock = new entity[64];
-		//allocates memory on the heap to entities
-		//in the future will be loaded based on memory allocation on ini files.
-	}
-	catch (std::bad_alloc)
-	{
-		printf("CREngine init error. Failed to initialize entityBlock. Exiting program\n");
-		exit(1);
-		//error handling for memory allocation
-		//if memory cannot be initialized then program exits.
-	}
-
 	/*** Engine Component Initialization Block ***/
 
 	//video window associated with current title, screen size, widescreen support, etc.
 	CREVideo = video(TITLE, screenWidth, screenHeight, windowFlag);
 	
-	printf("Stub: Initializing inputHandler with stub inputBus, 3 inputBusWidth.\n");
-	CREinput = inputHandler(3);
 	//inputHandler associated with inputBus.
 
 	const int IMG_FLAGS = IMG_INIT_PNG;
@@ -129,9 +98,7 @@ void CREMain()
 
 void CRELoop()
 {
-	SDL_Event e;
-	
-	do
+	while(true)
 	{
 		//read inputs
 		CREinput.pollInputs();
@@ -145,25 +112,24 @@ void CRELoop()
 		//updates game based on queued events
 		if (!CREEventHandler.interpretEvents())
 			break;
-		
 
 		//play user feedback
 		CREAudio.playAudio();
 
 		//draw queues textures to screen
 		CREVideo.render();
-
-		//poll for quit
-		SDL_PollEvent(&e);
 	}
-	while (e.type != SDL_QUIT);
 }
 
 void CRECleanup()
 {
-	//deallocate inputs entityBlock from heap
-	delete[] inputBus;
-	delete[] entityBlock;
+	//deallocate entityBlock from memory
+	for (unsigned int i = 0; entityBlock[i]; i++)
+	{
+		delete entityBlock[i];
+	}
+
+	entityBlock.clear();
 
 	//shut down graphics, audio, and SDL subsystems.
 	IMG_Quit();

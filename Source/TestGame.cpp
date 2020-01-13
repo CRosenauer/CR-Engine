@@ -4,13 +4,14 @@
 
 //Buses to hold user inputs, and entities respectively
 extern __int8* inputBus;
-extern entity* entityBlock;
+extern vector<entity*> entityBlock;
 
 //Handler for audio.
 extern audio CREAudio;
 
 //handler for scripts
 extern scriptHandler CREScript;
+extern eventHandler  CREEventHandler;
 
 entity* Player;
 
@@ -42,20 +43,18 @@ void TestGame()
 	{
 	default:
 	case NOT_INITIALIZED:
-		Player = &entityBlock[0];
-		Player->define();
-		entityBlock[1].define();
+		Player = new entity;
+		entityBlock.push_back(Player);
+
+		entityBlock.push_back(new entity);
 
 		CREAudio.loadMusic("Friday_Chinatown.mp3");
 
 		Player->setTexture("ship.png", tempSource, 8, 8);
 		Player->setPosition(32, 32, 0); 
 
-		entityBlock[1].setAnimation(&testAnimation00, ANIMATION_LOOP);
-		entityBlock[1].setPosition(128, 128, 0);
-
-		printf("Entity IDs:\n0: %i\n1: %i\n", entityBlock[0].getEntityID(), entityBlock[1].getEntityID());
-		printf("Player entity ID: %i\n", Player->getEntityID());
+		entityBlock[1]->setAnimation(&testAnimation00, ANIMATION_LOOP);
+		entityBlock[1]->setPosition(128, 128, 0);
 
 #ifdef TESTSCRIPT
 		CREScript.loadScript(testScript00, Player->getEntityID());
@@ -83,8 +82,8 @@ void TestGame()
 
 	if (inputBus[2] == 1)
 	{
-		SDL_Event e;
-		e.type = SDL_QUIT;
-		SDL_PushEvent(&e);
+		CRE_Event e;
+		e.eventType = CRE_EVENT_QUIT;
+		CREEventHandler.queueEvent(e);
 	}
 }

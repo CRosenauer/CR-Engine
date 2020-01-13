@@ -21,8 +21,7 @@ void scriptHandler::loadScript(script eScript, unsigned int ID)
 
 void scriptHandler::pushEvent(const std::list<script>::iterator& scriptLoc)
 {
-	CREEventHandler.queueEvent(scriptLoc->event, scriptLoc->entityID);
-	printf("Event queued. Entity ID: %i\n", scriptLoc->entityID);
+	CREEventHandler.queueEvent(scriptLoc->event);
 }
 
 //broken function

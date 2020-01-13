@@ -9,7 +9,6 @@ entity::entity()
 	posX = 0;
 	posY = 0;
 	posZ = 0;
-	defined = false;
 	animFrameCount = 0;
 	eAnimation = NULL;
 	eFirstAnimation = NULL;
@@ -118,17 +117,6 @@ void entity::setAnimation(const animation* anim, const CREAnimationFlag& flag)
 	setTexture(eAnimation->path, eAnimation->source, eAnimation->xOffset, eAnimation->yOffset);
 }
 
-bool entity::isDefined()
-{
-	return defined;
-}
-
-void entity::define()
-{
-	defined = true;
-	entityID = ++IDCounter;
-}
-
 unsigned int entity::getEntityID()
 {
 	return entityID;
@@ -147,4 +135,36 @@ CREVRenderingFlag entity::getRenderingFlag()
 void entity::setRenderingFlag(CREVRenderingFlag flag)
 {
 	renderingFlag = flag;
+}
+
+void deleteEntity(const unsigned int& entityID)
+{
+	for (vector<entity*>::iterator itr = entityBlock.begin(); itr < entityBlock.end(); itr++)
+	{
+		if (entityID == (*itr)->getEntityID())
+		{
+			delete *itr;
+			
+			entityBlock.erase(itr);
+			break;
+		}
+	}
+}
+
+unsigned int allocateEntity()
+{
+	entityBlock.push_back(new entity);
+	
+	return entityBlock.back()->getEntityID();
+}
+
+entity* entityFromID(const unsigned int& id)
+{
+	for (unsigned int i = 0; i < entityBlock.size(); i++)
+	{
+		if (id == entityBlock[i]->getEntityID())
+			return entityBlock[i];
+	}
+
+	return NULL;
 }

@@ -1,10 +1,15 @@
 #include "event.h"
 
-extern entity* entityBlock;
+extern vector<entity*> entityBlock;
 
-void eventHandler::queueEvent(CRE_Event e, unsigned int ID)
+void eventHandler::queueEvent(CRE_Event e, const unsigned int& ID)
 {
 	e.entityID = ID;
+	CREEventQueue.push(e);
+}
+
+void eventHandler::queueEvent(const CRE_Event& e)
+{
 	CREEventQueue.push(e);
 }
 
@@ -26,16 +31,16 @@ void eventHandler::moveEntity(const CRE_Event& e)
 	int tempPosArray[3];
 
 	//********************************hard coded value, change later
-	for (int i = 0; i < 64; i++)
+	for (unsigned int i = 0; i < entityBlock.size(); i++)
 	{
-		if (entityBlock[i].getEntityID() == e.entityID)
+		if (entityBlock[i]->getEntityID() == e.entityID)
 		{
-			entityBlock[i].getPosition(tempPosArray);
+			entityBlock[i]->getPosition(tempPosArray);
 
 			tempPosArray[0] += e.data1;
 			tempPosArray[1] += e.data2;
 
-			entityBlock[i].setPosition(tempPosArray[0], tempPosArray[1], tempPosArray[2]);
+			entityBlock[i]->setPosition(tempPosArray[0], tempPosArray[1], tempPosArray[2]);
 
 			break;
 		}
@@ -47,16 +52,16 @@ void eventHandler::setEntityPos(const CRE_Event& e)
 	int tempPosArray[3];
 
 	//********************************hard coded value, change later
-	for (int i = 0; i < 64; i++)
+	for (unsigned int i = 0; i < entityBlock.size(); i++)
 	{
-		if (entityBlock[i].getEntityID() == e.entityID)
+		if (entityBlock[i]->getEntityID() == e.entityID)
 		{
-			entityBlock[i].getPosition(tempPosArray);
+			entityBlock[i]->getPosition(tempPosArray);
 
 			tempPosArray[0] = e.data1;
 			tempPosArray[1] = e.data2;
 
-			entityBlock[i].setPosition(tempPosArray[0], tempPosArray[1], tempPosArray[2]);
+			entityBlock[i]->setPosition(tempPosArray[0], tempPosArray[1], tempPosArray[2]);
 
 			break;
 		}
