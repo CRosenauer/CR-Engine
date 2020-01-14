@@ -1,14 +1,12 @@
 #include "TestGame.h"
 
-//Buses to hold user inputs, and entities respectively
-extern __int8* inputBus;
+//Buses to hold entities
 extern vector<entity*> entityBlock;
 
-//Handler for audio.
+//handlers for audio, inputs, etc. Most externally defined in CREngine.cpp
 extern audio CREAudio;
-
-//handler for scripts
 extern scriptHandler CREScript;
+extern inputHandler CREInput;
 
 
 const SDL_Rect UNDEFINED_RECT = { -1, -1, -1, -1 };
@@ -31,13 +29,13 @@ void TestGame()
 		gameScreen = NOT_INITIALIZED;
 	}
 	
-	
 	SDL_Rect tempSource;
 	tempSource.x = 0;
 	tempSource.y = 0;
 	tempSource.w = 16;
 	tempSource.h = 16;
-	int tempPos[3];
+	__int8 userInputs[INPUTWIDTH];
+	int tempPos[3] = {0, 0, 0};
 
 	switch (gameScreen)
 	{
@@ -62,25 +60,32 @@ void TestGame()
 		if(Player != NULL)
 			Player->getPosition(tempPos);
 
-		if (inputBus[0] > 0)
+		CREInput.getUserInputs(userInputs);
+
+		//x co-ord inputs (A/D)
+		if (userInputs[0] > 0)
 			tempPos[0]++;
-		else if (inputBus[0] < 0)
+		else if (userInputs[0] < 0)
 			tempPos[0]--;
-			
-		if (inputBus[1] > 0)
+		
+		//y co-ord inputs (W/S)
+		if (userInputs[1] > 0)
 			tempPos[1]++;
-		else if (inputBus[1] < 0)
+		else if (userInputs[1] < 0)
 			tempPos[1]--;
-			
+		
+		//quit inputs (enter)
+		if (userInputs[2] == 1)
+		{
+			SDL_Event e;
+			e.type = SDL_QUIT;
+			SDL_PushEvent(&e);
+		}
+
 		Player->setPosition(tempPos[0], tempPos[1], tempPos[2]);
 
 		break;
 	}
 
-	if (inputBus[2] == 1)
-	{
-		SDL_Event e;
-		e.type = SDL_QUIT;
-		SDL_PushEvent(&e);
-	}
+	
 }

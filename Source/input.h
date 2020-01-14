@@ -6,36 +6,36 @@
 
 #include <cstdio>
 
-extern __int8* inputBus;
+//const int to determine how many inputs are read
+//note: x and y inputs on d-pads or control sticks are counted as 1 input
+//ex. for implementing WASD movement you would only need 2 width, one for WS one for AD.
+const int INPUTWIDTH = 3;
 
-/*
-	Note to future me:
-	read SDL's implementation before you go messing around in stuff
-	like really.
-
-	read up on SDL_RegisterEvents
-*/
-
+enum INPUTMAP
+{
+	INPUT_X,   //0
+	INPUT_Y,   //1
+	INPUT_QUIT //2
+};
 
 class inputHandler
 {
 public:
 	inputHandler();
 
-	inputHandler(short numberOfInputs);
-
+	//reads inputs from user and sets input values to the internal input array: inputBus.
 	void pollInputs();
-	//reads inputs from user and 
-
+	
+	//function takes an array and 
+	void getUserInputs(__int8 readInputs[INPUTWIDTH]);
 
 private:
 	//void loadCustomKeys();
 	//to be implemented.
 	//reads stored keymaps from file and applies said keys to pollInputs logic.
 
-	//internal event for storing events from event queue.
-
-	short numberOfInputs = 3;
+	//internal array for storing user inputs
+	__int8 inputBus[INPUTWIDTH];
 
 	const Uint8* currentInputs = SDL_GetKeyboardState(NULL);
 
