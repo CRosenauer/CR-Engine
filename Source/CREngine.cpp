@@ -112,7 +112,7 @@ void CRELoop()
 		//play user feedback
 		CREAudio.playAudio();
 
-		//draw queues textures to screen
+		//draw queues textures to be rendered and draws images to the screen
 		CREVideo.render();
 
 		//poll for quit

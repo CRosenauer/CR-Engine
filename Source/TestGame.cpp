@@ -63,19 +63,19 @@ void TestGame()
 		CREInput.getUserInputs(userInputs);
 
 		//x co-ord inputs (A/D)
-		if (userInputs[0] > 0)
+		if (userInputs[INPUT_X] > 0)
 			tempPos[0]++;
-		else if (userInputs[0] < 0)
+		else if (userInputs[INPUT_X] < 0)
 			tempPos[0]--;
 		
 		//y co-ord inputs (W/S)
-		if (userInputs[1] > 0)
+		if (userInputs[INPUT_Y] > 0)
 			tempPos[1]++;
-		else if (userInputs[1] < 0)
+		else if (userInputs[INPUT_Y] < 0)
 			tempPos[1]--;
 		
 		//quit inputs (enter)
-		if (userInputs[2] == 1)
+		if (userInputs[INPUT_QUIT] == 1)
 		{
 			SDL_Event e;
 			e.type = SDL_QUIT;
