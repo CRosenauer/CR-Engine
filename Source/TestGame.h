@@ -3,8 +3,6 @@
 
 #include <SDL_events.h>
 
-#include <vector>
-
 #include "audio.h"
 #include "video.h"
 #include "entity.h"
@@ -13,8 +11,8 @@
 #include "testScript.hpp"
 
 
-//logic for the game
-//reads the inputs and updates game accordingly before playing audio and rendering graphics.
 void TestGame();
+//logic for the game
+//reads the inputs and updates game accordingly.
 
 #endif //TESTGAME_H

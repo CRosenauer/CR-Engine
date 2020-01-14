@@ -17,9 +17,7 @@ SDL_Renderer *CRERenderer = NULL;
 
 //Buses to hold user inputs, and entities respectively
 __int8* inputBus = NULL;
-const int INPUTWIDTH = 3;
 
-//vector for storing entities (or rather entity ptrs)
 vector<entity*> entityBlock;
 
 //Handlers for input and video.
@@ -29,14 +27,30 @@ audio         CREAudio;
 scriptHandler CREScript;
 eventHandler  CREEventHandler;
 
+const int INPUTWIDTH = 3;
 
 void CREInit()
 {
+	/*** Memory Allocation Block ***/
+	//allocate inputBus
+	try
+	{
+		printf("Stub: Initializing 3 inputs on inputBus");
+		inputBus = new __int8[INPUTWIDTH];
+	}
+	catch (std::bad_alloc)
+	{
+		printf("CREngine init error. Failed to initialize inputBus. Exiting program\n");
+		exit(1);
+	}
+
 	/*** Engine Component Initialization Block ***/
 
 	//video window associated with current title, screen size, widescreen support, etc.
 	CREVideo = video(TITLE, screenWidth, screenHeight, windowFlag);
 	
+	printf("Stub: Initializing inputHandler with stub inputBus, 3 inputBusWidth.\n");
+	CREinput = inputHandler(3);
 	//inputHandler associated with inputBus.
 
 	const int IMG_FLAGS = IMG_INIT_PNG;
@@ -98,7 +112,9 @@ void CREMain()
 
 void CRELoop()
 {
-	while(true)
+	SDL_Event e;
+	
+	do
 	{
 		//read inputs
 		CREinput.pollInputs();
@@ -112,23 +128,33 @@ void CRELoop()
 		//updates game based on queued events
 		if (!CREEventHandler.interpretEvents())
 			break;
+		
 
 		//play user feedback
 		CREAudio.playAudio();
 
 		//draw queues textures to screen
 		CREVideo.render();
+
+		//poll for quit
+		SDL_PollEvent(&e);
 	}
+	while (e.type != SDL_QUIT);
 }
 
 void CRECleanup()
 {
-	//deallocate entityBlock from memory
-	for (unsigned int i = 0; entityBlock[i]; i++)
+	//deallocate inputs from heap
+	//will likely be changed to stack memory as inputs don't need to be dynamic is size
+	delete[] inputBus;
+
+	//deallocate entity*s from entityBlock
+	for (unsigned int i = 0; i < entityBlock.size(); i++)
 	{
 		delete entityBlock[i];
 	}
 
+	//clean up entityBlock's entity**
 	entityBlock.clear();
 
 	//shut down graphics, audio, and SDL subsystems.

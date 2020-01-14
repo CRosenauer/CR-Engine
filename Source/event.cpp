@@ -2,14 +2,9 @@
 
 extern vector<entity*> entityBlock;
 
-void eventHandler::queueEvent(CRE_Event e, const unsigned int& ID)
+void eventHandler::queueEvent(CRE_Event e, unsigned int ID)
 {
 	e.entityID = ID;
-	CREEventQueue.push(e);
-}
-
-void eventHandler::queueEvent(const CRE_Event& e)
-{
 	CREEventQueue.push(e);
 }
 
@@ -30,7 +25,6 @@ void eventHandler::moveEntity(const CRE_Event& e)
 {
 	int tempPosArray[3];
 
-	//********************************hard coded value, change later
 	for (unsigned int i = 0; i < entityBlock.size(); i++)
 	{
 		if (entityBlock[i]->getEntityID() == e.entityID)
@@ -51,7 +45,6 @@ void eventHandler::setEntityPos(const CRE_Event& e)
 {
 	int tempPosArray[3];
 
-	//********************************hard coded value, change later
 	for (unsigned int i = 0; i < entityBlock.size(); i++)
 	{
 		if (entityBlock[i]->getEntityID() == e.entityID)

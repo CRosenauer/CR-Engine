@@ -1,6 +1,7 @@
 #include "entity.h"
 
-#include <cassert>
+//vector for containing entities
+extern vector<entity*> entityBlock;
 
 static unsigned int IDCounter = 0;
 
@@ -143,8 +144,8 @@ void deleteEntity(const unsigned int& entityID)
 	{
 		if (entityID == (*itr)->getEntityID())
 		{
-			delete *itr;
-			
+			delete* itr;
+
 			entityBlock.erase(itr);
 			break;
 		}
@@ -154,7 +155,7 @@ void deleteEntity(const unsigned int& entityID)
 unsigned int allocateEntity()
 {
 	entityBlock.push_back(new entity);
-	
+
 	return entityBlock.back()->getEntityID();
 }
 

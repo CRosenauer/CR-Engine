@@ -1,7 +1,5 @@
 #include "TestGame.h"
 
-#define TESTSCRIPT
-
 //Buses to hold user inputs, and entities respectively
 extern __int8* inputBus;
 extern vector<entity*> entityBlock;
@@ -11,9 +9,7 @@ extern audio CREAudio;
 
 //handler for scripts
 extern scriptHandler CREScript;
-extern eventHandler  CREEventHandler;
 
-entity* Player;
 
 const SDL_Rect UNDEFINED_RECT = { -1, -1, -1, -1 };
 
@@ -23,6 +19,9 @@ enum GAME_SCREEN
 	INITIALIZED
 };
 
+entity* Player = new entity;
+entity* testEntity = new entity;
+
 void TestGame()
 {	
 	static GAME_SCREEN gameScreen;
@@ -31,7 +30,8 @@ void TestGame()
 	{
 		gameScreen = NOT_INITIALIZED;
 	}
-		
+	
+	
 	SDL_Rect tempSource;
 	tempSource.x = 0;
 	tempSource.y = 0;
@@ -43,10 +43,10 @@ void TestGame()
 	{
 	default:
 	case NOT_INITIALIZED:
-		Player = new entity;
+		
 		entityBlock.push_back(Player);
-
-		entityBlock.push_back(new entity);
+		
+		entityBlock.push_back(testEntity);
 
 		CREAudio.loadMusic("Friday_Chinatown.mp3");
 
@@ -56,14 +56,11 @@ void TestGame()
 		entityBlock[1]->setAnimation(&testAnimation00, ANIMATION_LOOP);
 		entityBlock[1]->setPosition(128, 128, 0);
 
-#ifdef TESTSCRIPT
-		CREScript.loadScript(testScript00, Player->getEntityID());
-#endif //TESTSCRIPT
-
 		gameScreen = INITIALIZED;
 		break;
 	case INITIALIZED:
-		Player->getPosition(tempPos);
+		if(Player != NULL)
+			Player->getPosition(tempPos);
 
 		if (inputBus[0] > 0)
 			tempPos[0]++;
@@ -82,8 +79,8 @@ void TestGame()
 
 	if (inputBus[2] == 1)
 	{
-		CRE_Event e;
-		e.eventType = CRE_EVENT_QUIT;
-		CREEventHandler.queueEvent(e);
+		SDL_Event e;
+		e.type = SDL_QUIT;
+		SDL_PushEvent(&e);
 	}
 }

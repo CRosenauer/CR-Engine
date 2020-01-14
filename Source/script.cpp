@@ -21,7 +21,7 @@ void scriptHandler::loadScript(script eScript, unsigned int ID)
 
 void scriptHandler::pushEvent(const std::list<script>::iterator& scriptLoc)
 {
-	CREEventHandler.queueEvent(scriptLoc->event);
+	CREEventHandler.queueEvent(scriptLoc->event, scriptLoc->entityID);
 }
 
 //broken function

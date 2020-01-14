@@ -4,32 +4,19 @@ inputHandler::inputHandler()
 {
 	//load keymap from file.
 
-	if (inputBus == NULL)
-	{
-		//allocate inputBus
-		try
-		{
-			printf("Stub: Initializing 3 inputs on inputBus");
-			inputBus = new __int8[INPUTWIDTH];
-		}
-		catch (std::bad_alloc)
-		{
-			printf("CREngine init error. Failed to initialize inputBus. Exiting program\n");
-			exit(1);
-		}
-	}
+	inputBus = NULL;
+
+	printf("CREngine Warning: inputHandler default constructor called. For initialization usage only.\n");
 }
 
-inputHandler::~inputHandler()
+inputHandler::inputHandler (short inputSize)
 {
-	//deallocate inputBus from memory
-	delete[] inputBus;
+	numberOfInputs = inputSize;
 }
-
 
 void inputHandler::pollInputs()
 {
-	for (int i = 0; i < INPUTWIDTH; i++)
+	for (int i = 0; i < numberOfInputs; i++)
 		inputBus[i] = 0;
 
 	if (currentInputs[SDL_SCANCODE_W])

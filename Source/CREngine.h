@@ -3,11 +3,11 @@
 
 #include <cstdio>
 #include <new>
+#include <vector>
 
 #include <SDL.h>
 #include <SDL_mixer.h>
 #include <string>
-#include <vector>
 
 #include "TestGame.h"
 

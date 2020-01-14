@@ -2,10 +2,8 @@
 #define EVENT_HPP
 
 #include <SDL_events.h>
-
 #include <queue>
 #include <vector>
-
 #include "entity.h"
 
 //CRE Events are altered and simplified versions of SDL's internal event strucuts.
@@ -20,11 +18,11 @@
 //goes unused is not included.
 struct CRE_Event
 {
-	int eventType = NULL;
-	int data1 = NULL;
-	int data2 = NULL;
+	int eventType;
+	int data1;
+	int data2;
 
-	unsigned int entityID = NULL;
+	unsigned int entityID;
 };
 
 //event codes used for testing.
@@ -52,11 +50,7 @@ public:
 	//queues event with the given target entity ID
 	//passed ID is applied to a copy of the passed event
 	//event is pushed onto the internal event queue
-	void queueEvent(CRE_Event e, const unsigned int& ID);
-
-	//same as previous function but with no arguement for ID
-	//this function assumes ID is unused or is already set.
-	void queueEvent(const CRE_Event& e);
+	void queueEvent(CRE_Event e, unsigned int ID);
 
 	//cycles through and interprets every event in the event queue
 	//unless a quit event is found

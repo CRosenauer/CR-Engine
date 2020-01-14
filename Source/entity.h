@@ -81,9 +81,6 @@ private:
 
 /*** entityBlock accessing functions: ***/
 
-//vector for containing entities
-extern vector<entity*> entityBlock;
-
 //cycles through entityBlock until entity is found whose ID equals the passed ID
 //deallocates said entity from memory and removes the entity* from the vector
 void deleteEntity(const unsigned int& entityID);
@@ -97,5 +94,6 @@ unsigned int allocateEntity();
 //function returns the pointer to said entity.
 //if no entity with the passed ID can be found function returns NULL.
 entity* entityFromID(const unsigned int& id);
+
 
 #endif //ENTITY_H

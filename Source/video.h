@@ -4,17 +4,14 @@
 #include <SDL.h>
 #include <SDL_Surface.h>
 #include <SDL_Render.h>
-
 #include <queue>
-#include <string>
 #include <vector>
+#include <string>
 
 #include "entity.h"
 #include "texture.h"
 #include "timer.h"
 #include "renderingFlags.hpp"
-
-extern vector<entity*> entityBlock;
 
 /* video.h, main class used to write images to the screen
  * 

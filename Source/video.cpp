@@ -2,6 +2,7 @@
 #include <cassert>
 
 extern SDL_Renderer* CRERenderer;
+extern vector<entity*> entityBlock;
 
 video::video()
 {
@@ -64,24 +65,24 @@ void video::render()
 
 	//TODO: implement depth based rendering priority
 
-	//fix no change bug
 	//loops through defined entities
 	//addes defined entities to rendering queues depending on internal
 	//rendering flags (SPRITE, BACKGROUND, FOREGROUND, etc)
-
 	for (unsigned int i = 0; i < entityBlock.size(); i++)
 	{
-		switch (entityBlock[i]->getRenderingFlag())
+		entity* tempEntity = entityBlock[i];
+
+		switch (tempEntity->getRenderingFlag())
 		{
 		case RENDERINGFLAG_SPRITE:
 		default:
-			spriteQueue.push(entityBlock[i]->getTexture());
+			spriteQueue.push(tempEntity->getTexture());
 			break;
 		case RENDERINGFLAG_BACKGROUND:
-			backgroundQueue.push(entityBlock[i]->getTexture());
+			backgroundQueue.push(tempEntity->getTexture());
 			break;
 		case RENDERINGFLAG_FOREGROUND:
-			foregroundQueue.push(entityBlock[i]->getTexture());
+			foregroundQueue.push(tempEntity->getTexture());
 			break;
 		}
 	}
