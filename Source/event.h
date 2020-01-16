@@ -3,6 +3,7 @@
 
 #include <SDL_events.h>
 #include <queue>
+#include <vector>
 #include "entity.h"
 
 //CRE Events are altered and simplified versions of SDL's internal event strucuts.

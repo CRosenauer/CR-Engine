@@ -1,6 +1,7 @@
 #include "entity.h"
 
-#include <cassert>
+//vector for containing entities
+extern vector<entity*> entityBlock;
 
 static unsigned int IDCounter = 0;
 
@@ -9,7 +10,6 @@ entity::entity()
 	posX = 0;
 	posY = 0;
 	posZ = 0;
-	defined = false;
 	animFrameCount = 0;
 	eAnimation = NULL;
 	eFirstAnimation = NULL;
@@ -51,6 +51,7 @@ void entity::setTexture(const texture& text)
 texture* entity::getTexture()
 {
 	//Updates animation if entity is currently using an animation.
+	
 	if (eAnimation != NULL)
 	{
 
@@ -118,17 +119,6 @@ void entity::setAnimation(const animation* anim, const CREAnimationFlag& flag)
 	setTexture(eAnimation->path, eAnimation->source, eAnimation->xOffset, eAnimation->yOffset);
 }
 
-bool entity::isDefined()
-{
-	return defined;
-}
-
-void entity::define()
-{
-	defined = true;
-	entityID = ++IDCounter;
-}
-
 unsigned int entity::getEntityID()
 {
 	return entityID;
@@ -147,4 +137,44 @@ CREVRenderingFlag entity::getRenderingFlag()
 void entity::setRenderingFlag(CREVRenderingFlag flag)
 {
 	renderingFlag = flag;
+}
+
+void deleteEntity(const unsigned int& entityID)
+{
+	//cycles through entityBus until an entity is found with the passed ID
+	//entity with that id is then deallocated from memory and removed from entityBlock.
+	for (vector<entity*>::iterator itr = entityBlock.begin(); itr < entityBlock.end(); itr++)
+	{
+		if (entityID == (*itr)->getEntityID())
+		{
+			delete* itr;
+
+			entityBlock.erase(itr);
+			break;
+		}
+	}
+}
+
+unsigned int allocateEntity()
+{
+	//allocates memory to a new entity in entityBlock
+	//then returns the ID of the allocated ID
+	entityBlock.push_back(new entity);
+
+	return entityBlock.back()->getEntityID();
+}
+
+entity* entityFromID(const unsigned int& id)
+{
+	//cycles through entityBlock until an entity is found whose internal ID
+	//equals the passed ID. A pointer to this entity is returned.
+	for (unsigned int i = 0; i < entityBlock.size(); i++)
+	{
+		if (id == entityBlock[i]->getEntityID())
+			return entityBlock[i];
+	}
+
+	//Case for if no entity with the passed ID can be found.
+	//Will return NULL in this case.
+	return NULL;
 }

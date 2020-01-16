@@ -3,7 +3,9 @@
 
 #include <SDL.h>
 #include <SDL_image.h>
+
 #include <cstdio>
+#include <vector>
 
 #include "texture.h"
 #include "animation.h"
@@ -44,14 +46,6 @@ public:
 	//loads passed animation into memory.
 	void setAnimation(const animation* anim, const CREAnimationFlag& flag);
 
-	//returns the value of defined
-	//used to determine if the entity in memory is currently defined.
-	bool isDefined();
-
-	//sets the entity to defined and the internal ID number of the entity.
-	//should be used when the user intends to use an entity in memory.
-	void define();
-
 	//returns ID of the entity
 	unsigned int getEntityID();
 
@@ -69,8 +63,6 @@ private:
 
 	texture eTexture;
 
-	bool defined;
-
 	bool rectIsUndefined(SDL_Rect);
 
 	const animation* eAnimation;
@@ -85,5 +77,23 @@ private:
 	//Entity is a combination of logic and texture data
 	//Entities internal logic handles
 };
+
+
+/*** entityBlock accessing functions: ***/
+
+//cycles through entityBlock until entity is found whose ID equals the passed ID
+//deallocates said entity from memory and removes the entity* from the vector
+void deleteEntity(const unsigned int& entityID);
+
+//pushes a new entity to the entity vector and sets it to defined
+//returns the ID of the entity
+unsigned int allocateEntity();
+
+//cycles through entityBlock until an entity is found whose internal ID
+//matches the passed ID.
+//function returns the pointer to said entity.
+//if no entity with the passed ID can be found function returns NULL.
+entity* entityFromID(const unsigned int& id);
+
 
 #endif //ENTITY_H

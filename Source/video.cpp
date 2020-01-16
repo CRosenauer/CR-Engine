@@ -2,7 +2,7 @@
 #include <cassert>
 
 extern SDL_Renderer* CRERenderer;
-extern unsigned int entityBlockSize;
+extern vector<entity*> entityBlock;
 
 video::video()
 {
@@ -58,6 +58,11 @@ void video::init()
 	setFrameTimer();
 }
 
+//memory leak in here
+//I think there's two main culprits:
+//1. when the function cycles through entityBlock it fails to deallocate some memory
+//2. when queues are being popped/emptied/cycled through certain memory isn't being deallocated
+//since queues are part of the C++ standard im guessing it's option 1.
 void video::render()
 {
 	SDL_RenderClear(CRERenderer);
@@ -65,17 +70,14 @@ void video::render()
 
 	//TODO: implement depth based rendering priority
 
-	//fix no change bug
+	entity* tempEntity;
+
 	//loops through defined entities
 	//addes defined entities to rendering queues depending on internal
 	//rendering flags (SPRITE, BACKGROUND, FOREGROUND, etc)
-	for (unsigned int i = 0; i < entityBlockSize; i++)
+	for (unsigned int i = 0; i < entityBlock.size(); i++)
 	{
-		entity* tempEntity;
-		tempEntity = &entityBlock[i];
-
-		if (!tempEntity->isDefined())
-			continue;
+		tempEntity = entityBlock[i];
 
 		switch (tempEntity->getRenderingFlag())
 		{
@@ -146,8 +148,8 @@ void video::render()
 	pollFrameTimer();
 	setFrameTimer();
 
-	SDL_RenderPresent(CRERenderer);
 	//render frame to screen.
+	SDL_RenderPresent(CRERenderer);
 }
 
 

@@ -3,6 +3,7 @@
 
 #include <cstdio>
 #include <new>
+#include <vector>
 
 #include <SDL.h>
 #include <SDL_mixer.h>

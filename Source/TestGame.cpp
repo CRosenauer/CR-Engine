@@ -1,18 +1,13 @@
 #include "TestGame.h"
 
-#define TESTSCRIPT
+//Buses to hold entities
+extern vector<entity*> entityBlock;
 
-//Buses to hold user inputs, and entities respectively
-extern __int8* inputBus;
-extern entity* entityBlock;
-
-//Handler for audio.
+//handlers for audio, inputs, etc. Most externally defined in CREngine.cpp
 extern audio CREAudio;
-
-//handler for scripts
 extern scriptHandler CREScript;
+extern inputHandler CREInput;
 
-entity* Player;
 
 const SDL_Rect UNDEFINED_RECT = { -1, -1, -1, -1 };
 
@@ -22,6 +17,9 @@ enum GAME_SCREEN
 	INITIALIZED
 };
 
+entity* Player = new entity;
+entity* testEntity = new entity;
+
 void TestGame()
 {	
 	static GAME_SCREEN gameScreen;
@@ -30,61 +28,64 @@ void TestGame()
 	{
 		gameScreen = NOT_INITIALIZED;
 	}
-		
+	
 	SDL_Rect tempSource;
 	tempSource.x = 0;
 	tempSource.y = 0;
 	tempSource.w = 16;
 	tempSource.h = 16;
-	int tempPos[3];
+	__int8 userInputs[INPUTWIDTH];
+	int tempPos[3] = {0, 0, 0};
 
 	switch (gameScreen)
 	{
 	default:
 	case NOT_INITIALIZED:
-		Player = &entityBlock[0];
-		Player->define();
-		entityBlock[1].define();
+		
+		entityBlock.push_back(Player);
+		
+		entityBlock.push_back(testEntity);
 
 		CREAudio.loadMusic("Friday_Chinatown.mp3");
 
 		Player->setTexture("ship.png", tempSource, 8, 8);
 		Player->setPosition(32, 32, 0); 
 
-		entityBlock[1].setAnimation(&testAnimation00, ANIMATION_LOOP);
-		entityBlock[1].setPosition(128, 128, 0);
-
-		printf("Entity IDs:\n0: %i\n1: %i\n", entityBlock[0].getEntityID(), entityBlock[1].getEntityID());
-		printf("Player entity ID: %i\n", Player->getEntityID());
-
-#ifdef TESTSCRIPT
-		CREScript.loadScript(testScript00, Player->getEntityID());
-#endif //TESTSCRIPT
+		testEntity->setAnimation(&testAnimation00, ANIMATION_LOOP);
+		testEntity->setPosition(128, 128, 0);
 
 		gameScreen = INITIALIZED;
 		break;
 	case INITIALIZED:
-		Player->getPosition(tempPos);
+		if(Player != NULL)
+			Player->getPosition(tempPos);
 
-		if (inputBus[0] > 0)
+		CREInput.getUserInputs(userInputs);
+
+		//x co-ord inputs (A/D)
+		if (userInputs[INPUT_X] > 0)
 			tempPos[0]++;
-		else if (inputBus[0] < 0)
+		else if (userInputs[INPUT_X] < 0)
 			tempPos[0]--;
-			
-		if (inputBus[1] > 0)
+		
+		//y co-ord inputs (W/S)
+		if (userInputs[INPUT_Y] > 0)
 			tempPos[1]++;
-		else if (inputBus[1] < 0)
+		else if (userInputs[INPUT_Y] < 0)
 			tempPos[1]--;
-			
+		
+		//quit inputs (enter)
+		if (userInputs[INPUT_QUIT] == 1)
+		{
+			SDL_Event e;
+			e.type = SDL_QUIT;
+			SDL_PushEvent(&e);
+		}
+
 		Player->setPosition(tempPos[0], tempPos[1], tempPos[2]);
 
 		break;
 	}
 
-	if (inputBus[2] == 1)
-	{
-		SDL_Event e;
-		e.type = SDL_QUIT;
-		SDL_PushEvent(&e);
-	}
+	
 }

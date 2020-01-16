@@ -5,6 +5,7 @@
 
 #include "audio.h"
 #include "video.h"
+#include "input.h"
 #include "entity.h"
 #include "testAnim.hpp"
 #include "script.h"
