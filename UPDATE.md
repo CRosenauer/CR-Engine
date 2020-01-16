@@ -3,6 +3,33 @@
  updates to the CR-Engine. For a more general overview see
  repository notes.
  
+# January, 15, 2020
+ In this update only a couple of things have been changed.
+ The memory leak in the engine has been fixed, and input
+ information has been relocated to a more suitible file.
+ 
+ The memory leak was located to be in texture::loadTexture(
+ string, SDL_Rect, SDL_Rect). The leak occured because I
+ had assumed that the SDL function, SDL_CreateTextureFromSurface
+ did not allocate any new memory. This assumption was incorrect
+ and as such every time the engine loaded a new texture (say from
+ an animation) memory would leak. To fix this error the previous
+ texture is freed before a new texture is loaded.
+ 
+ Input information, such as the number of inputs and the input
+ array have been reloacted from the CREngine files to the input
+ class. Additionally, the input array is no longer implemented
+ using heap memory, but rather stack memory. The input array is
+ accessed by using the function input::getUserInput(__int8[]).
+ The user inputs will be copied to the passed array and no
+ value is returned.
+ 
+ For the next update I plan on implementing internal entity data
+ for game logic use, and to re-implement texture data into a
+ structure containing the texture path, string, source, etc
+ (basically all the information that the texture class reads
+ to load a texture).
+ 
 # January, 11, 2020
  In this update event and script handling were implemented
  and tested. These proccesses are handled by the classes
