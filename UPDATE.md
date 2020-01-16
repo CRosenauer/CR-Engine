@@ -6,7 +6,7 @@
 # January, 15, 2020 (Again)
  Smaller update for the last part of today. Texture data
  and entity data have been implemented.
- 
+
  Texture data is stored as a struct, textureData. This
  struct contains four members: string path, SDL_Rect source,
  int xOffset, and int yOffset. path is the name of the 
@@ -23,7 +23,7 @@
  represents the number of pixels left of the entity's x
  position and the yOffset represents the number of pixels
  above the entity's y position.
- 
+
  The framework for entity data has been implemented but
  will need to be expanded based on a game specific needs.
  the entityData structure contains two members, int
@@ -33,7 +33,7 @@
  struct of the union componentData to read. The union
  componentData should contain several structures which
  contain data to specific types of entities (player, fireball, etc).
- 
+
  With this new member to the entity class a few new
  functions have been added to access and mutate the entityData
  structure. entity::setEntityType(unsigned int) sets
@@ -43,7 +43,11 @@
  Functions to access and mutate the union in entity.data
  have not been added yet as I don't know how I want to
  implement these functions yet.
- 
+
+ Functions to access and mutate the union in entity.data
+ have not been added yet as I don't know how I want to
+ implement these functions yet.
+
  Additionally there may be another memory leak in the engine.
  I'm not entirely sure if there is as memory usage slowly
  increases and decreases throughout runtime. Next update
