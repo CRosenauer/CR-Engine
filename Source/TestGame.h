@@ -7,8 +7,10 @@
 #include "video.h"
 #include "input.h"
 #include "entity.h"
-#include "testAnim.hpp"
 #include "script.h"
+
+#include "testTexture.hpp"
+#include "testAnim.hpp"
 #include "testScript.hpp"
 
 

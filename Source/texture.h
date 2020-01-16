@@ -8,22 +8,26 @@
 
 #include "file.h"
 
+struct textureData
+{
+	std::string path;
+	SDL_Rect source;
+	int xOffset;
+	int yOffset;
+};
+
 class texture
 {
 public:
 	texture();
 
-	texture(const std::string& path, SDL_Rect source, SDL_Rect dest, const int& xOffset, const int& yOffset);
-
-	void loadTexture(const std::string& path, SDL_Rect source, SDL_Rect dest, const int& xOffset, const int& yOffset);
+	void loadTexture(const textureData& text, const SDL_Rect& dest);
 
 	SDL_Texture* getTexture();
 
 	SDL_Rect getSourceRect();
 
 	SDL_Rect getDestRect();
-
-	void autoSetRect();
 
 	void setRect(SDL_Rect source, SDL_Rect dest);
 

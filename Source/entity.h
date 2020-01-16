@@ -13,6 +13,17 @@
 
 using namespace std;
 
+union componentData
+{
+
+};
+
+struct entityData
+{
+	unsigned int  entityType;
+	componentData componentData;
+};
+
 class entity
 {
 public:
@@ -22,7 +33,7 @@ public:
 	//loads texture of .png image of path
 	//loads source to draw from source
 	//loads location to draw to from dest
-	void setTexture(const std::string& path, SDL_Rect source, const int& xOffset, const int& yOffset);
+	void setTexture(const textureData& text);
 
 	//sets eTexture to passed texture.
 	void setTexture(const texture& text);
@@ -39,10 +50,6 @@ public:
 	//returns position array {posX, posY, posZ}
 	void getPosition(int pos[3]);
 	
-	//virtual function for entity logic
-	//child classes created for individual entities (player char, npcs, etc)
-	//void entityLogic();
-
 	//loads passed animation into memory.
 	void setAnimation(const animation* anim, const CREAnimationFlag& flag);
 
@@ -54,6 +61,12 @@ public:
 
 	//returns current rendering mode of the entity
 	CREVRenderingFlag getRenderingFlag();
+
+	//sets data.entityType to the passed interger.
+	void setEntityType(const unsigned int& i);
+
+	//returns current entity type found in data.entityType
+	unsigned int getEntityType();
 
 private:
 	//horizontal, vertical, and depth position of the entity respectively.
@@ -74,8 +87,7 @@ private:
 
 	unsigned int entityID;
 
-	//Entity is a combination of logic and texture data
-	//Entities internal logic handles
+	entityData data;
 };
 
 
