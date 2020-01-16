@@ -4,20 +4,15 @@ extern SDL_Renderer* CRERenderer;
 
 texture::texture()
 {
-
+	tDest = { 0, 0, 0, 0 };
+	tSource = tDest;
+	xOffset = 0;
+	yOffset = 0;
 }
 
-texture::texture(const std::string& path, SDL_Rect source, SDL_Rect dest, const int& xOffset, const int& yOffset)
+void texture::loadTexture(const textureData& text, const SDL_Rect& dest)
 {
-	std::string tempString = getFilePath(path, GRAPHICS);
-	loadTexture(tempString.c_str(), source, dest, xOffset, yOffset);
-	tSource = source;
-	tDest   = dest;
-}
-
-void texture::loadTexture(const std::string& path, SDL_Rect source, SDL_Rect dest, const int& xOffset, const int& yOffset)
-{
-	std::string tempString = getFilePath(path, GRAPHICS);
+	std::string tempString = getFilePath(text.path, GRAPHICS);
 	SDL_Surface* tempSurface = IMG_Load(tempString.c_str());
 
 	if (tempSurface == NULL)
@@ -43,8 +38,8 @@ void texture::loadTexture(const std::string& path, SDL_Rect source, SDL_Rect des
 
 	SDL_FreeSurface(tempSurface);
 
-	tSource = source;
-	tDest   = dest;
+	tSource = text.source;
+	tDest = dest;
 
 	tDest.x -= xOffset;
 	tDest.y -= yOffset;
@@ -63,12 +58,6 @@ SDL_Rect texture::getSourceRect()
 SDL_Rect texture::getDestRect()
 {
 	return tDest;
-}
-
-void texture::autoSetRect()
-{
-	tSource = {};
-	tDest   = {};
 }
 
 void texture::setRect(SDL_Rect source, SDL_Rect dest)

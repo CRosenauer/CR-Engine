@@ -4,6 +4,8 @@
 #include <SDL_rect.h>
 #include <string>
 
+#include "texture.h"
+
 enum CREAnimationFlag
 {
 	ANIMATION_NOLOOP,
@@ -12,18 +14,7 @@ enum CREAnimationFlag
 
 struct animation
 {
-	const std::string path;
-	//the path of the image being used in this frame of animation
-
-	const SDL_Rect source;
-	//a SDL_Rect of which part of the image should be used.
-
-	const int xOffset;
-	const int yOffset;
-	//integer values representing the vector which is the offset
-	//from the center of the object to the rendering corner of the
-	//sprite.
-	//
+	const textureData textureData;
 
 	const unsigned int frameCount;
 	//number of frames this texture is used.

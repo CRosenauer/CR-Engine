@@ -48,7 +48,7 @@ void TestGame()
 
 		CREAudio.loadMusic("Friday_Chinatown.mp3");
 
-		Player->setTexture("ship.png", tempSource, 8, 8);
+		Player->setTexture(ship);
 		Player->setPosition(32, 32, 0); 
 
 		testEntity->setAnimation(&testAnimation00, ANIMATION_LOOP);

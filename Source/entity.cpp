@@ -17,25 +17,19 @@ entity::entity()
 	entityID = NULL;
 }
 
-void entity::setTexture(const std::string& path, SDL_Rect source, const int& xOffset, const int& yOffset)
+//memory leaking in this function.
+void entity::setTexture(const textureData& text)
 {
-	SDL_Rect dest = source;
+	SDL_Rect dest = text.source;
 	
 	SDL_Rect tempSource;
 
 	dest.x = posX;
 	dest.y = posY;
 
-	if (rectIsUndefined(source))
-	{
-		tempSource = eTexture.getSourceRect();
-	}
-	else
-	{
-		tempSource = source;
-	}
+	tempSource = text.source;
 
-	eTexture.loadTexture(path, tempSource, dest, xOffset, yOffset);
+	eTexture.loadTexture(text, dest);
 }
 
 bool entity::rectIsUndefined(SDL_Rect rect)
@@ -77,8 +71,8 @@ texture* entity::getTexture()
 		}
 
 		animFrameCount--;
-
-		setTexture(eAnimation->path, eAnimation->source, eAnimation->xOffset, eAnimation->yOffset);
+		
+		setTexture(eAnimation->textureData);
 	}
 
 	return &eTexture;
@@ -116,7 +110,7 @@ void entity::setAnimation(const animation* anim, const CREAnimationFlag& flag)
 	if (flag == ANIMATION_LOOP)
 		eFirstAnimation = anim;
 
-	setTexture(eAnimation->path, eAnimation->source, eAnimation->xOffset, eAnimation->yOffset);
+	setTexture(eAnimation->textureData);
 }
 
 unsigned int entity::getEntityID()
@@ -137,6 +131,16 @@ CREVRenderingFlag entity::getRenderingFlag()
 void entity::setRenderingFlag(CREVRenderingFlag flag)
 {
 	renderingFlag = flag;
+}
+
+void entity::setEntityType(const unsigned int& i)
+{
+	data.entityType = i;
+}
+
+unsigned int entity::getEntityType()
+{
+	return data.entityType;
 }
 
 void deleteEntity(const unsigned int& entityID)

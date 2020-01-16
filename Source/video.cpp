@@ -58,11 +58,6 @@ void video::init()
 	setFrameTimer();
 }
 
-//memory leak in here
-//I think there's two main culprits:
-//1. when the function cycles through entityBlock it fails to deallocate some memory
-//2. when queues are being popped/emptied/cycled through certain memory isn't being deallocated
-//since queues are part of the C++ standard im guessing it's option 1.
 void video::render()
 {
 	SDL_RenderClear(CRERenderer);
