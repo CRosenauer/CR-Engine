@@ -51,8 +51,8 @@ void TestGame()
 		Player->setTexture("ship.png", tempSource, 8, 8);
 		Player->setPosition(32, 32, 0); 
 
-		entityBlock[1]->setAnimation(&testAnimation00, ANIMATION_LOOP);
-		entityBlock[1]->setPosition(128, 128, 0);
+		testEntity->setAnimation(&testAnimation00, ANIMATION_LOOP);
+		testEntity->setPosition(128, 128, 0);
 
 		gameScreen = INITIALIZED;
 		break;

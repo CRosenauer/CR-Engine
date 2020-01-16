@@ -51,6 +51,7 @@ void entity::setTexture(const texture& text)
 texture* entity::getTexture()
 {
 	//Updates animation if entity is currently using an animation.
+	
 	if (eAnimation != NULL)
 	{
 

@@ -28,7 +28,7 @@ public:
 	void setRect(SDL_Rect source, SDL_Rect dest);
 
 private:
-	SDL_Texture*  tTexture;
+	SDL_Texture* tTexture = NULL;
 	SDL_Rect     tSource;
 	SDL_Rect     tDest;
 
