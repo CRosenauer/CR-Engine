@@ -39,10 +39,6 @@
  structure. entity::setEntityType(unsigned int) sets
  data.entityData to the passed integer. entity::getEntityType()
  returns the current entity type (found in entity.data.entityType).
- 
- Functions to access and mutate the union in entity.data
- have not been added yet as I don't know how I want to
- implement these functions yet.
 
  Functions to access and mutate the union in entity.data
  have not been added yet as I don't know how I want to
