@@ -15,7 +15,7 @@ Uint32 windowFlag = SDL_WINDOW_SHOWN;
 SDL_Renderer *CRERenderer = NULL;
 //main renderer for drawing to screen
 
-vector<entity*> entityBlock;
+extern vector<entity*> entityBlock;
 
 //Handlers for input, video, etc.
 inputHandler  CREInput;
@@ -98,7 +98,7 @@ void CRELoop()
 	{
 		//read inputs
 		CREInput.pollInputs();
-
+		
 		//game logic function
 		TestGame();
 

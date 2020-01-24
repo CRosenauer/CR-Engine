@@ -19,7 +19,12 @@ struct textureData
 class texture
 {
 public:
+	//default constructor
 	texture();
+
+	//destructor
+	//deallocates internal texture
+	~texture();
 
 	void loadTexture(const textureData& text, const SDL_Rect& dest);
 

@@ -3,6 +3,16 @@
  updates to the CR-Engine. For a more general overview see
  repository notes.
  
+# January, 23, 2020
+ Very small update today. I have fixed another memory leak
+ in the CR-Engine. This time it appears that there are no
+ other memory leaks in the game. The leak occured in the
+ function getFilePath(string, RESOURCE_PATH). The function
+ would allocate a char*
+ but never deallocated it after determining the path of the
+ passed resource. This issue has been fixed and now there
+ are no memory leaks to my knowledge.
+ 
 # January, 15, 2020 (Again)
  Smaller update for the last part of today. Texture data
  and entity data have been implemented.
@@ -39,10 +49,6 @@
  structure. entity::setEntityType(unsigned int) sets
  data.entityData to the passed integer. entity::getEntityType()
  returns the current entity type (found in entity.data.entityType).
- 
- Functions to access and mutate the union in entity.data
- have not been added yet as I don't know how I want to
- implement these functions yet.
 
  Functions to access and mutate the union in entity.data
  have not been added yet as I don't know how I want to

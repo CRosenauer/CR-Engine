@@ -56,6 +56,7 @@ void TestGame()
 
 		gameScreen = INITIALIZED;
 		break;
+		
 	case INITIALIZED:
 		if(Player != NULL)
 			Player->getPosition(tempPos);
@@ -83,9 +84,7 @@ void TestGame()
 		}
 
 		Player->setPosition(tempPos[0], tempPos[1], tempPos[2]);
-
+		
 		break;
 	}
-
-	
 }
