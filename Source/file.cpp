@@ -2,7 +2,13 @@
 
 std::string getFilePath(const std::string& name, const RESOURCE_PATH& path)
 {
-	std::string basePath = SDL_GetBasePath();
+	//char* used to allow deallocation of memory as SDL_GetBasePath()
+	//returns dynamic pointer.
+	char* cPath = SDL_GetBasePath();
+	std::string basePath = cPath;
+
+	SDL_free(cPath);
+
 	basePath += "Resources/";
 	switch (path)
 	{

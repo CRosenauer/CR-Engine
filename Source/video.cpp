@@ -1,5 +1,7 @@
 #include "video.h"
-#include <cassert>
+//#include <cassert>
+
+#define FRAMECAP_60
 
 extern SDL_Renderer* CRERenderer;
 extern vector<entity*> entityBlock;
@@ -65,26 +67,22 @@ void video::render()
 
 	//TODO: implement depth based rendering priority
 
-	entity* tempEntity;
-
 	//loops through defined entities
 	//addes defined entities to rendering queues depending on internal
 	//rendering flags (SPRITE, BACKGROUND, FOREGROUND, etc)
 	for (unsigned int i = 0; i < entityBlock.size(); i++)
 	{
-		tempEntity = entityBlock[i];
-
-		switch (tempEntity->getRenderingFlag())
+		switch (entityBlock[i]->getRenderingFlag())
 		{
 		case RENDERINGFLAG_SPRITE:
 		default:
-			spriteQueue.push(tempEntity->getTexture());
+			spriteQueue.push(entityBlock[i]->getTexture());
 			break;
 		case RENDERINGFLAG_BACKGROUND:
-			backgroundQueue.push(tempEntity->getTexture());
+			backgroundQueue.push(entityBlock[i]->getTexture());
 			break;
 		case RENDERINGFLAG_FOREGROUND:
-			foregroundQueue.push(tempEntity->getTexture());
+			foregroundQueue.push(entityBlock[i]->getTexture());
 			break;
 		}
 	}
@@ -140,8 +138,10 @@ void video::render()
 		//render set up background layer for renderering.
 	}
 
+#ifdef FRAMECAP_60
 	pollFrameTimer();
 	setFrameTimer();
+#endif
 
 	//render frame to screen.
 	SDL_RenderPresent(CRERenderer);

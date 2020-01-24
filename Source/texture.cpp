@@ -10,21 +10,28 @@ texture::texture()
 	yOffset = 0;
 }
 
+texture::~texture()
+{
+	SDL_DestroyTexture(tTexture);
+}
+
 void texture::loadTexture(const textureData& text, const SDL_Rect& dest)
 {
+	
 	std::string tempString = getFilePath(text.path, GRAPHICS);
 	SDL_Surface* tempSurface = IMG_Load(tempString.c_str());
 
 	if (tempSurface == NULL)
 	{
 		printf("Image of path: %s cannot be loaded. SDL_image Error: %s\n", tempString.c_str(), IMG_GetError());
-		exit(-1);
+		//exit(-1);
 	}
 	else
 	{
 		if (tTexture != NULL)
 		{
 			SDL_DestroyTexture(tTexture);
+			tTexture = NULL;
 		}
 
 		tTexture = SDL_CreateTextureFromSurface(CRERenderer, tempSurface);
@@ -32,12 +39,13 @@ void texture::loadTexture(const textureData& text, const SDL_Rect& dest)
 		if (tTexture == NULL)
 		{
 			printf("Texture of path: %s cannot be created.\nError: %s", tempString.c_str(), SDL_GetError());
-			exit(-1);
+			//exit(-1);
 		}
 	}
 
 	SDL_FreeSurface(tempSurface);
-
+	tempSurface = NULL;
+	
 	tSource = text.source;
 	tDest = dest;
 

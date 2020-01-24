@@ -1,7 +1,7 @@
 #include "entity.h"
 
 //vector for containing entities
-extern vector<entity*> entityBlock;
+vector<entity*> entityBlock;
 
 static unsigned int IDCounter = 0;
 
@@ -17,17 +17,12 @@ entity::entity()
 	entityID = NULL;
 }
 
-//memory leaking in this function.
 void entity::setTexture(const textureData& text)
 {
 	SDL_Rect dest = text.source;
-	
-	SDL_Rect tempSource;
 
 	dest.x = posX;
 	dest.y = posY;
-
-	tempSource = text.source;
 
 	eTexture.loadTexture(text, dest);
 }
