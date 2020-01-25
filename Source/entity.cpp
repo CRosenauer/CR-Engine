@@ -2,6 +2,8 @@
 
 //vector for containing entities
 vector<entity*> entityBlock;
+vector<entity*> background;
+vector<entity*> foreground;
 
 static unsigned int IDCounter = 0;
 
@@ -14,7 +16,7 @@ entity::entity()
 	eAnimation = NULL;
 	eFirstAnimation = NULL;
 	renderingFlag = RENDERINGFLAG_SPRITE;
-	entityID = NULL;
+	entityID = ++IDCounter;
 }
 
 void entity::setTexture(const textureData& text)
@@ -84,7 +86,12 @@ void entity::setPosition(int x, int y, int z)
 	temp.y += (y - posY);
 	posY = y;
 
-	posZ = z;
+	if (z > 0)
+		posZ = z;
+	else
+		posZ = 0;
+
+	printf("Set Position:\nEntity ID: %i. Z Position: %i\n", entityID, posZ);
 
 	eTexture.setRect(eTexture.getSourceRect(), temp);
 }
@@ -118,12 +125,12 @@ int entity::getDepth()
 	return posZ;
 }
 
-CREVRenderingFlag entity::getRenderingFlag()
+RENDERINGFLAG entity::getRenderingFlag()
 {
 	return renderingFlag;
 }
 
-void entity::setRenderingFlag(CREVRenderingFlag flag)
+void entity::setRenderingFlag(RENDERINGFLAG flag)
 {
 	renderingFlag = flag;
 }

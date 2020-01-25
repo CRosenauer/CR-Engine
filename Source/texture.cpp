@@ -12,7 +12,7 @@ texture::texture()
 
 texture::~texture()
 {
-	SDL_DestroyTexture(tTexture);
+	//SDL_DestroyTexture(tTexture);
 }
 
 void texture::loadTexture(const textureData& text, const SDL_Rect& dest)

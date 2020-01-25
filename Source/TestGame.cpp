@@ -2,6 +2,8 @@
 
 //Buses to hold entities
 extern vector<entity*> entityBlock;
+extern vector<entity*> background;
+extern vector<entity*> foreground;
 
 //handlers for audio, inputs, etc. Most externally defined in CREngine.cpp
 extern audio CREAudio;
@@ -35,6 +37,7 @@ void TestGame()
 	tempSource.w = 16;
 	tempSource.h = 16;
 	__int8 userInputs[INPUTWIDTH];
+	bool repeatedInputs[INPUTWIDTH];
 	int tempPos[3] = {0, 0, 0};
 
 	switch (gameScreen)
@@ -62,6 +65,7 @@ void TestGame()
 			Player->getPosition(tempPos);
 
 		CREInput.getUserInputs(userInputs);
+		CREInput.getRepeatInputs(repeatedInputs);
 
 		//x co-ord inputs (A/D)
 		if (userInputs[INPUT_X] > 0)
@@ -75,6 +79,12 @@ void TestGame()
 		else if (userInputs[INPUT_Y] < 0)
 			tempPos[1]--;
 		
+		//z co-ord inputs (Q/E)
+		if (userInputs[INPUT_Z] > 0 && !repeatedInputs[INPUT_Z])
+			tempPos[2]++;
+		else if(userInputs[INPUT_Z] < 0 && !repeatedInputs[INPUT_Z])
+			tempPos[2]--;
+
 		//quit inputs (enter)
 		if (userInputs[INPUT_QUIT] == 1)
 		{
@@ -85,6 +95,12 @@ void TestGame()
 
 		Player->setPosition(tempPos[0], tempPos[1], tempPos[2]);
 		
+		deleteEntity(testEntity->getEntityID());
+		testEntity = new entity;
+		entityBlock.push_back(testEntity);
+		testEntity->setAnimation(&testAnimation00, ANIMATION_LOOP);
+		testEntity->setPosition(128, 128, 0);
+
 		break;
 	}
 }

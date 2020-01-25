@@ -39,7 +39,7 @@ public:
 	void setTexture(const texture& text);
 
 	//sets rendering flag of the entity. See renderingFlags.hpp for rendering flag information.
-	void setRenderingFlag(CREVRenderingFlag flag);
+	void setRenderingFlag(RENDERINGFLAG flag);
 
 	//returns the texture associated with the entity
 	texture* getTexture();
@@ -60,7 +60,7 @@ public:
 	int getDepth();
 
 	//returns current rendering mode of the entity
-	CREVRenderingFlag getRenderingFlag();
+	RENDERINGFLAG getRenderingFlag();
 
 	//sets data.entityType to the passed interger.
 	void setEntityType(const unsigned int& i);
@@ -83,7 +83,7 @@ private:
 
 	int animFrameCount;
 
-	CREVRenderingFlag renderingFlag;
+	RENDERINGFLAG renderingFlag;
 
 	unsigned int entityID;
 
