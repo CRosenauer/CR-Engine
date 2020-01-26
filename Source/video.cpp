@@ -9,6 +9,8 @@ extern vector<entity*> background;
 extern vector<entity*> foreground;
 
 
+//flag to have only onscreen entites render to the image
+#define ONSCREEN_RENDER_ONLY
 
 video::video()
 {
@@ -155,7 +157,16 @@ void video::render()
 		{
 			if (entityBlock[i]->getDepth() == currentDepth)
 			{
-				spriteQueue.push(entityBlock[i]->getTexture());
+				SDL_Rect tempDest = entityBlock[i]->getTextureDest();
+				
+#ifdef ONSCREEN_RENDER_ONLY
+				//check if entity's texture is on screen
+				if( tempDest.x < cameraPosX + screenWidth &&
+				    tempDest.x + tempDest.w > cameraPosX &&
+					tempDest.y < cameraPosY + screenHeight &&
+					tempDest.y + tempDest.h > cameraPosY)
+#endif //ONSCREEN_RENDER_ONLY
+					spriteQueue.push(entityBlock[i]->getTexture());
 			}
 		}
 	}

@@ -94,12 +94,6 @@ void TestGame()
 		}
 
 		Player->setPosition(tempPos[0], tempPos[1], tempPos[2]);
-		
-		deleteEntity(testEntity->getEntityID());
-		testEntity = new entity;
-		entityBlock.push_back(testEntity);
-		testEntity->setAnimation(&testAnimation00, ANIMATION_LOOP);
-		testEntity->setPosition(128, 128, 0);
 
 		break;
 	}

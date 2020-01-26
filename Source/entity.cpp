@@ -77,13 +77,12 @@ texture* entity::getTexture()
 
 void entity::setPosition(int x, int y, int z)
 {
-	SDL_Rect temp = eTexture.getDestRect();
+	SDL_Rect tempDest = eTexture.getDestRect();
 
-
-	temp.x += (x - posX);
+	tempDest.x += (x - posX);
 	posX = x;
 
-	temp.y += (y - posY);
+	tempDest.y += (y - posY);
 	posY = y;
 
 	if (z > 0)
@@ -91,8 +90,7 @@ void entity::setPosition(int x, int y, int z)
 	else
 		posZ = 0;
 
-
-	eTexture.setRect(eTexture.getSourceRect(), temp);
+	eTexture.setRect(eTexture.getSourceRect(), tempDest);
 }
 
 void entity::getPosition(int pos[3])
@@ -142,6 +140,11 @@ void entity::setEntityType(const unsigned int& i)
 unsigned int entity::getEntityType()
 {
 	return data.entityType;
+}
+
+SDL_Rect entity::getTextureDest()
+{
+	return eTexture.getDestRect();
 }
 
 void deleteEntity(const unsigned int& entityID)

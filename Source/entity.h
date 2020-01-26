@@ -68,6 +68,9 @@ public:
 	//returns current entity type found in data.entityType
 	unsigned int getEntityType();
 
+	//returns internal texture's destination rect.
+	SDL_Rect getTextureDest();
+
 private:
 	//horizontal, vertical, and depth position of the entity respectively.
 	//by default texture is centered on the xyz position on the entity.
