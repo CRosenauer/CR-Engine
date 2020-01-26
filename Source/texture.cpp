@@ -15,9 +15,38 @@ texture::~texture()
 	SDL_DestroyTexture(tTexture);
 }
 
+texture::texture(const texture& t)
+{
+	//loads internal variables
+	tDest    = t.tDest;
+	tSource  = t.tSource;
+	xOffset  = t.xOffset;
+	yOffset  = t.yOffset;
+	textData = t.textData;
+
+	//creates a new SDL_Texture for internal texture rendering
+	loadTexture(textData, tDest);
+}
+void texture::operator = (const texture& t)
+{
+	//deallocate old texture
+	SDL_DestroyTexture(tTexture);
+
+	//loads internal variables
+	tDest = t.tDest;
+	tSource = t.tSource;
+	xOffset = t.xOffset;
+	yOffset = t.yOffset;
+	textData = t.textData;
+
+	//creates a new SDL_Texture for internal texture rendering
+	loadTexture(textData, tDest);
+}
+
 void texture::loadTexture(const textureData& text, const SDL_Rect& dest)
 {
-	
+	textData = text;
+
 	std::string tempString = getFilePath(text.path, GRAPHICS);
 	SDL_Surface* tempSurface = IMG_Load(tempString.c_str());
 

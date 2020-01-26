@@ -10,8 +10,14 @@ inputHandler::inputHandler()
 
 void inputHandler::pollInputs()
 {
+	__int8 prevInput[INPUTWIDTH];
+
 	for (int i = 0; i < INPUTWIDTH; i++)
+	{
+		prevInput[i] = inputBus[i];
 		inputBus[i] = 0;
+	}
+		
 
 	if (currentInputs[SDL_SCANCODE_D])
 	{
@@ -33,10 +39,23 @@ void inputHandler::pollInputs()
 		inputBus[INPUT_Y]++;
 	}
 
+	if (currentInputs[SDL_SCANCODE_Q])
+	{
+		inputBus[INPUT_Z]++;
+	}
+
+	if (currentInputs[SDL_SCANCODE_E])
+	{
+		inputBus[INPUT_Z]--;
+	}
+
 	if (currentInputs[SDL_SCANCODE_RETURN])
 	{
 		inputBus[INPUT_QUIT]++;
 	}
+
+	for (int i = 0; i < INPUTWIDTH; i++)
+		repeatInput[i] = prevInput[i] == inputBus[i];
 }
 
 void inputHandler::getUserInputs(__int8 readInputs[INPUTWIDTH])
@@ -44,5 +63,13 @@ void inputHandler::getUserInputs(__int8 readInputs[INPUTWIDTH])
 	for (int i = 0; i < INPUTWIDTH; i++)
 	{
 		readInputs[i] = inputBus[i];
+	}
+}
+
+void inputHandler::getRepeatInputs(bool readInputs[INPUTWIDTH])
+{
+	for (int i = 0; i < INPUTWIDTH; i++)
+	{
+		readInputs[i] = repeatInput[i];
 	}
 }

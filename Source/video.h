@@ -38,7 +38,7 @@ public:
 	//CRE_V_TEXTURE_SPRITE: loads texture as a sprite image
 	//CRE_V_TEXTURE_BACKGROUND: loads texture as a background image
 	//CRE_V_TEXTURE_FOREGROUND: loads texture as a foreground image
-	void loadTexture(texture* texture, CREVRenderingFlag flag);
+	void loadTexture(texture* texture, RENDERINGFLAG flag);
 
 	//Render current frame
 	//renders current game screen
@@ -64,6 +64,8 @@ private:
 	queue<texture*> spriteQueue;
 	queue<texture*> backgroundQueue;
 	queue<texture*> foregroundQueue;
+	queue<texture*> staticBackgroundQueue;
+	queue<texture*> staticForegroundQueue;
 	//temperary queues for loading sprites, etc.
 	//is orderly loaded to textureQueue before rendering
 	//this way memory fragmentation shouldnt be a huge issue.

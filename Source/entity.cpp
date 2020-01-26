@@ -2,6 +2,8 @@
 
 //vector for containing entities
 vector<entity*> entityBlock;
+vector<entity*> background;
+vector<entity*> foreground;
 
 static unsigned int IDCounter = 0;
 
@@ -14,7 +16,7 @@ entity::entity()
 	eAnimation = NULL;
 	eFirstAnimation = NULL;
 	renderingFlag = RENDERINGFLAG_SPRITE;
-	entityID = NULL;
+	entityID = ++IDCounter;
 }
 
 void entity::setTexture(const textureData& text)
@@ -75,18 +77,20 @@ texture* entity::getTexture()
 
 void entity::setPosition(int x, int y, int z)
 {
-	SDL_Rect temp = eTexture.getDestRect();
+	SDL_Rect tempDest = eTexture.getDestRect();
 
-
-	temp.x += (x - posX);
+	tempDest.x += (x - posX);
 	posX = x;
 
-	temp.y += (y - posY);
+	tempDest.y += (y - posY);
 	posY = y;
 
-	posZ = z;
+	if (z > 0)
+		posZ = z;
+	else
+		posZ = 0;
 
-	eTexture.setRect(eTexture.getSourceRect(), temp);
+	eTexture.setRect(eTexture.getSourceRect(), tempDest);
 }
 
 void entity::getPosition(int pos[3])
@@ -118,12 +122,12 @@ int entity::getDepth()
 	return posZ;
 }
 
-CREVRenderingFlag entity::getRenderingFlag()
+RENDERINGFLAG entity::getRenderingFlag()
 {
 	return renderingFlag;
 }
 
-void entity::setRenderingFlag(CREVRenderingFlag flag)
+void entity::setRenderingFlag(RENDERINGFLAG flag)
 {
 	renderingFlag = flag;
 }
@@ -136,6 +140,11 @@ void entity::setEntityType(const unsigned int& i)
 unsigned int entity::getEntityType()
 {
 	return data.entityType;
+}
+
+SDL_Rect entity::getTextureDest()
+{
+	return eTexture.getDestRect();
 }
 
 void deleteEntity(const unsigned int& entityID)

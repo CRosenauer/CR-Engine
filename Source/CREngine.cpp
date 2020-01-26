@@ -16,6 +16,8 @@ SDL_Renderer *CRERenderer = NULL;
 //main renderer for drawing to screen
 
 extern vector<entity*> entityBlock;
+extern vector<entity*> background;
+extern vector<entity*> foreground;
 
 //Handlers for input, video, etc.
 inputHandler  CREInput;
