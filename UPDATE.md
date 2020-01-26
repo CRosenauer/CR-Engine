@@ -3,6 +3,38 @@
  updates to the CR-Engine. For a more general overview see
  repository notes.
  
+# January, 25, 2020
+ In this update a few new things have been added. Firstly,
+ Entities are now rendered based on their z position, or
+ depth, textures have added implementation for making
+ proper use of their dynamic memory portion, and only
+ entities that are on screen will be rendered to the frame.
+ 
+ Starting with entities being rendered based on their z
+ positon. You can think of an entities z position being how
+ much they pop out of the screen. As such entities with a
+ higher z position will be rendered on top of entities with
+ a lower z position. An additional part to add that
+ rendering flags have been added for static foreground and
+ background textures (foreground and background textures
+ that don't change position with a moving view port). These
+ rendering flags have not been completely implemented and
+ will be further expanded upon in a later update.
+ 
+ The texture class now has a copy constructor and
+ overloaded assignment operator to prevent issues with the
+ dynamically allocated member SDL_Texture.
+ 
+ Finally a bit of logic has been added to the render
+ function to only draw entities that would show on screen.
+ This change should not have any visual impact but in
+ theory speeds up the rendering time as the engine no
+ longer renders entities that wouldn't show on screen anyways.
+ 
+ For the next update I will likely add implementation to
+ background and foreground textures, and may also implement
+ custom binding readings.
+ 
 # January, 23, 2020
  Very small update today. I have fixed another memory leak
  in the CR-Engine. This time it appears that there are no
