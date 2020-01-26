@@ -91,7 +91,6 @@ void entity::setPosition(int x, int y, int z)
 	else
 		posZ = 0;
 
-	printf("Set Position:\nEntity ID: %i. Z Position: %i\n", entityID, posZ);
 
 	eTexture.setRect(eTexture.getSourceRect(), temp);
 }

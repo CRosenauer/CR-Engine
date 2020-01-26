@@ -8,6 +8,8 @@ extern vector<entity*> entityBlock;
 extern vector<entity*> background;
 extern vector<entity*> foreground;
 
+
+
 video::video()
 {
 	title =  "Test Game";
@@ -154,13 +156,10 @@ void video::render()
 			if (entityBlock[i]->getDepth() == currentDepth)
 			{
 				spriteQueue.push(entityBlock[i]->getTexture());
-				printf("Rendering entity:\nEntity ID: %i. Z position: %i\n", entityBlock[i]->getEntityID(), entityBlock[i]->getDepth());
 			}
 		}
-		printf("currentDepth: %i\n", currentDepth);
 	}
 
-	printf("Max Depth: %i\n", maxDepth);
 
 	/***  Render queued sprites  ***/
 	while(!spriteQueue.empty())

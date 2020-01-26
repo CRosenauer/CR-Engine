@@ -22,9 +22,15 @@ public:
 	//default constructor
 	texture();
 
+	//copy constructor
+	texture(const texture& t);
+
 	//destructor
 	//deallocates internal texture
 	~texture();
+
+	//overloaded = operatror
+	void operator = (const texture& t);
 
 	void loadTexture(const textureData& text, const SDL_Rect& dest);
 
@@ -40,6 +46,9 @@ private:
 	SDL_Texture* tTexture = NULL;
 	SDL_Rect     tSource;
 	SDL_Rect     tDest;
+
+	//used for overloaded = operator and copy constructor.
+	textureData textData;
 
 	int xOffset, yOffset;
 };
