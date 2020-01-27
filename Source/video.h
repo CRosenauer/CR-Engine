@@ -34,10 +34,15 @@ public:
 	//loads an entity, background, or foreground to rendering queues
 	//for drawing to screen
 	//drawing is handled by void render()
-	//CREVRenderingFlags:
-	//CRE_V_TEXTURE_SPRITE: loads texture as a sprite image
-	//CRE_V_TEXTURE_BACKGROUND: loads texture as a background image
-	//CRE_V_TEXTURE_FOREGROUND: loads texture as a foreground image
+	//RENDERINGFLAG:
+	//RENDERINGFLAG_SPRITE
+	//RENDERINGFLAG_BACKGROUND
+	//RENDERINGFLAG_FOREGROUND
+	//RENDERINGFLAG_STATIC_BACKGROUND
+	//RENDERINGFLAG_STATIC_FOREGROUND
+	//
+	//Flag information can be found in renderingFlags.hpp
+	//
 	void loadTexture(texture* texture, RENDERINGFLAG flag);
 
 	//Render current frame
@@ -54,6 +59,8 @@ private:
 	std::string title;
 
 	int screenWidth, screenHeight;
+
+	//positions for the view port's top left corner
 	int cameraPosX, cameraPosY;
 
 	Uint32 windowFlag;
@@ -61,17 +68,17 @@ private:
 	SDL_Window*   CREVWindow;
 	SDL_Surface*  CREVSurface;
 
-	queue<texture*> spriteQueue;
-	queue<texture*> backgroundQueue;
-	queue<texture*> foregroundQueue;
-	queue<texture*> staticBackgroundQueue;
-	queue<texture*> staticForegroundQueue;
 	//temperary queues for loading sprites, etc.
 	//is orderly loaded to textureQueue before rendering
 	//this way memory fragmentation shouldnt be a huge issue.
 	//queues add potential memory fragmentation problems
 	//for future iterations, make vectors with loadsize from file
 	//or have a set vram size in file and manage loading of backgrounds, sprites, and foregrounds
+	queue<texture*> spriteQueue;
+	queue<texture*> backgroundQueue;
+	queue<texture*> foregroundQueue;
+	queue<texture*> staticBackgroundQueue;
+	queue<texture*> staticForegroundQueue;
 };
 
 #endif //VIDEO_H

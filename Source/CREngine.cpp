@@ -52,7 +52,14 @@ void CREInit()
 		exit(1);
 	}
 
-	const int SDL_FLAGS = SDL_INIT_VIDEO | SDL_INIT_AUDIO;
+	const int SDL_FLAGS =
+		SDL_INIT_VIDEO |
+		SDL_INIT_AUDIO |
+		SDL_INIT_TIMER |
+#ifdef CONTROLLER_SUPPORT
+		SDL_INIT_GAMECONTROLLER |
+#endif
+		0; //terminator for bitwise operator that doesn't change anything
 
 	//initialize SDL
 	if (SDL_Init(SDL_FLAGS) != 0)
