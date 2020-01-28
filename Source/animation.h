@@ -6,7 +6,7 @@
 
 #include "texture.h"
 
-enum CREAnimationFlag
+enum ANIMATION_FLAG
 {
 	ANIMATION_NOLOOP,
 	ANIMATION_LOOP

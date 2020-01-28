@@ -44,14 +44,19 @@ public:
 	//returns the texture associated with the entity
 	texture* getTexture();
 
-	//sets posX to x, posY to y, posZ to z
+	//kinematic mutators for positon, velocity, and acceleration
 	void setPosition(int x, int y, int z);
+	void setVelocity(int x, int y, int z);
+	void setAcceleration(int x, int y, int z);
 	
-	//returns position array {posX, posY, posZ}
+	//kinematic accessors for position, velocity, and acceleration
+	//returns array {x, y, z}
 	void getPosition(int pos[3]);
+	void getVelocity(int vel[3]);
+	void getAcceleration(int acc[3]);
 	
 	//loads passed animation into memory.
-	void setAnimation(const animation* anim, const CREAnimationFlag& flag);
+	void setAnimation(const animation* anim, const ANIMATION_FLAG& flag);
 
 	//returns ID of the entity
 	unsigned int getEntityID();
@@ -71,11 +76,20 @@ public:
 	//returns internal texture's destination rect.
 	SDL_Rect getTextureDest();
 
+	virtual void update() = NULL;
+
+	//function to update entity's animation frame
+	//should be called in update.
+	void updateAnimation();
+
 private:
-	//horizontal, vertical, and depth position of the entity respectively.
-	//by default texture is centered on the xyz position on the entity.
-	//this can be overwritten with setTexture()
+	//kinematic variables of the entity
+	//pos, vel, and acc stand for position, velocity, and acceleration respectively.
+	//X, Y, Z are the x (E/W), y (N/S), and z (Depth) co-ordinates respectively.
+	//variables used in update for position changes.
 	int posX, posY, posZ;
+	int velX, velY, velZ;
+	int accX, accY, accZ;
 
 	texture eTexture;
 
@@ -92,23 +106,5 @@ private:
 
 	entityData data;
 };
-
-
-/*** entityBlock accessing functions: ***/
-
-//cycles through entityBlock until entity is found whose ID equals the passed ID
-//deallocates said entity from memory and removes the entity* from the vector
-void deleteEntity(const unsigned int& entityID);
-
-//pushes a new entity to the entity vector and sets it to defined
-//returns the ID of the entity
-unsigned int allocateEntity();
-
-//cycles through entityBlock until an entity is found whose internal ID
-//matches the passed ID.
-//function returns the pointer to said entity.
-//if no entity with the passed ID can be found function returns NULL.
-entity* entityFromID(const unsigned int& id);
-
 
 #endif //ENTITY_H

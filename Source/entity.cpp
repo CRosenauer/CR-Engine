@@ -1,10 +1,5 @@
 #include "entity.h"
 
-//vector for containing entities
-vector<entity*> entityBlock;
-vector<entity*> background;
-vector<entity*> foreground;
-
 static unsigned int IDCounter = 0;
 
 entity::entity()
@@ -12,6 +7,12 @@ entity::entity()
 	posX = 0;
 	posY = 0;
 	posZ = 0;
+	velX = 0;
+	velY = 0;
+	velZ = 0;
+	accX = 0;
+	accY = 0;
+	accZ = 0;
 	animFrameCount = 0;
 	eAnimation = NULL;
 	eFirstAnimation = NULL;
@@ -41,37 +42,6 @@ void entity::setTexture(const texture& text)
 
 texture* entity::getTexture()
 {
-	//Updates animation if entity is currently using an animation.
-	
-	if (eAnimation != NULL)
-	{
-
-		//checks for animation frame count, cycles to the next frame of animation.
-		if (animFrameCount == 0)
-		{
-			//checks if there is a next frame in the animation.
-			if (eAnimation->nextFrame == NULL)
-			{
-				//checks for looping animation. if looping animation then
-				//cycles to the next (first) frame of animation
-				if (eFirstAnimation != NULL)
-				{
-					eAnimation = eFirstAnimation;
-					animFrameCount = eAnimation->frameCount;
-				}
-			}
-			else
-			{
-				eAnimation = eAnimation->nextFrame;
-				animFrameCount = eAnimation->frameCount;
-			}
-		}
-
-		animFrameCount--;
-		
-		setTexture(eAnimation->textureData);
-	}
-
 	return &eTexture;
 }
 
@@ -93,6 +63,20 @@ void entity::setPosition(int x, int y, int z)
 	eTexture.setRect(eTexture.getSourceRect(), tempDest);
 }
 
+void entity::setVelocity(int x, int y, int z)
+{
+	velX = x;
+	velY = y;
+	velZ = z;
+}
+
+void entity::setAcceleration(int x, int y, int z)
+{
+	accX = x;
+	accY = y;
+	accZ = z;
+}
+
 void entity::getPosition(int pos[3])
 {
 	pos[0] = posX;
@@ -100,7 +84,21 @@ void entity::getPosition(int pos[3])
 	pos[2] = posZ;
 }
 
-void entity::setAnimation(const animation* anim, const CREAnimationFlag& flag)
+void entity::getVelocity(int vel[3])
+{
+	vel[0] = velX;
+	vel[1] = velY;
+	vel[2] = velZ;
+}
+
+void entity::getAcceleration(int acc[3])
+{
+	acc[0] = accX;
+	acc[1] = accY;
+	acc[2] = accZ;
+}
+
+void entity::setAnimation(const animation* anim, const ANIMATION_FLAG& flag)
 {
 	eAnimation = anim;
 
@@ -147,42 +145,34 @@ SDL_Rect entity::getTextureDest()
 	return eTexture.getDestRect();
 }
 
-void deleteEntity(const unsigned int& entityID)
+void entity::updateAnimation()
 {
-	//cycles through entityBus until an entity is found with the passed ID
-	//entity with that id is then deallocated from memory and removed from entityBlock.
-	for (vector<entity*>::iterator itr = entityBlock.begin(); itr < entityBlock.end(); itr++)
+	if (eAnimation != NULL)
 	{
-		if (entityID == (*itr)->getEntityID())
+
+		//checks for animation frame count, cycles to the next frame of animation.
+		if (animFrameCount == 0)
 		{
-			delete* itr;
-
-			entityBlock.erase(itr);
-			break;
+			//checks if there is a next frame in the animation.
+			if (eAnimation->nextFrame == NULL)
+			{
+				//checks for looping animation. if looping animation then
+				//cycles to the next (first) frame of animation
+				if (eFirstAnimation != NULL)
+				{
+					eAnimation = eFirstAnimation;
+					animFrameCount = eAnimation->frameCount;
+				}
+			}
+			else
+			{
+				eAnimation = eAnimation->nextFrame;
+				animFrameCount = eAnimation->frameCount;
+			}
 		}
+
+		animFrameCount--;
+
+		setTexture(eAnimation->textureData);
 	}
-}
-
-unsigned int allocateEntity()
-{
-	//allocates memory to a new entity in entityBlock
-	//then returns the ID of the allocated ID
-	entityBlock.push_back(new entity);
-
-	return entityBlock.back()->getEntityID();
-}
-
-entity* entityFromID(const unsigned int& id)
-{
-	//cycles through entityBlock until an entity is found whose internal ID
-	//equals the passed ID. A pointer to this entity is returned.
-	for (unsigned int i = 0; i < entityBlock.size(); i++)
-	{
-		if (id == entityBlock[i]->getEntityID())
-			return entityBlock[i];
-	}
-
-	//Case for if no entity with the passed ID can be found.
-	//Will return NULL in this case.
-	return NULL;
 }
