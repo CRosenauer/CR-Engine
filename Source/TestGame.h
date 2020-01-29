@@ -8,6 +8,7 @@
 #include "input.h"
 #include "entity.h"
 #include "script.h"
+#include "ground.h"
 
 #include "testTexture.hpp"
 #include "testAnim.hpp"

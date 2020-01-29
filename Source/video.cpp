@@ -5,8 +5,8 @@
 
 extern SDL_Renderer* CRERenderer;
 extern vector<entity*> entityBlock;
-extern vector<entity*> background;
-extern vector<entity*> foreground;
+extern vector<ground*> background;
+extern vector<ground*> foreground;
 
 
 //flag to have only onscreen entites render to the image
@@ -259,7 +259,7 @@ void video::render()
 	SDL_RenderPresent(CRERenderer);
 }
 
-void video::loadTexture(texture* texture, RENDERINGFLAG flag)
+void video::loadTexture(texture* texture, RENDERING_FLAG flag)
 {
 	switch (flag)
 	{

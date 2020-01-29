@@ -120,12 +120,12 @@ int entity::getDepth()
 	return posZ;
 }
 
-RENDERINGFLAG entity::getRenderingFlag()
+RENDERING_FLAG entity::getRenderingFlag()
 {
 	return renderingFlag;
 }
 
-void entity::setRenderingFlag(RENDERINGFLAG flag)
+void entity::setRenderingFlag(RENDERING_FLAG flag)
 {
 	renderingFlag = flag;
 }

@@ -6,6 +6,7 @@
 #include "entity.h"
 
 /*
+	Renderings flags for quick reference
 enum RENDERINGFLAG
 {
 	RENDERINGFLAG_SPRITE,
@@ -19,8 +20,7 @@ enum RENDERINGFLAG
 enum IMAGE_TYPE
 {
 	TEXTURE,	//0
-	TEXTURE_PTR,//1
-	ANIMATION	//2
+	ANIMATION	//1
 };
 
 //union to contain texture data used in the ground struct
@@ -30,18 +30,19 @@ enum IMAGE_TYPE
 //animation contains a animation
 union groundImageData
 {
-	texture text;
-	texture* texturePtr;
+	textureData text;
 	animation animation;
 };
 
 //struct to contain foreground and background data
 struct groundData
 {
-	IMAGE_TYPE imageType;
-	groundImageData data;
-	RENDERINGFLAG flag;
-	ground* next;
+	const IMAGE_TYPE imageType;
+	const groundImageData data;
+	ANIMATION_FLAG animFlag;
+	const RENDERING_FLAG flag;
+	const int groundDepth;
+	const groundData* next;
 };
 
 //class used as container for foreground and background data
@@ -52,31 +53,40 @@ public:
 	ground(const groundData& data);
 
 	//mutators
-	void setRenderingFlag(const RENDERINGFLAG& flag) { renderingFlag = flag; }
-	void setTexture(const texture& text) { gTexture = text; }
-	void setAnination(const animation& anim, const ANIMATION_FLAG& flag) { gAnimation = &anim; gFirstAnim = &anim; }
-	void setRenderingFlag(const RENDERINGFLAG& flag) { renderingFlag = flag; }
+	void loadGround(const groundData& groundDat);
 
 	//accessors
-	RENDERINGFLAG getRenderingFlag() { return renderingFlag; }
+	RENDERING_FLAG getRenderingFlag() { return renderingFlag; }
+	texture* getTexture() { return &gTexture; }
 
+	//functions to update texture data for animations
+	//to be used at the end of a frame render.
+	//don't touch it, just let the engine handle this function.
 	void update();
 
-	void updateAnim();
-
 private:
+	//internal functions for setting image data.
+	void setRenderingFlag(const RENDERING_FLAG& flag) { renderingFlag = flag; }
+	void setTexture(const texture& text) { gTexture = text; }
+	void setAnination(const animation& anim, const ANIMATION_FLAG& flag) { gAnimation = &anim; gFirstAnim = &anim; }
+
 	texture   gTexture;
 	const animation* gAnimation;
 	const animation* gFirstAnim;
+	int animFrameCount;
+
+	SDL_Rect destRect = { 0, 0, 0, 0 };
 
 	IMAGE_TYPE imageType;
 
-	RENDERINGFLAG renderingFlag;
+	RENDERING_FLAG renderingFlag;
+		
+	int posX, posY;
 };
 
 void setGround(const groundData& groundDat);
 
-void resetGround(RENDERINGFLAG flag);
+void resetGround(RENDERING_FLAG flag);
 
 void updateGrounds();
 

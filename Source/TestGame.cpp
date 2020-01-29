@@ -2,8 +2,8 @@
 
 //Buses to hold entities
 extern vector<entity*> entityBlock;
-extern vector<entity*> background;
-extern vector<entity*> foreground;
+extern vector<ground*> background;
+extern vector<ground*> foreground;
 
 //handlers for audio, inputs, etc. Most externally defined in CREngine.cpp
 extern audio CREAudio;

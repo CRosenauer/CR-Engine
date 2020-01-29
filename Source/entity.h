@@ -39,7 +39,7 @@ public:
 	void setTexture(const texture& text);
 
 	//sets rendering flag of the entity. See renderingFlags.hpp for rendering flag information.
-	void setRenderingFlag(RENDERINGFLAG flag);
+	void setRenderingFlag(RENDERING_FLAG flag);
 
 	//returns the texture associated with the entity
 	texture* getTexture();
@@ -65,7 +65,7 @@ public:
 	int getDepth();
 
 	//returns current rendering mode of the entity
-	RENDERINGFLAG getRenderingFlag();
+	RENDERING_FLAG getRenderingFlag();
 
 	//sets data.entityType to the passed interger.
 	void setEntityType(const unsigned int& i);
@@ -75,8 +75,6 @@ public:
 
 	//returns internal texture's destination rect.
 	SDL_Rect getTextureDest();
-
-	virtual void update() = NULL;
 
 	//function to update entity's animation frame
 	//should be called in update.
@@ -100,7 +98,7 @@ private:
 
 	int animFrameCount;
 
-	RENDERINGFLAG renderingFlag;
+	RENDERING_FLAG renderingFlag;
 
 	unsigned int entityID;
 

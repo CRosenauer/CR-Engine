@@ -12,6 +12,7 @@
 #include "texture.h"
 #include "timer.h"
 #include "renderingFlags.hpp"
+#include "ground.h"
 
 /* video.h, main class used to write images to the screen
  * 
@@ -43,7 +44,7 @@ public:
 	//
 	//Flag information can be found in renderingFlags.hpp
 	//
-	void loadTexture(texture* texture, RENDERINGFLAG flag);
+	void loadTexture(texture* texture, RENDERING_FLAG flag);
 
 	//Render current frame
 	//renders current game screen
