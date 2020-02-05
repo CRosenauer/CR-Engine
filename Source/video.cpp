@@ -80,40 +80,92 @@ void video::render()
 	//use to place entities from rendering queue and to render to frame
 	texture tempTexture;
 
-	/***  Queue backgrounds to render based on depth  ***/
-	int maxDepth = 0;
-
+	/***  Queue backgrounds and g=foregrounds to render queues based on depth  ***/
 	for (unsigned int i = 0; i < background.size(); i++)
 	{
+			switch (background[i]->getRenderingFlag())
+			{
+			case RENDERINGFLAG_BACKGROUND: 
+				backgroundQueue.push(background[i]->getTexture());
+				break;
+			case RENDERINGFLAG_STATIC_BACKGROUND:
+				staticBackgroundQueue.push(background[i]->getTexture());
+			default:
+				break;
+		}
+	}
+
+	for (unsigned int i = 0; i < foreground.size(); i++)
+	{
+		switch (foreground[i]->getRenderingFlag())
+		{
+		case RENDERINGFLAG_FOREGROUND:
+			foregroundQueue.push(foreground[i]->getTexture());
+			break;
+		case RENDERINGFLAG_STATIC_FOREGROUND:
+			staticForegroundQueue.push(foreground[i]->getTexture());
+		default:
+			break;
+		}
+	}
+
+
+	//vars for holding information related to 
+	int maxDepth = 0;
+	int currentDepth = 0;
+
+	/***  Queue sprites to render based on depth ***/
+	for (unsigned int i = 0; i < entityBlock.size(); i++)
+	{
 		int tempPos[3];
-		background[i]->getPosition(tempPos);
+		entityBlock[i]->getPosition(tempPos);
+
 		if (tempPos[2] > maxDepth)
 			maxDepth = tempPos[2];
 	}
 
-	int currentDepth = 0;
-
-	while (currentDepth <= maxDepth)
+	for(currentDepth = 0; currentDepth <= maxDepth; currentDepth++)
 	{
-		for (unsigned int i = 0; i < background.size(); i++)
+		for (unsigned int i = 0; i < entityBlock.size(); i++)
 		{
-			if (background[i]->getDepth() == currentDepth)
+			if (entityBlock[i]->getDepth() == currentDepth)
 			{
-				switch (background[i]->getRenderingFlag())
-				{
-				case RENDERINGFLAG_BACKGROUND: 
-					backgroundQueue.push(background[i]->getTexture());
-					break;
-				case RENDERINGFLAG_STATIC_BACKGROUND:
-					staticBackgroundQueue.push(background[i]->getTexture());
-				default:
-					break;
-				}
+				SDL_Rect tempDest = entityBlock[i]->getTextureDest();
+				
+#ifdef ONSCREEN_RENDER_ONLY
+				//check if entity's texture is on screen
+				if( tempDest.x < cameraPosX + screenWidth &&
+				    tempDest.x + tempDest.w > cameraPosX &&
+					tempDest.y < cameraPosY + screenHeight &&
+					tempDest.y + tempDest.h > cameraPosY)
+#endif //ONSCREEN_RENDER_ONLY
+					switch (entityBlock[i]->getRenderingFlag())
+					{
+					case RENDERINGFLAG_STATIC_BACKGROUND:
+						staticBackgroundQueue.push(entityBlock[i]->getTexture());
+						break;
+					case RENDERINGFLAG_BACKGROUND:
+						backgroundQueue.push(entityBlock[i]->getTexture());
+						break;
+					default:
+					case RENDERINGFLAG_SPRITE:
+						spriteQueue.push(entityBlock[i]->getTexture());
+						break;
+					case RENDERINGFLAG_FOREGROUND:
+						foregroundQueue.push(entityBlock[i]->getTexture());
+						break;
+					case RENDERINGFLAG_STATIC_FOREGROUND:
+						staticForegroundQueue.push(entityBlock[i]->getTexture());
+						break;
+					}
+					
 			}
 		}
-		currentDepth++;
 	}
-	
+
+	/***  Render all queued textures  ***/
+
+
 	/***  Render queued backgrounds  ***/
 
 	//Static backgrounds queued to allow paralax b.g.
@@ -139,41 +191,10 @@ void video::render()
 		//render set up background layer for renderering.
 		SDL_RenderCopy(CRERenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), &tempTexture.getDestRect());
 	}
-	
-	/***  Queue sprites to render based on depth ***/
-	maxDepth = 0;
-
-	for (unsigned int i = 0; i < entityBlock.size(); i++)
-	{
-		int tempPos[3];
-		entityBlock[i]->getPosition(tempPos);
-		if (tempPos[2] > maxDepth)
-			maxDepth = tempPos[2];
-	}
-
-	for(currentDepth = 0; currentDepth <= maxDepth; currentDepth++)
-	{
-		for (unsigned int i = 0; i < entityBlock.size(); i++)
-		{
-			if (entityBlock[i]->getDepth() == currentDepth)
-			{
-				SDL_Rect tempDest = entityBlock[i]->getTextureDest();
-				
-#ifdef ONSCREEN_RENDER_ONLY
-				//check if entity's texture is on screen
-				if( tempDest.x < cameraPosX + screenWidth &&
-				    tempDest.x + tempDest.w > cameraPosX &&
-					tempDest.y < cameraPosY + screenHeight &&
-					tempDest.y + tempDest.h > cameraPosY)
-#endif //ONSCREEN_RENDER_ONLY
-					spriteQueue.push(entityBlock[i]->getTexture());
-			}
-		}
-	}
 
 
 	/***  Render queued sprites  ***/
-	while(!spriteQueue.empty())
+	while (!spriteQueue.empty())
 	{
 		tempTexture = *spriteQueue.front();
 
@@ -181,7 +202,7 @@ void video::render()
 
 		//load entity from entity rendering queue
 		//and pop front element from queue
-		
+
 		SDL_Rect tempRect = tempTexture.getDestRect();
 
 		tempRect.x = tempRect.x - cameraPosX;
@@ -191,39 +212,6 @@ void video::render()
 		SDL_RenderCopy(CRERenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), &tempRect);
 	}
 
-	/***  Queue foregrounds to render based on depth  ***/
-	maxDepth = 0;
-
-	for (unsigned int i = 0; i < foreground.size(); i++)
-	{
-		int tempPos[3];
-		foreground[i]->getPosition(tempPos);
-		if (tempPos[2] > maxDepth)
-			maxDepth = tempPos[2];
-	}
-
-	currentDepth = 0;
-
-	while (currentDepth <= maxDepth)
-	{
-		for (unsigned int i = 0; i < foreground.size(); i++)
-		{
-			if (foreground[i]->getDepth() == currentDepth)
-			{
-				switch (foreground[i]->getRenderingFlag())
-				{
-				case RENDERINGFLAG_FOREGROUND:
-					foregroundQueue.push(foreground[i]->getTexture());
-					break;
-				case RENDERINGFLAG_STATIC_FOREGROUND:
-					staticForegroundQueue.push(foreground[i]->getTexture());
-				default:
-					break;
-				}
-			}
-		}
-		currentDepth++;
-	}
 
 	/***  Render queued foregrounds ***/
 	//Foregrounds queued to allow paralax f.g. or HUD.
@@ -232,7 +220,7 @@ void video::render()
 		//load background layer from queue for renderering
 		tempTexture = *foregroundQueue.front();
 		foregroundQueue.pop();
-		
+
 		//unsure how to handle math for this
 
 		//render set up background layer for renderering.
@@ -250,13 +238,15 @@ void video::render()
 		//render set up background layer for renderering.
 	}
 
+
+
+	//render frame to screen.
+	SDL_RenderPresent(CRERenderer);
+
 #ifdef FRAMECAP_60
 	pollFrameTimer();
 	setFrameTimer();
 #endif
-
-	//render frame to screen.
-	SDL_RenderPresent(CRERenderer);
 }
 
 void video::loadTexture(texture* texture, RENDERING_FLAG flag)

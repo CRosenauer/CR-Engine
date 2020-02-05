@@ -20,7 +20,7 @@ ground::ground(const groundData& data)
 
 	switch (imageType)
 	{
-	deafult:
+	default:
 	case TEXTURE:
 		gAnimation = NULL;
 		destRect.w = data.data.text.source.w;
@@ -53,7 +53,7 @@ void ground::loadGround(const groundData& data)
 
 	switch (imageType)
 	{
-	deafult:
+	default:
 	case TEXTURE:
 		gAnimation = NULL;
 		destRect.w = data.data.text.source.w;

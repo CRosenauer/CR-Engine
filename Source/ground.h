@@ -3,7 +3,11 @@
 
 #include <vector>
 
-#include "entity.h"
+#include "texture.h"
+#include "animation.h"
+#include "renderingFlags.hpp"
+
+using namespace std;
 
 /*
 	Renderings flags for quick reference
@@ -32,6 +36,8 @@ union groundImageData
 {
 	textureData text;
 	animation animation;
+
+	~groundImageData() {}
 };
 
 //struct to contain foreground and background data
@@ -39,10 +45,12 @@ struct groundData
 {
 	const IMAGE_TYPE imageType;
 	const groundImageData data;
-	ANIMATION_FLAG animFlag;
+	const ANIMATION_FLAG animFlag;
 	const RENDERING_FLAG flag;
 	const int groundDepth;
 	const groundData* next;
+
+	~groundData() {}
 };
 
 //class used as container for foreground and background data
@@ -81,7 +89,7 @@ private:
 
 	RENDERING_FLAG renderingFlag;
 		
-	int posX, posY;
+	int posX, posY, posZ;
 };
 
 void setGround(const groundData& groundDat);

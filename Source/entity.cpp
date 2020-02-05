@@ -2,6 +2,8 @@
 
 static unsigned int IDCounter = 0;
 
+vector<entity*> entityBlock;
+
 entity::entity()
 {
 	posX = 0;
