@@ -94,7 +94,9 @@ private:
 
 void setGround(const groundData& groundDat);
 
-void resetGround(RENDERING_FLAG flag);
+void resetGround(const RENDERING_FLAG& flag);
+
+void resetGround();
 
 void updateGrounds();
 
