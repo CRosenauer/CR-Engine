@@ -1,6 +1,9 @@
 #ifndef VIDEO_H
 #define VIDEO_H
 
+#define FRAMECAP_60
+#define FRAMERATE_COUNTER
+
 #include <SDL.h>
 #include <SDL_Surface.h>
 #include <SDL_Render.h>
@@ -56,6 +59,17 @@ public:
 	//called once at the beginning of the game in void CREInit();
 	void init();
 
+	//sets the passed array to the cameraX and cameraY position
+	void getCameraPos(int pos[2]);
+
+	//sets the camera position to the values in the passed array.
+	//cameraPosX = pos[0], cameraPosY = pos[1]
+	void setCameraPos(const int pos[2]);
+
+#ifdef FRAMERATE_COUNTER
+	float getFrameRate();
+#endif
+
 private:
 	std::string title;
 
@@ -68,6 +82,13 @@ private:
 
 	SDL_Window*   CREVWindow;
 	SDL_Surface*  CREVSurface;
+
+
+#ifdef FRAMERATE_COUNTER
+	float frameRate = 0;
+	float prevTicks = 0;
+	float currentTicks = 1;
+#endif
 
 	//temperary queues for loading sprites, etc.
 	//is orderly loaded to textureQueue before rendering

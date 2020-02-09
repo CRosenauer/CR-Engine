@@ -109,7 +109,7 @@ void entity::setAnimation(const animation* anim, const ANIMATION_FLAG& flag)
 	if (flag == ANIMATION_LOOP)
 		eFirstAnimation = anim;
 
-	setTexture(eAnimation->textureData);
+	setTexture(*(eAnimation->textureData));
 }
 
 unsigned int entity::getEntityID()
@@ -175,6 +175,6 @@ void entity::updateAnimation()
 
 		animFrameCount--;
 
-		setTexture(eAnimation->textureData);
+		setTexture(*(eAnimation->textureData));
 	}
 }

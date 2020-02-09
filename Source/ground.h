@@ -44,25 +44,29 @@ enum IMAGE_TYPE
 //animation contains a animation
 union groundImageData
 {
-	const textureData text;		//information for texture data
-	const animation animation;	//information for animation data
+	const textureData* text;		//information for texture data
+	const animation* anim;	//information for animation data
 
-	~groundImageData() {}
+	//constructors for initialization
+	groundImageData(const textureData* t) : text(t) {}
+	groundImageData(const animation* a) : anim(a) {}
+
+	~groundImageData() {}		//unused destructor. Included to prevent compilation warnings
 };
 
 //struct to contain foreground and background data
 struct groundData
 {
 	const IMAGE_TYPE imageType;		//flag for if the ground is animated or a static texture
-	const groundImageData data;		//union containing texture and animation data
+	const groundImageData* data;		//union containing texture and animation data
 	const ANIMATION_FLAG animFlag;	//flag if the animation is looping or not
 	const RENDERING_FLAG flag;		//flag for the rendering layer this 
-	const int groundDepth;			//data containing the depth of the ground layer.
+	const unsigned int groundDepth;	//data containing the depth of the ground layer.
 									//Larger depth means higher priority (currently unused)
 
 	const groundData* next;			//pointer to the next ground layer
 
-	~groundData() {}
+	~groundData() {}				//unused destructor. Included to revent compilations warnings
 };
 
 //class used as container for foreground and background data
@@ -101,7 +105,8 @@ private:
 
 	RENDERING_FLAG renderingFlag;
 		
-	int posX, posY, posZ;
+	int posX, posY;
+	unsigned int posZ;
 };
 
 //resets current background and foreground vetors and loads passed groundData

@@ -9,21 +9,21 @@
 
 const animation testAnimation02 =
 {
-	animationTest2,
+	&animationTest2,
 	10,
 	NULL
 };
 
 const animation testAnimation01 =
 {
-	animationTest1,
+	&animationTest1,
 	10,
 	&testAnimation02
 };
 
 const animation testAnimation00 =
 {
-	animationTest0,
+	&animationTest0,
 	10,
 	&testAnimation01
 };

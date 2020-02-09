@@ -1,8 +1,6 @@
 #include "video.h"
 //#include <cassert>
 
-#define FRAMECAP_60
-
 extern SDL_Renderer* CRERenderer;
 extern vector<entity*> entityBlock;
 extern vector<ground*> background;
@@ -83,16 +81,17 @@ void video::render()
 	/***  Queue backgrounds and g=foregrounds to render queues based on depth  ***/
 	for (unsigned int i = 0; i < background.size(); i++)
 	{
-			switch (background[i]->getRenderingFlag())
-			{
-			case RENDERINGFLAG_BACKGROUND: 
-				backgroundQueue.push(background[i]->getTexture());
-				break;
-			case RENDERINGFLAG_STATIC_BACKGROUND:
-				staticBackgroundQueue.push(background[i]->getTexture());
-			default:
-				break;
+		switch (background[i]->getRenderingFlag())
+		{
+		case RENDERINGFLAG_BACKGROUND: 
+			backgroundQueue.push(background[i]->getTexture());
+			break;
+		case RENDERINGFLAG_STATIC_BACKGROUND:
+			staticBackgroundQueue.push(background[i]->getTexture());
+		default:
+			break;
 		}
+		background[i]->update();
 	}
 
 	for (unsigned int i = 0; i < foreground.size(); i++)
@@ -107,6 +106,7 @@ void video::render()
 		default:
 			break;
 		}
+		foreground[i]->update();
 	}
 
 
@@ -158,7 +158,8 @@ void video::render()
 						staticForegroundQueue.push(entityBlock[i]->getTexture());
 						break;
 					}
-					
+				
+				entityBlock[i]->updateAnimation();
 			}
 		}
 	}
@@ -247,6 +248,14 @@ void video::render()
 	pollFrameTimer();
 	setFrameTimer();
 #endif
+
+#ifdef FRAMERATE_COUNTER
+	prevTicks = currentTicks;
+	currentTicks = static_cast<float>(SDL_GetTicks());
+
+	frameRate = 1000.f / (currentTicks - prevTicks);
+	//printf("Frame rate: %f\n", frameRate);
+#endif
 }
 
 void video::loadTexture(texture* texture, RENDERING_FLAG flag)
@@ -273,3 +282,22 @@ void video::loadTexture(texture* texture, RENDERING_FLAG flag)
 		break;
 	}
 }
+
+void video::getCameraPos(int pos[2])
+{
+	pos[0] = cameraPosX;
+	pos[1] = cameraPosY;
+}
+
+void video::setCameraPos(const int pos[2])
+{
+	cameraPosX = pos[0];
+	cameraPosY = pos[1];
+}
+
+#ifdef FRAMERATE_COUNTER
+float video::getFrameRate()
+{
+	return frameRate;
+}
+#endif

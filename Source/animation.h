@@ -14,7 +14,7 @@ enum ANIMATION_FLAG
 
 struct animation
 {
-	const textureData textureData;
+	const textureData* textureData;
 
 	const unsigned int frameCount;
 	//number of frames this texture is used.

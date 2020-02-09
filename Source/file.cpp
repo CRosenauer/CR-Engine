@@ -9,15 +9,15 @@ std::string getFilePath(const std::string& name, const RESOURCE_PATH& path)
 
 	SDL_free(cPath);
 
-	basePath += "Resources/";
+	basePath += "Resources\\";
 	switch (path)
 	{
 	case AUDIO:
-		basePath += "Audio/";
+		basePath += "Audio\\";
 		basePath += name;
 		break;
 	case GRAPHICS:
-		basePath += "Graphics/";
+		basePath += "Graphics\\";
 		basePath += name;
 	default:
 		break;

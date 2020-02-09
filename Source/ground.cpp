@@ -35,18 +35,18 @@ ground::ground(const groundData& data)
 		animFrameCount = 0;
 
 		//set rendering information from passed groundData struct
-		destRect.w = data.data.text.source.w;
-		destRect.h = data.data.text.source.h;
+		destRect.w = data.data->text->source.w;
+		destRect.h = data.data->text->source.h;
 		destRect.x = posX;
 		destRect.y = posY;
 		
 		//load texture from groundData struct
-		gTexture.loadTexture(data.data.text, destRect);
+		gTexture.loadTexture(*(data.data->text), destRect);
 		break;
 
 	case ANIMATION:
 		//set animation information from groundData struct
-		gAnimation = &data.data.animation;
+		gAnimation = data.data->anim;
 		if (data.animFlag == ANIMATION_LOOP)
 			gFirstAnim = gAnimation;
 		else
@@ -54,13 +54,13 @@ ground::ground(const groundData& data)
 		animFrameCount = 0;
 
 		//set rendering destination for passed groundData struct
-		destRect.w = data.data.animation.textureData.source.w;
-		destRect.h = data.data.animation.textureData.source.h;
+		destRect.w = data.data->anim->textureData->source.w;
+		destRect.h = data.data->anim->textureData->source.h;
 		destRect.x = posX;
 		destRect.y = posY;
 
 		//load first frame from the animation.
-		gTexture.loadTexture(data.data.animation.textureData, destRect);
+		gTexture.loadTexture(*(data.data->anim->textureData), destRect);
 		break;
 	}
 }
@@ -85,18 +85,18 @@ void ground::loadGround(const groundData& data)
 		animFrameCount = 0;
 
 		//set rendering information from passed groundData struct
-		destRect.w = data.data.text.source.w;
-		destRect.h = data.data.text.source.h;
+		destRect.w = data.data->text->source.w;
+		destRect.h = data.data->text->source.h;
 		destRect.x = posX;
 		destRect.y = posY;
 
 		//load texture from groundData struct
-		gTexture.loadTexture(data.data.text, destRect);
+		gTexture.loadTexture(*(data.data->text), destRect);
 		break;
 
 	case ANIMATION:
 		//set animation information from groundData struct
-		gAnimation = &data.data.animation;
+		gAnimation = data.data->anim;
 		if (data.animFlag == ANIMATION_LOOP)
 			gFirstAnim = gAnimation;
 		else
@@ -104,13 +104,13 @@ void ground::loadGround(const groundData& data)
 		animFrameCount = 0;
 
 		//set rendering destination for passed groundData struct
-		destRect.w = data.data.animation.textureData.source.w;
-		destRect.h = data.data.animation.textureData.source.h;
+		destRect.w = data.data->anim->textureData->source.w;
+		destRect.h = data.data->anim->textureData->source.h;
 		destRect.x = posX;
 		destRect.y = posY;
 
 		//load first frame from the animation.
-		gTexture.loadTexture(data.data.animation.textureData, destRect);
+		gTexture.loadTexture(*(data.data->anim->textureData), destRect);
 		break;
 	}
 }
@@ -145,20 +145,34 @@ void ground::update()
 
 			animFrameCount--;
 
-			gTexture.loadTexture(gAnimation->textureData, destRect);
+			gTexture.loadTexture(*(gAnimation->textureData), destRect);
 		}
 	}
 }
 
 void setGround(const groundData& groundDat)
 {
+	printf("Stub: setGround in ground.cpp.\nTo be altered and improved upon later.\n");
 	resetGround();
 
 	const groundData* tempData = &groundDat;
 
 	while (tempData != NULL)
 	{
-		//do things
+		switch (tempData->flag)
+		{
+		case RENDERINGFLAG_BACKGROUND:
+		case RENDERINGFLAG_STATIC_BACKGROUND:
+			background.push_back(new ground(*tempData));
+			break;
+		case RENDERINGFLAG_FOREGROUND:
+		case RENDERINGFLAG_STATIC_FOREGROUND:
+			foreground.push_back(new ground(*tempData));
+		default:
+			break;
+		}
+
+		tempData = tempData->next;
 	}
 }
 
@@ -202,7 +216,14 @@ void resetGround(const RENDERING_FLAG& flag)
 
 void resetGround()
 {
+	//deallocate foregrounds
+	for (unsigned int i = 0; i < foreground.size(); i++)
+		delete foreground[i];
 	foreground.clear();
+
+	//deallocate backgrounds
+	for (unsigned int i = 0; i < background.size(); i++)
+		delete foreground[i];
 	background.clear();
 }
 
