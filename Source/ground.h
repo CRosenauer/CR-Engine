@@ -10,6 +10,16 @@
 using namespace std;
 
 /*
+	ground.h
+
+	header for everything related to foregrounds and background
+	note that ground information is intended to be stored as const
+	structs rather than through dynamic memory.
+*/
+
+
+
+/*
 	Renderings flags for quick reference
 enum RENDERINGFLAG
 {
@@ -34,8 +44,8 @@ enum IMAGE_TYPE
 //animation contains a animation
 union groundImageData
 {
-	textureData text;
-	animation animation;
+	const textureData text;		//information for texture data
+	const animation animation;	//information for animation data
 
 	~groundImageData() {}
 };
@@ -43,12 +53,14 @@ union groundImageData
 //struct to contain foreground and background data
 struct groundData
 {
-	const IMAGE_TYPE imageType;
-	const groundImageData data;
-	const ANIMATION_FLAG animFlag;
-	const RENDERING_FLAG flag;
-	const int groundDepth;
-	const groundData* next;
+	const IMAGE_TYPE imageType;		//flag for if the ground is animated or a static texture
+	const groundImageData data;		//union containing texture and animation data
+	const ANIMATION_FLAG animFlag;	//flag if the animation is looping or not
+	const RENDERING_FLAG flag;		//flag for the rendering layer this 
+	const int groundDepth;			//data containing the depth of the ground layer.
+									//Larger depth means higher priority (currently unused)
+
+	const groundData* next;			//pointer to the next ground layer
 
 	~groundData() {}
 };
@@ -92,12 +104,24 @@ private:
 	int posX, posY, posZ;
 };
 
+//resets current background and foreground vetors and loads passed groundData
 void setGround(const groundData& groundDat);
 
+//loads passed groundData without resetting all foreground and background vectors.
+void loadGround(const groundData& groundDat);
+
+//removes all foreground and background layers of the passed rendering flag
 void resetGround(const RENDERING_FLAG& flag);
 
+//removes all loaded foreground and background layers
 void resetGround();
 
+//iterates through both the foreground and background vectors and
+//updates each layer of the grounds' animation (if applicible)
 void updateGrounds();
+
+//returns true if both the foreground and backgrounds vectors are empty
+//returns false in all other cases
+bool groundsEmpty();
 
 #endif //FOREBACKGROUNDHANDLER_H

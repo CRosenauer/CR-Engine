@@ -202,19 +202,29 @@ void resetGround(const RENDERING_FLAG& flag)
 
 void resetGround()
 {
-	foreground.empty();
-	background.empty();
+	foreground.clear();
+	background.clear();
 }
 
 void updateGrounds()
 {
-	for (int i = 0; i < foreground.size(); i++)
+	for (unsigned int i = 0; i < foreground.size(); i++)
 	{
 		foreground[i]->update();
 	}
 
-	for (int i = 0; i < background.size(); i++)
+	for (unsigned int i = 0; i < background.size(); i++)
 	{
 		background[i]->update();
 	}
+}
+
+bool groundsEmpty()
+{
+	return foreground.empty() && background.empty();
+}
+
+void loadGround(const groundData& groundDat)
+{
+
 }
