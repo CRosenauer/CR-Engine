@@ -1,17 +1,20 @@
 #include "entity.h"
 
-//vector for containing entities
-vector<entity*> entityBlock;
-vector<entity*> background;
-vector<entity*> foreground;
-
 static unsigned int IDCounter = 0;
+
+vector<entity*> entityBlock;
 
 entity::entity()
 {
 	posX = 0;
 	posY = 0;
 	posZ = 0;
+	velX = 0;
+	velY = 0;
+	velZ = 0;
+	accX = 0;
+	accY = 0;
+	accZ = 0;
 	animFrameCount = 0;
 	eAnimation = NULL;
 	eFirstAnimation = NULL;
@@ -41,8 +44,111 @@ void entity::setTexture(const texture& text)
 
 texture* entity::getTexture()
 {
-	//Updates animation if entity is currently using an animation.
-	
+	return &eTexture;
+}
+
+void entity::setPosition(int x, int y, int z)
+{
+	SDL_Rect tempDest = eTexture.getDestRect();
+
+	tempDest.x += (x - posX);
+	posX = x;
+
+	tempDest.y += (y - posY);
+	posY = y;
+
+	if (z > 0)
+		posZ = z;
+	else
+		posZ = 0;
+
+	eTexture.setRect(eTexture.getSourceRect(), tempDest);
+}
+
+void entity::setVelocity(int x, int y, int z)
+{
+	velX = x;
+	velY = y;
+	velZ = z;
+}
+
+void entity::setAcceleration(int x, int y, int z)
+{
+	accX = x;
+	accY = y;
+	accZ = z;
+}
+
+void entity::getPosition(int pos[3])
+{
+	pos[0] = posX;
+	pos[1] = posY;
+	pos[2] = posZ;
+}
+
+void entity::getVelocity(int vel[3])
+{
+	vel[0] = velX;
+	vel[1] = velY;
+	vel[2] = velZ;
+}
+
+void entity::getAcceleration(int acc[3])
+{
+	acc[0] = accX;
+	acc[1] = accY;
+	acc[2] = accZ;
+}
+
+void entity::setAnimation(const animation* anim, const ANIMATION_FLAG& flag)
+{
+	eAnimation = anim;
+
+	animFrameCount = eAnimation->frameCount;
+
+	if (flag == ANIMATION_LOOP)
+		eFirstAnimation = anim;
+
+	setTexture(*(eAnimation->textureData));
+}
+
+unsigned int entity::getEntityID()
+{
+	return entityID;
+}
+
+int entity::getDepth()
+{
+	return posZ;
+}
+
+RENDERING_FLAG entity::getRenderingFlag()
+{
+	return renderingFlag;
+}
+
+void entity::setRenderingFlag(RENDERING_FLAG flag)
+{
+	renderingFlag = flag;
+}
+
+void entity::setEntityType(const unsigned int& i)
+{
+	data.entityType = i;
+}
+
+unsigned int entity::getEntityType()
+{
+	return data.entityType;
+}
+
+SDL_Rect entity::getTextureDest()
+{
+	return eTexture.getDestRect();
+}
+
+void entity::updateAnimation()
+{
 	if (eAnimation != NULL)
 	{
 
@@ -65,124 +171,10 @@ texture* entity::getTexture()
 				eAnimation = eAnimation->nextFrame;
 				animFrameCount = eAnimation->frameCount;
 			}
+
+			setTexture(*(eAnimation->textureData));
 		}
 
 		animFrameCount--;
-		
-		setTexture(eAnimation->textureData);
 	}
-
-	return &eTexture;
-}
-
-void entity::setPosition(int x, int y, int z)
-{
-	SDL_Rect tempDest = eTexture.getDestRect();
-
-	tempDest.x += (x - posX);
-	posX = x;
-
-	tempDest.y += (y - posY);
-	posY = y;
-
-	if (z > 0)
-		posZ = z;
-	else
-		posZ = 0;
-
-	eTexture.setRect(eTexture.getSourceRect(), tempDest);
-}
-
-void entity::getPosition(int pos[3])
-{
-	pos[0] = posX;
-	pos[1] = posY;
-	pos[2] = posZ;
-}
-
-void entity::setAnimation(const animation* anim, const CREAnimationFlag& flag)
-{
-	eAnimation = anim;
-
-	animFrameCount = eAnimation->frameCount;
-
-	if (flag == ANIMATION_LOOP)
-		eFirstAnimation = anim;
-
-	setTexture(eAnimation->textureData);
-}
-
-unsigned int entity::getEntityID()
-{
-	return entityID;
-}
-
-int entity::getDepth()
-{
-	return posZ;
-}
-
-RENDERINGFLAG entity::getRenderingFlag()
-{
-	return renderingFlag;
-}
-
-void entity::setRenderingFlag(RENDERINGFLAG flag)
-{
-	renderingFlag = flag;
-}
-
-void entity::setEntityType(const unsigned int& i)
-{
-	data.entityType = i;
-}
-
-unsigned int entity::getEntityType()
-{
-	return data.entityType;
-}
-
-SDL_Rect entity::getTextureDest()
-{
-	return eTexture.getDestRect();
-}
-
-void deleteEntity(const unsigned int& entityID)
-{
-	//cycles through entityBus until an entity is found with the passed ID
-	//entity with that id is then deallocated from memory and removed from entityBlock.
-	for (vector<entity*>::iterator itr = entityBlock.begin(); itr < entityBlock.end(); itr++)
-	{
-		if (entityID == (*itr)->getEntityID())
-		{
-			delete* itr;
-
-			entityBlock.erase(itr);
-			break;
-		}
-	}
-}
-
-unsigned int allocateEntity()
-{
-	//allocates memory to a new entity in entityBlock
-	//then returns the ID of the allocated ID
-	entityBlock.push_back(new entity);
-
-	return entityBlock.back()->getEntityID();
-}
-
-entity* entityFromID(const unsigned int& id)
-{
-	//cycles through entityBlock until an entity is found whose internal ID
-	//equals the passed ID. A pointer to this entity is returned.
-	for (unsigned int i = 0; i < entityBlock.size(); i++)
-	{
-		if (id == entityBlock[i]->getEntityID())
-			return entityBlock[i];
-	}
-
-	//Case for if no entity with the passed ID can be found.
-	//Will return NULL in this case.
-	return NULL;
 }

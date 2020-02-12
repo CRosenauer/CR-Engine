@@ -8,7 +8,9 @@
 #include "input.h"
 #include "entity.h"
 #include "script.h"
+#include "ground.h"
 
+#include "testGrounds.hpp"
 #include "testTexture.hpp"
 #include "testAnim.hpp"
 #include "testScript.hpp"

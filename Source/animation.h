@@ -6,7 +6,7 @@
 
 #include "texture.h"
 
-enum CREAnimationFlag
+enum ANIMATION_FLAG
 {
 	ANIMATION_NOLOOP,
 	ANIMATION_LOOP
@@ -14,7 +14,7 @@ enum CREAnimationFlag
 
 struct animation
 {
-	const textureData textureData;
+	const textureData* textureData;
 
 	const unsigned int frameCount;
 	//number of frames this texture is used.

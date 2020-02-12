@@ -2,8 +2,8 @@
 
 //Buses to hold entities
 extern vector<entity*> entityBlock;
-extern vector<entity*> background;
-extern vector<entity*> foreground;
+extern vector<ground*> background;
+extern vector<ground*> foreground;
 
 //handlers for audio, inputs, etc. Most externally defined in CREngine.cpp
 extern audio CREAudio;
@@ -52,10 +52,14 @@ void TestGame()
 		CREAudio.loadMusic("Friday_Chinatown.mp3");
 
 		Player->setTexture(ship);
+		Player->setRenderingFlag(RENDERINGFLAG_SPRITE);
 		Player->setPosition(32, 32, 0); 
 
 		testEntity->setAnimation(&testAnimation00, ANIMATION_LOOP);
+		testEntity->setRenderingFlag(RENDERINGFLAG_SPRITE);
 		testEntity->setPosition(128, 128, 0);
+
+		setGround(test_ground);
 
 		gameScreen = INITIALIZED;
 		break;

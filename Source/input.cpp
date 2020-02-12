@@ -5,7 +5,11 @@ inputHandler::inputHandler()
 	//To implement: load keymap from file.
 
 	for (int i = 0; i < INPUTWIDTH; i++)
+	{
 		inputBus[i] = 0;
+		repeatInput[i] = false;
+	}
+		
 }
 
 void inputHandler::pollInputs()

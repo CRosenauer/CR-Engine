@@ -6,6 +6,8 @@
 
 #include <cstdio>
 
+//#define CONTROLLER_SUPPORT
+
 //const int to determine how many inputs are read
 //note: x and y inputs on d-pads or control sticks are counted as 1 input
 //ex. for implementing WASD movement you would only need 2 width, one for WS one for AD.
