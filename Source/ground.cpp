@@ -141,11 +141,11 @@ void ground::update()
 					gAnimation = gAnimation->nextFrame;
 					animFrameCount = gAnimation->frameCount;
 				}
+
+				gTexture.loadTexture(*(gAnimation->textureData), destRect);
 			}
 
 			animFrameCount--;
-
-			gTexture.loadTexture(*(gAnimation->textureData), destRect);
 		}
 	}
 }

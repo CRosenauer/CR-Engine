@@ -97,7 +97,7 @@ const animation test_background_anim_00 =
 {
 	&test_background_anim_data_00,
 	15,
-	&test_background_anim_00
+	&test_background_anim_01
 };
 
 const union groundImageData test_background_anim = &test_background_anim_00;

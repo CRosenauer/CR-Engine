@@ -171,10 +171,10 @@ void entity::updateAnimation()
 				eAnimation = eAnimation->nextFrame;
 				animFrameCount = eAnimation->frameCount;
 			}
+
+			setTexture(*(eAnimation->textureData));
 		}
 
 		animFrameCount--;
-
-		setTexture(*(eAnimation->textureData));
 	}
 }

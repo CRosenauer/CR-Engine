@@ -91,7 +91,6 @@ void video::render()
 		default:
 			break;
 		}
-		background[i]->update();
 	}
 
 	for (unsigned int i = 0; i < foreground.size(); i++)
@@ -106,7 +105,6 @@ void video::render()
 		default:
 			break;
 		}
-		foreground[i]->update();
 	}
 
 
@@ -239,6 +237,9 @@ void video::render()
 		//render set up background layer for renderering.
 	}
 
+	//update animations
+	updateGrounds();
+	//update entityAnim();
 
 
 	//render frame to screen.
