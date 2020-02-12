@@ -3,6 +3,16 @@
  updates to the CR-Engine. For a more general overview see
  repository notes.
  
+# Feburary, 11, 2020
+ This update note is somewhat sparce as I am currently
+ finishing my midterms, but will be completed shortly.
+ Foreground and background functionality has been
+ included to a certain extent. It is not 100% complete
+ but functional to a usable extent.
+ 
+ I will elaborate on the functionality in the near
+ future.
+ 
 # January, 25, 2020
  In this update a few new things have been added. Firstly,
  Entities are now rendered based on their z position, or
