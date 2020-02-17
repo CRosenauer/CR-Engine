@@ -16,16 +16,13 @@ SDL_Renderer *CRERenderer = NULL;
 //main renderer for drawing to screen
 
 extern vector<entity*> entityBlock;
-extern vector<entity*> background;
-extern vector<entity*> foreground;
 
 //Handlers for input, video, etc.
 inputHandler  CREInput;
 video         CREVideo;
 audio         CREAudio;
-scriptHandler CREScript;
+scriptHandler CREScriptHandler;
 eventHandler  CREEventHandler;
-
 
 
 void CREInit()
@@ -101,9 +98,7 @@ void CREMain()
 
 void CRELoop()
 {
-	SDL_Event e;
-	
-	do
+	while( true )
 	{
 		//read inputs
 		CREInput.pollInputs();
@@ -112,10 +107,10 @@ void CRELoop()
 		TestGame();
 
 		//process currently loaded scripts
-		CREScript.processScripts();
+		CREScriptHandler.processScripts();
 
 		//updates game based on queued events
-		if (!CREEventHandler.interpretEvents())
+		if (!CREEventHandler.processEvents())
 			break;
 
 		//play user feedback
@@ -123,11 +118,7 @@ void CRELoop()
 
 		//draw queues textures to be rendered and draws images to the screen
 		CREVideo.render();
-
-		//poll for quit
-		SDL_PollEvent(&e);
 	}
-	while (e.type != SDL_QUIT);
 }
 
 void CRECleanup()
@@ -140,6 +131,12 @@ void CRECleanup()
 
 	//clean up entityBlock's entity**
 	entityBlock.clear();
+
+	//clean up backgrounds and foregrounds
+	resetGround();
+
+	//clean events
+	//clean scripts
 
 	//shut down graphics, audio, and SDL subsystems.
 	IMG_Quit();

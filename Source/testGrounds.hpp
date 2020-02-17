@@ -100,11 +100,11 @@ const animation test_background_anim_00 =
 	&test_background_anim_01
 };
 
-const union groundImageData test_background_anim = &test_background_anim_00;
+const union groundImageData test_background_anim = { (const textureData*)  &test_background_anim_00 };
 
-const union groundImageData test_HUD = &test_HUD_data;
+const union groundImageData test_HUD = { &test_HUD_data };
 
-const union groundImageData test_scrolling_foreground = &test_scrolling_foreground_data;
+const union groundImageData test_scrolling_foreground = { &test_scrolling_foreground_data };
 
 const groundData test_ground_02 =
 {

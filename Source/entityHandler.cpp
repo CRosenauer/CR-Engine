@@ -1,6 +1,6 @@
 #include "entityHandler.h"
 
-vector<entity*> entityBlock;
+extern vector<entity*> entityBlock;
 
 void deleteEntity(const unsigned int& entityID)
 {

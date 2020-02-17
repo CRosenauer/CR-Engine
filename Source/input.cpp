@@ -14,6 +14,9 @@ inputHandler::inputHandler()
 
 void inputHandler::pollInputs()
 {
+	SDL_PumpEvents();
+	currentInputs = SDL_GetKeyboardState(NULL);
+
 	__int8 prevInput[INPUTWIDTH];
 
 	for (int i = 0; i < INPUTWIDTH; i++)

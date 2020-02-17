@@ -5,11 +5,6 @@
 
 #include "entity.h"
 
-enum ENTITY_TYPE
-{
-	test //0
-};
-
 //cycles through entityBlock until entity is found whose ID equals the passed ID
 //deallocates said entity from memory and removes the entity* from the vector
 void deleteEntity(const unsigned int& entityID);

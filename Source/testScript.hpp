@@ -1,26 +1,26 @@
 #ifndef TESTSCRIPT_HPP
 #define TESTSCRIPT_HPP
 
+#include "event.h"
 #include "script.h"
-
 
 const CRE_Event testEvent02 =
 {
-	CRE_EVENT_ENTITY_MOVE,
+	CRE_EVENT_FUNCTION,
 	128,
 	128
 };
 
 const CRE_Event testEvent01 =
 {
-	CRE_EVENT_TEST_PRINT,
+	CRE_EVENT_FUNCTION,
 	1,
 	NULL //NULL as value should not be used in print test
 };
 
 const CRE_Event testEvent00 =
 {
-	CRE_EVENT_TEST_PRINT,
+	CRE_EVENT_FUNCTION,
 	0,
 	NULL //NULL as value should not be used in print test
 };

@@ -132,12 +132,12 @@ void entity::setRenderingFlag(RENDERING_FLAG flag)
 	renderingFlag = flag;
 }
 
-void entity::setEntityType(const unsigned int& i)
+void entity::setEntityType(const ENTITY_TYPE& i)
 {
 	data.entityType = i;
 }
 
-unsigned int entity::getEntityType()
+ENTITY_TYPE entity::getEntityType()
 {
 	return data.entityType;
 }

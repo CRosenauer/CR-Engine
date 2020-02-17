@@ -49,7 +49,7 @@ private:
 
 	bool repeatInput[INPUTWIDTH];
 
-	const Uint8* currentInputs = SDL_GetKeyboardState(NULL);
+	const Uint8* currentInputs = NULL;
 
 	// Boolean array to store inputs for button presses
 	// 0: up/down    (+/-)

@@ -7,7 +7,8 @@
 #include "video.h"
 #include "input.h"
 #include "entity.h"
-#include "script.h"
+#include "scriptHandler.h"
+#include "eventHandler.h"
 #include "ground.h"
 
 #include "testGrounds.hpp"

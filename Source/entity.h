@@ -13,6 +13,11 @@
 
 using namespace std;
 
+enum ENTITY_TYPE
+{
+	test //0
+};
+
 union componentData
 {
 
@@ -20,7 +25,7 @@ union componentData
 
 struct entityData
 {
-	unsigned int  entityType;
+	ENTITY_TYPE entityType;
 	componentData componentData;
 };
 
@@ -68,10 +73,10 @@ public:
 	RENDERING_FLAG getRenderingFlag();
 
 	//sets data.entityType to the passed interger.
-	void setEntityType(const unsigned int& i);
+	void setEntityType(const ENTITY_TYPE& i);
 
 	//returns current entity type found in data.entityType
-	unsigned int getEntityType();
+	ENTITY_TYPE getEntityType();
 
 	//returns internal texture's destination rect.
 	SDL_Rect getTextureDest();

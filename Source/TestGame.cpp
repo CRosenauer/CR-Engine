@@ -2,13 +2,13 @@
 
 //Buses to hold entities
 extern vector<entity*> entityBlock;
-extern vector<ground*> background;
-extern vector<ground*> foreground;
 
 //handlers for audio, inputs, etc. Most externally defined in CREngine.cpp
-extern audio CREAudio;
-extern scriptHandler CREScript;
+extern audio        CREAudio;
 extern inputHandler CREInput;
+
+extern scriptHandler CREScriptHandler;
+extern eventHandler  CREEventHandler;
 
 
 const SDL_Rect UNDEFINED_RECT = { -1, -1, -1, -1 };
@@ -92,9 +92,7 @@ void TestGame()
 		//quit inputs (enter)
 		if (userInputs[INPUT_QUIT] == 1)
 		{
-			SDL_Event e;
-			e.type = SDL_QUIT;
-			SDL_PushEvent(&e);
+			CREEventHandler.passQuitEvent();
 		}
 
 		Player->setPosition(tempPos[0], tempPos[1], tempPos[2]);

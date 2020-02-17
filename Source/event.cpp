@@ -1,108 +1,82 @@
 #include "event.h"
 
-extern vector<entity*> entityBlock;
+//primitive queue for holding events to load
+//allows eventHandler and scriptHandler to communicate without circular dependancies
+queue<CRE_Event> primitiveEventQueue;
 
-void eventHandler::queueEvent(CRE_Event e, unsigned int ID)
+string eventCodeToString(const CREEventCode& code)
 {
-	e.entityID = ID;
-	CREEventQueue.push(e);
-}
+	string s;
 
-void passQuitEvent()
-{
-	SDL_Event e;
-	e.type = SDL_QUIT;
-}
-
-/* Everything after here is for testing and verification of events and scripts. */
-/* Read at the risk fo your own mental health */
-
-//developer helper functions
-//not included in event.h because these functions will likely sit in other files
-//in an actual game.
-
-void eventHandler::moveEntity(const CRE_Event& e)
-{
-	int tempPosArray[3];
-
-	for (unsigned int i = 0; i < entityBlock.size(); i++)
+	switch (code)
 	{
-		if (entityBlock[i]->getEntityID() == e.entityID)
-		{
-			entityBlock[i]->getPosition(tempPosArray);
+#ifdef EVENT_QUIT
+	case CRE_EVENT_QUIT:
+		s = "CRE_EVENT_QUIT";
+		break;
+#endif
 
-			tempPosArray[0] += e.data1;
-			tempPosArray[1] += e.data2;
+#ifdef EVENT_LOAD_SFX
+	case CRE_EVENT_LOAD_SFX:
+		s = "CRE_EVENT_LOAD_SFX";
+		break;
+#endif
 
-			entityBlock[i]->setPosition(tempPosArray[0], tempPosArray[1], tempPosArray[2]);
+#ifdef EVENT_LOAD_MUSIC
+	case CRE_EVENT_LOAD_MUSIC:
+		s = "CRE_EVENT_LOAD_MUSIC";
+		break;
+#endif
 
-			break;
-		}
-	}
-}
+#ifdef EVENT_LOAD_TEXTURE
+	case CRE_EVENT_LOAD_TEXTURE:
+		s = "CRE_EVENT_LOAD_TEXTURE";
+		break;
+#endif
 
-void eventHandler::setEntityPos(const CRE_Event& e)
-{
-	int tempPosArray[3];
+#ifdef EVENT_LOAD_ANIMATION
+	case CRE_EVENT_LOAD_ANIMATION:
+		s = "CRE_EVENT_LOAD_ANIMATION";
+		break;
+#endif
 
-	for (unsigned int i = 0; i < entityBlock.size(); i++)
-	{
-		if (entityBlock[i]->getEntityID() == e.entityID)
-		{
-			entityBlock[i]->getPosition(tempPosArray);
+#ifdef EVENT_LOAD_GROUNDS
+	case CRE_EVENT_LOAD_GROUNDS:
+		s = "CRE_EVENT_LOAD_GROUNDS";
+		break;
+#endif
 
-			tempPosArray[0] = e.data1;
-			tempPosArray[1] = e.data2;
+#ifdef EVENT_SET_GROUNDS
+	case CRE_EVENT_SET_GROUNDS:
+		s = "CRE_EVENT_SET_GROUNDS";
+		break;
+#endif
 
-			entityBlock[i]->setPosition(tempPosArray[0], tempPosArray[1], tempPosArray[2]);
+#ifdef EVENT_RESET_GROUNDS
+	case CRE_EVENT_RESET_GROUNDS:
+		s = "CRE_EVENT_RESET_GROUNDS";
+		break;
+#endif
 
-			break;
-		}
-	}
-}
+#ifdef EVENT_LOAD_SCRIPT
+	case CRE_EVENT_LOAD_SCRIPT:
+		s = "CRE_EVENT_LOAD_SCRIPT";
+		break;
+#endif
 
-bool eventHandler::interpretEvents()
-{
-	CRE_Event e;
+#ifdef EVENT_FUNCTION
+	case CRE_EVENT_FUNCTION:
+		s = "CRE_EVENT_FUNCTION";
+		break;
+#endif
 
-	while (!CREEventQueue.empty())
-	{
-		e = CREEventQueue.front();
-		CREEventQueue.pop();
-
-		switch (e.eventType)
-		{
-		case CRE_EVENT_QUIT:
-			passQuitEvent();
-			return false;
-			break;
-
-		case CRE_EVENT_TEST_PRINT:
-			switch (e.data1)
-			{
-			default:
-			case TEST_0:
-				printf("Test 0\n");
-				break;
-			case TEST_1:
-				printf("Test 1\n");
-				break;
-			}
-			break;
-
-		case CRE_EVENT_ENTITY_MOVE:
-			moveEntity(e);
-			break;
-
-		case CRE_EVENT_ENTITY_SET_POS:
-			setEntityPos(e);
-			break;
-
-		default:
-			printf("Unknown event code: %i. Skipping event.\nPlease refer to event.h, enum CREEventCode\n", e.eventType);
-			break;
-		}
+#ifdef EVENT_IF_GOTO
+	case CRE_EVENT_IF_GOTO:
+		s = "CRE_EVENT_IF_GOTO";
+		break;
+#endif
 	}
 
-	return true;
+	return s;
 }
+

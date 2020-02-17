@@ -31,6 +31,7 @@ enum RENDERINGFLAG
 };
 */
 
+
 enum IMAGE_TYPE
 {
 	TEXTURE,	//0
@@ -44,12 +45,8 @@ enum IMAGE_TYPE
 //animation contains a animation
 union groundImageData
 {
-	const textureData* text;		//information for texture data
-	const animation* anim;	//information for animation data
-
-	//constructors for initialization
-	groundImageData(const textureData* t) : text(t) {}
-	groundImageData(const animation* a) : anim(a) {}
+	const textureData* text;	//information for texture data
+	const animation* anim;		//information for animation data
 
 	~groundImageData() {}		//unused destructor. Included to prevent compilation warnings
 };
@@ -76,7 +73,7 @@ public:
 	ground();
 	ground(const groundData& data);
 
-	//mutators
+	//loads passed ground data to this current ground
 	void loadGround(const groundData& groundDat);
 
 	//accessors
@@ -94,6 +91,7 @@ private:
 	void setTexture(const texture& text) { gTexture = text; }
 	void setAnination(const animation& anim, const ANIMATION_FLAG& flag) { gAnimation = &anim; gFirstAnim = &anim; }
 
+	//member image information
 	texture   gTexture;
 	const animation* gAnimation;
 	const animation* gFirstAnim;
