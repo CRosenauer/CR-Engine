@@ -4,14 +4,95 @@
  repository notes.
  
 # Feburary, 11, 2020
- This update note is somewhat sparce as I am currently
- finishing my midterms, but will be completed shortly.
- Foreground and background functionality has been
- included to a certain extent. It is not 100% complete
- but functional to a usable extent.
+ In this update background and foregrounds functionality
+ has been added via the "ground" class and related data
+ structs in "grounds.h" and "ground.cpp". Additionally,
+ functionality has been added for easy background and 
+ foreground loading and removal. Foregrounds and backgrounds
+ are stored in two vectors: foreground and background.
  
- I will elaborate on the functionality in the near
- future.
+ There are four main rendering methods for foregrounds
+ and backgrounds, all of which can be found in the enum
+ RENDERIN_FLAG in "renderingFlags.hpp": RENDERINGFLAG_BACKGROUND,
+ RENDERINGFLAG_FOREGROUND, RENDERINGFLAG_STATIC_BACKGROUND, and
+ RENDERINGFLAG_STATIC_FOREGROUND. The video system renders
+ graphics in specific order based on the rendering flag.
+ From drawn first to drawn last: RENDERINGFLAG_STATIC_BACKGROUND,
+ RENDERINGFLAG_BACKGROUND, RENDERINGFLAG_ENTITY, RENDERINGFLAG_FOREGROUND,
+ and RENDERINGFLAG_STATIC_FOREGROUND. Additionally, static foregrounds
+ and static backgrounds are not rendered relative to the
+ view port position in the game context. As such, static
+ foregrounds can be used for displaying HUDS or menus.
+ 
+ When developing for the CR-Engine you will likely not need
+ to use the grounds class directly and will rely on passing
+ ground data to the implementation functions.
+ 
+ There are two main components to ground data:
+ the union groundImageData, and the struct groundData.
+ These two user defined data types contain all data used
+ for storing and conveying grounds data.
+ 
+ groundImageData contains a pointer to textureData and a
+ pointer to animation. This union stores relavent image
+ data to be loaded to a ground object.
+ 
+ groundData is implemented similarly to a singly linked list
+ frame and contains several piece of information:
+ an image type specifier, imageType; a pointer to
+ groundImageData, data;, an animation looping flag, animFlag;
+ a rendering type flag, flag; an integer representing the
+ depth of ground data, depth; and finally a pointer to the
+ next groundData struct to load, next.
+ 
+ groundData structs are intended to be stringed together  singly
+ linked lists where the member pointer in groundData, next
+ points to the next piece of groundData to load.
+ 
+ Both groundData and groundImageData are inteneded to be
+ stored as const structs to prevent using working memory for
+ storing image data.
+ 
+ There are five main implementation functions for handling
+ foregrounds and backgrounds: setGround, loadGround, 
+ resetGround, updateGround, and groundsEmpty.
+ 
+ setGround and loadGround have similar functionality. They
+ both take a groundData struct as arguements and generate ground objects
+ in the foreground and background vectors based on the
+ passed groundData. The main difference between these two
+ functions is that setGrounds removes all current foreground
+ and background data before loading the passed groundData
+ while loadGrounds just loads the passed groundData.
+ 
+ resetGround removes all or part of the current foreground
+ and background data depending on which version of the
+ overloaded function is currently used. The two overloaded
+ versions of resetGround take no arguements, or a RENDERING_FLAG.
+ The no arguements version resets all foreground and background
+ data while the RENDERING_FLAG version removes all foreground or
+ background data of the passed flag.
+ 
+ updateGrounds updates the animation for all currently loaded
+ foregrounds and backgrounds. This function is only called by
+ the video system but can be called by the user for any
+ particular reason.
+ 
+ Finally, groundsEmpty returns a boolean variables for if the
+ foreground and background vectors are empty.
+ 
+ As a final note, the grounds system is fully functional but 
+ some functionality will be added in the future. In particular,
+ depth-based rendering priority is not currently implemented.
+ Additionally, in the future I want to add some way to
+ remove specific foregrounds and backgrounds that are
+ currently loaded.
+
+ The next update is aready underway and focuses on re-tooling
+ the event and scripting systems to provide more robust form
+ of scripting and event passing. Ideally the next update will
+ make it such that most processes in the CR-Engine occurs
+ from passing specific events.
  
 # January, 25, 2020
  In this update a few new things have been added. Firstly,
