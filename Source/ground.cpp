@@ -182,33 +182,28 @@ void resetGround(const RENDERING_FLAG& flag)
 
 	switch (flag)
 	{
-	case RENDERINGFLAG_FOREGROUND: 
+	case RENDERINGFLAG_FOREGROUND:
 	case RENDERINGFLAG_STATIC_FOREGROUND:
-		for (itr = foreground.begin(); itr < foreground.end(); itr++)
+		for (itr = foreground.begin(); itr != foreground.end(); itr++)
 		{
 			if ((*itr)->getRenderingFlag() == flag)
 			{
-				itr = foreground.erase(itr);
-
-				//if (itr != foreground.begin())
-				//	itr--;
+				foreground.erase(itr);
+				itr--;
 			}
 		}
 		break;
 
 	case RENDERINGFLAG_BACKGROUND:
 	case RENDERINGFLAG_STATIC_BACKGROUND:
-		for (itr = background.begin(); itr < background.end(); itr++)
+		for (itr = background.begin(); itr != background.end(); itr++)
 		{
 			if ((*itr)->getRenderingFlag() == flag)
 			{
-				itr = background.erase(itr);
-
-				//if (itr != background.begin())
-				//	itr--;
+				background.erase(itr);
+				itr--;
 			}
 		}
-
 	default:
 		break;
 	}
