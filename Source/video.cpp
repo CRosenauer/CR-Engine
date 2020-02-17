@@ -68,7 +68,6 @@ void video::render()
 {
 	//clear the frame to blank for renderering
 	SDL_RenderClear(CRERenderer);
-
 	
 	//loops through defined entities
 	//addes defined entities to rendering queues depending on internal

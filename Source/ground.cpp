@@ -189,7 +189,12 @@ void resetGround(const RENDERING_FLAG& flag)
 			if ((*itr)->getRenderingFlag() == flag)
 			{
 				foreground.erase(itr);
-				itr--;
+
+				if (foreground.empty())
+					break;
+
+				if(itr != foreground.begin())
+					itr--;
 			}
 		}
 		break;
@@ -201,7 +206,12 @@ void resetGround(const RENDERING_FLAG& flag)
 			if ((*itr)->getRenderingFlag() == flag)
 			{
 				background.erase(itr);
-				itr--;
+
+				if (background.empty())
+					break;
+
+				if( itr != background.begin())
+					itr--;
 			}
 		}
 	default:
