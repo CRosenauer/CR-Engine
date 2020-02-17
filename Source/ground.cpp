@@ -216,14 +216,7 @@ void resetGround(const RENDERING_FLAG& flag)
 
 void resetGround()
 {
-	//deallocate foregrounds
-	for (unsigned int i = 0; i < foreground.size(); i++)
-		delete foreground[i];
 	foreground.clear();
-
-	//deallocate backgrounds
-	for (unsigned int i = 0; i < background.size(); i++)
-		delete foreground[i];
 	background.clear();
 }
 
