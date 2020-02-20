@@ -3,15 +3,29 @@
 
 //Event type preproccessor
 #define EVENT_QUIT
+
+//audio events
 #define EVENT_LOAD_SFX
 #define EVENT_LOAD_MUSIC
+//#define FORCE_STOP_MUSIC
+
+//video events
+
+//entity graphics events
 #define EVENT_LOAD_TEXTURE
 #define EVENT_LOAD_ANIMATION
+
+//grounds events
 #define EVENT_LOAD_GROUNDS
 #define EVENT_SET_GROUNDS
 #define EVENT_RESET_GROUNDS
+
+//operation script events
 #define EVENT_LOAD_SCRIPT
 #define EVENT_FUNCTION
+#define EVENT_GOTO
+
+//logical script events
 #define EVENT_IF_GOTO
 
 
@@ -36,51 +50,124 @@
 //goes unused is not included.
 
 /*
-	If you are reading this then i forgot to  remove this piece of reference code.
+	Event structure based on event codes:
+
+	CRE_EVENT_QUIT:
+	generic1-4: unused
+	entityID:   unused
+
+		quits the program
+
+
+	CRE_EVENT_LOAD_SFX
+	generic1:   char pointer of the name of the sound file to play.
+	generic2-4: unused
+	entityID:   unused
+
+		loads .wav file as a sound effect.
+
+
+	CRE_EVENT_LOAD_MUSIC
+	generic1:   char pointer of the name of the music file to play.
+	generic2-4: unused.
+	entityID:   unused.
+
+		loads .mp3 file as game music
+
+
+	CRE_EVENT_LOAD_TEXTURE
+	generic1:   pointer to the textureData struct to load.
+	generic2-4: unused
+	entityID:   ID of the entity that the texture will be loaded to.
+
+		loads texture to an entity.
+
+
+	CRE_EVENT_LOAD_ANIMATION
+	generic1:   pointer to the animation struct to load.
+	generic2-4: unused
+	entityID:   ID of the entity that the animation will be loaded to.
+
+		loads animation to an entity.
+
+
+	CRE_EVENT_LOAD_GROUNDS
+	generic1:   pointer to the groundData struct to load. Calls loadGrounds().
+	generic2-4: unused
+	entityID:   unused
+
+		loads groundData struct to current background/foregrounds
+
+
+	CRE_EVENT_SET_GROUNDS
+	generic1:   pointer to the groundData struct to set. Calls setGrounds().
+	generic2-4: unused
+	entityID:   unused
+
+		resets all backgrounds/foregrounds and loads groundData struct to current background/foregrounds
+
+
+	CRE_EVENT_RESET_GROUNDS
+	generic1:   RENDERINGFLAG specifying which type of grounds to remove.
+	generic2-4: unused
+	entityID:   unused
+
+		removes all backgrounds/foregrounds of type passed RENDERINGFLAG
+
+
+	CRE_EVENT_ALL_RESET_GROUNDS
+	generic1-4: unused
+	entityID:   unused
+
+		resets all backgrounds/foregrounds
+
+
+	CRE_EVENT_LOAD_SCRIPT
+	generic1:   pointer to a script struct to load.
+	generic2-4: unused
+	entityID:   ID of the entity which the script will be applied to. (if applicible)
+
+		loads the script pointed to be generic1.
+
+
+	CRE_EVENT_FUNCTION
+	generic1:   function pointer to the function to operate. (with arguements (entity*, void*)).
+	generic2:   void* to the second arguement of the function (if needed)
+	generic3-4: unused
+	entityID:   reference ID to the entity which the function will be taking effect on (if needed).
+
+		performs a function on an entity (or other specified piece of data).
+
+
+	CRE_EVENT_GOTO
+	generic1:   function that returns the address of the script which this event will jump to.
+	generic2:   not defined by user
+	generic3-4: unused
+	entityID:   not defined by user
+
+		Replaces the script which queued this event with the sciprt returned by function in generic1
+
+
+	CRE_EVENT_IF_GOTO
+	generic1: boolean returning function which takes arguements (entity*, void*).
+	generic2: void* arguement to the boolean fucntion
+	generic3: function that returns the address of the script which this event will jump to.
+	generic4: not defined by user
+	entityID: not defined by user
+
+		Used to perfrom some degree of logic with scripts.
+		If the boolean function in generic1 returns true replaces script which queued this event
+		with the returned by the function in generic3.
+		Note: generic3 is a function rather than an address to prevent circular variable dependancies
 	
-	This is somewhat undefined territory but if it work it works i guess.
-	
-	To me for later reference:
-	we can use a union as a piece of undefined data as a pointer to data, a piece of data,
-	or as a function pointer.
-
-	Is this good practice? Likely not. Is it functional? Hopefully.
-
-	Also if you read this try not to judge me too hard.
-
-#include <cstdio>
-
-void* test()
-{
-	printf("Test\n");
-	//intentionally doesn't return a value;
-}
-
-union test
-{
-	void* value;
-	void* (*function)();
-};
-
-int main()
-{
-	union test asdf = { (void*) 1 };
-
-	printf("%p\n", asdf.value);
-	printf("%p\n", asdf.function);
-
-	asdf.function = test;
-
-	asdf.function();
-}
 
 */
 
 union genericData
 {
-	int data;
 	void* pointer;
 	void* (*function)( entity*, void* );
+	int data;
 };
 
 //event codes used for testing.
@@ -91,6 +178,9 @@ enum CREEventCode
 	CRE_EVENT_QUIT,
 #endif
 
+
+	//audio events
+
 #ifdef EVENT_LOAD_SFX
 	CRE_EVENT_LOAD_SFX,
 #endif
@@ -99,6 +189,9 @@ enum CREEventCode
 	CRE_EVENT_LOAD_MUSIC,
 #endif
 
+
+	//entity graphics events
+
 #ifdef EVENT_LOAD_TEXTURE
 	CRE_EVENT_LOAD_TEXTURE,
 #endif
@@ -106,6 +199,9 @@ enum CREEventCode
 #ifdef EVENT_LOAD_ANIMATION
 	CRE_EVENT_LOAD_ANIMATION,
 #endif
+
+
+	//grounds events
 
 #ifdef EVENT_LOAD_GROUNDS
 	CRE_EVENT_LOAD_GROUNDS,
@@ -119,6 +215,13 @@ enum CREEventCode
 	CRE_EVENT_RESET_GROUNDS,
 #endif
 
+#ifdef EVENT_RESET_GROUNDS
+	CRE_EVENT_RESET_ALL_GROUNDS,
+#endif
+
+
+	//operation events
+
 #ifdef EVENT_LOAD_SCRIPT
 	CRE_EVENT_LOAD_SCRIPT,
 #endif
@@ -126,6 +229,12 @@ enum CREEventCode
 #ifdef EVENT_FUNCTION
 	CRE_EVENT_FUNCTION,
 #endif
+
+#ifdef EVENT_GOTO
+	CRE_EVENT_GOTO,
+#endif
+
+	//logical events
 
 #ifdef EVENT_IF_GOTO
 	CRE_EVENT_IF_GOTO,
@@ -135,16 +244,16 @@ enum CREEventCode
 struct CRE_Event
 {
 	//piece of data telling the engine what do to with this information
-	CREEventCode eventType;
+	CREEventCode eventType = CRE_EVENT_QUIT;
 
 	//generic unions to store data, function, and addresses
-	genericData generic1;
-	genericData generic2;
-	genericData generic3;
-	genericData generic4;
+	genericData generic1 = { NULL };
+	genericData generic2 = { NULL };
+	genericData generic3 = { NULL };
+	genericData generic4 = { NULL };
 
 	//reference entity ID.
-	unsigned int entityID;
+	unsigned int entityID = 0;
 };
 
 //returns string version of the passed event code

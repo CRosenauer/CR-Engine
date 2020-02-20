@@ -46,6 +46,8 @@ bool eventHandler::processEvents()
 		e = CREEventQueue.front();
 		CREEventQueue.pop();
 
+		int tempID;
+
 		switch (e.eventType)
 		{
 #ifdef EVENT_QUIT
@@ -69,7 +71,7 @@ bool eventHandler::processEvents()
 
 #ifdef EVENT_LOAD_TEXTURE
 		case CRE_EVENT_LOAD_TEXTURE:
-			entityFromID(e.entityID)->setTexture( * (texture*) (e.generic1.pointer) );
+			entityFromID(e.entityID)->setTexture( * (textureData*) (e.generic1.pointer) );
 			break;
 #endif
 
@@ -113,10 +115,42 @@ bool eventHandler::processEvents()
 		case CRE_EVENT_IF_GOTO:
 			if ( (bool) e.generic1.function( entityFromID(e.entityID), e.generic2.pointer ) )
 			{
-				//replace the value at the address of the old script with conditional goto script
-				* (script*) e.generic3.pointer = * (script*) e.generic2.pointer;
+				//replace the value at the address of the old script (generic4) with conditional goto script (generic3)
+				try
+				{
+					if (e.generic4.pointer == NULL)
+						throw 0;
+
+						tempID = ((const script*)e.generic4.pointer)->entityID;
+					*(script*)e.generic4.pointer = *(script*)e.generic3.function(NULL, NULL);
+					((script*)e.generic4.pointer)->entityID = tempID;
+				}
+				catch(int)
+				{
+					printf("Error in CRE_EVENT_IF_GOTO: generic4 was NULL");
+				}
 			}
 				
+			break;
+#endif
+
+#ifdef EVENT_GOTO
+		case CRE_EVENT_GOTO:
+			//replace the value at the address of the old script (generic2) with the goto script (generic1)
+			try
+			{
+				if (e.generic2.pointer == NULL)
+					throw 0;
+
+				tempID = ((const script*)e.generic2.pointer)->entityID;
+				*(script*)e.generic2.pointer = *(script*)e.generic1.function(NULL, NULL);
+				((script*)e.generic2.pointer)->entityID = tempID;
+			}
+			catch (int)
+			{
+				printf("Error in CRE_EVENT_GOTO: generic2 was NULL");
+			}
+			
 			break;
 #endif
 

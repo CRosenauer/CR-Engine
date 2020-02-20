@@ -19,8 +19,7 @@ enum GAME_SCREEN
 	INITIALIZED
 };
 
-entity* Player = new entity;
-entity* testEntity = new entity;
+entity* Player;
 
 void TestGame()
 {	
@@ -44,22 +43,10 @@ void TestGame()
 	{
 	default:
 	case NOT_INITIALIZED:
-		
-		entityBlock.push_back(Player);
-		
-		entityBlock.push_back(testEntity);
 
-		CREAudio.loadMusic("Friday_Chinatown.mp3");
+		Player = entityFromID(allocateEntity(test));
 
-		Player->setTexture(ship);
-		Player->setRenderingFlag(RENDERINGFLAG_SPRITE);
-		Player->setPosition(32, 32, 0); 
-
-		testEntity->setAnimation(&testAnimation00, ANIMATION_LOOP);
-		testEntity->setRenderingFlag(RENDERINGFLAG_SPRITE);
-		testEntity->setPosition(128, 128, 0);
-
-		setGround(test_ground);
+		CREScriptHandler.loadScript( testScript00, Player->getEntityID() );
 
 		gameScreen = INITIALIZED;
 		break;

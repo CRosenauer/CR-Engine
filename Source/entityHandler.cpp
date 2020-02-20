@@ -27,7 +27,7 @@ unsigned int allocateEntity(const ENTITY_TYPE& type)
 	{
 	default:
 	case test:
-		//alloc entity child of type test entity.
+		entityBlock.push_back(new entity);
 		break;
 	}
 

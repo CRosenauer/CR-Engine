@@ -14,7 +14,7 @@
 #include "testGrounds.hpp"
 #include "testTexture.hpp"
 #include "testAnim.hpp"
-#include "testScript.hpp"
+#include "testScript.h"
 
 
 void TestGame();

@@ -31,7 +31,7 @@ void scriptHandler::pushEvent(const std::list<script>::iterator& scriptLoc)
 //theres also a memory leak. maybe not in this function but somewhere
 void scriptHandler::processScripts()
 {
-	//traverses script list
+	//traverses script list and processes each event in the script list.
 	for (scriptIndex = scriptList.begin(); scriptIndex != scriptList.end(); scriptIndex++)
 	{
 		bool scriptDeleted = false;
@@ -59,6 +59,22 @@ void scriptHandler::processScripts()
 
 				*scriptIndex = *(scriptIndex->nextScript);
 				scriptIndex->entityID = ID;
+
+				//address passing for "goto" type events.
+				switch (scriptIndex->event.eventType)
+				{
+				case CRE_EVENT_IF_GOTO:
+					scriptIndex->event.generic4.pointer = &*scriptIndex;
+					scriptIndex->frameCount = 1;
+
+					break;
+				case CRE_EVENT_GOTO:
+					scriptIndex->event.generic2.pointer = &*scriptIndex;
+					scriptIndex->frameCount = 1;
+
+				default:
+					break;
+				}
 
 				pushEvent(scriptIndex);
 			}
