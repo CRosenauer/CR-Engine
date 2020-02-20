@@ -3,6 +3,28 @@
  updates to the CR-Engine. For a more general overview see
  repository notes.
  
+# Feburary, 19, 2020
+ In this update the event handlering system was overhauled
+ to allow for more robust events and scripting, along with
+ logical scripting.
+ 
+ Event have been overhauled and now include 4 generic data
+ unions which can hold a void ptr, function ptr (that takes arguements
+ (void ptr, void ptr), or 32-bit piece of other data.
+ 
+ Additionally, the list of event types has been expanded to
+ include logical events, background/foreground events,
+ logical events, and more. This list of event types will
+ be updated further in the future. Information on event types
+ can be found in "event.h"
+ 
+ Event handler has been moved to it's own set of files,
+ "eventHandler.h" and "eventHandler.cpp". The functionality
+ of the event handler remains unchanged.
+ 
+ There are currently some frame rate issues. Next update I
+ will look into these issues and see what I can optimize.
+ 
 # Feburary, 11, 2020
  In this update background and foregrounds functionality
  has been added via the "ground" class and related data
