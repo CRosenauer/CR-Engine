@@ -100,7 +100,7 @@ const animation test_background_anim_00 =
 	&test_background_anim_01
 };
 
-const union groundImageData test_background_anim = { (const textureData*)  &test_background_anim_00 };
+const union groundImageData test_background_anim = { (textureData*) &test_background_anim_00 };
 
 const union groundImageData test_HUD = { &test_HUD_data };
 

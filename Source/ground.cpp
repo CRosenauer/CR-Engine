@@ -65,6 +65,13 @@ ground::ground(const groundData& data)
 	}
 }
 
+ground::~ground()
+{
+	gTexture.~texture();
+	gAnimation = NULL;
+	gFirstAnim = NULL;
+}
+
 void ground::loadGround(const groundData& data)
 {
 	posX = 0;
@@ -221,6 +228,16 @@ void resetGround(const RENDERING_FLAG& flag)
 
 void resetGround()
 {
+	for (int i = 0; i < foreground.size(); i++)
+	{
+		foreground[i]->~ground();
+	}
+
+	for (int i = 0; i < background.size(); i++)
+	{
+		background[i]->~ground();
+	}
+
 	foreground.clear();
 	background.clear();
 }

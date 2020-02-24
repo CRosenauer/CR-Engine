@@ -1,5 +1,7 @@
 #include "testScript.h"
 
+extern video CREVideo;
+
 namespace TSF
 {
 	void TE__testPrint(void* unused, char* text)
@@ -25,9 +27,45 @@ namespace TSF
 		entity->getPosition(tempPos);
 
 		if (tempPos[0] == pos->x && tempPos[1] == pos->y)
-			printf("Test passed: CRE_EVENT_FUNCTION\n");
+			printf("Test passed: entity position correct\n");
 		else
-			printf("Test failed: CRE_EVENT_FUNCTION\n");
+			printf("Test failed: entity position incorrect\n");
+	}
+
+	void TE__validateDestRect(entity* entity, SDL_Point* pos)
+	{
+		texture tempTexture = *entity->getTexture();
+
+		SDL_Rect validationRect = tempTexture.getDestRect();
+
+		//hard coded values to "correct" texture position offsets
+		validationRect.x += 8;
+		validationRect.y += 8;
+
+		if ((validationRect.x == pos->x) && (validationRect.y == pos->y))
+			printf("Test Passed: dest rect position correct.\n");
+		else
+		{
+			printf("Test failed: dest rect position not correct.\nActual dest rect positions: %i, %i\n", validationRect.x, validationRect.y);
+		}
+			
+	}
+
+	void TE__moveViewport(void* unused, SDL_Point* pos)
+	{
+		int posArray[] = { pos->x, pos->y };
+		CREVideo.setCameraPos(posArray);
+	}
+
+	void TE__validateViewport(void* unused, SDL_Point* pos)
+	{
+		int posArray[2];
+		CREVideo.getCameraPos(posArray);
+
+		if ((posArray[0] == pos->x) && (posArray[1] == pos->y))
+			printf("Test Passed: viewport position correct.\n");
+		else
+			printf("Test failed: viewport position not correct.\n");
 	}
 
 	bool returnTrue(void* unused1, void* unused2)
@@ -39,4 +77,36 @@ namespace TSF
 	{
 		return &testScript04;
 	}
+
+	const script* returnScriptTest12(void* unused1, void* unused2)
+	{
+		return &scriptTest12;
+	}
+
+	void ST_testPrintf_1(void* unused1, void* unused2)
+	{
+		printf("You should see this on frame 0.\n");
+	}
+
+	void ST_testPrintf_2(void* unused1, void* unused2)
+	{
+		printf("You should also see this on frame 0.\n");
+	}
+
+	void ST_testPrintf_3(void* unused1, void* unused2)
+	{
+		printf("You should see this on frame 1.\n");
+	}
+
+	void ST_testPrintf_4(void* unused1, void* unused2)
+	{
+		printf("You should see this on frame 2.\n");
+	}
+
+	void ST_testPrintf_5(void* unused1, void* unused2)
+	{
+		printf("You should also see this on frame 1.\n");
+	}
+
 }
+

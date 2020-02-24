@@ -124,6 +124,7 @@ bool eventHandler::processEvents()
 						tempID = ((const script*)e.generic4.pointer)->entityID;
 					*(script*)e.generic4.pointer = *(script*)e.generic3.function(NULL, NULL);
 					((script*)e.generic4.pointer)->entityID = tempID;
+
 				}
 				catch(int)
 				{
@@ -145,6 +146,7 @@ bool eventHandler::processEvents()
 				tempID = ((const script*)e.generic2.pointer)->entityID;
 				*(script*)e.generic2.pointer = *(script*)e.generic1.function(NULL, NULL);
 				((script*)e.generic2.pointer)->entityID = tempID;
+
 			}
 			catch (int)
 			{

@@ -160,7 +160,22 @@
 		with the returned by the function in generic3.
 		Note: generic3 is a function rather than an address to prevent circular variable dependancies
 	
+	CRE_EVENT_SPAWN_ENTITY_SCRIPT - currently unimplemented
+	generic1-4: pointer to the script(s) that will be loaded to the new entity
+	entityID:   unused
 
+		Used to spawn an entity and imediately apply a script(s) to it.
+		Scripts in generic1-4 will be applied in order. To terminate the active scripts set any generic
+		to NULL.
+
+		ex.) generic 1: pointer to a script
+		     generic 2: NULL
+		     generic 3: pointer to a script
+			 generic 4: pointer to a script
+
+		In this case, when the event handler attempts to push generic 2 to the script handler the event handler
+		will see that generic 2 is NULL and will assume that there are no more scripts to load. As such, only
+		the script in generic 1 will be loaded to the newly spawned entity.
 */
 
 union genericData
@@ -218,6 +233,13 @@ enum CREEventCode
 #ifdef EVENT_RESET_GROUNDS
 	CRE_EVENT_RESET_ALL_GROUNDS,
 #endif
+
+
+	//entity based events
+
+#ifdef EVENT_SPAWN_ENTITY_SCRIPT
+	CRE_EVENT_SPAWN_ENTITY_SCRIPT
+#endif // EVENT_SPAWN_ENTITY_SCRIPT
 
 
 	//operation events
