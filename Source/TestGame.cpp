@@ -4,6 +4,7 @@
 extern vector<entity*> entityBlock;
 
 //handlers for audio, inputs, etc. Most externally defined in CREngine.cpp
+extern video		CREVideo;
 extern audio        CREAudio;
 extern inputHandler CREInput;
 
@@ -20,16 +21,11 @@ enum GAME_SCREEN
 };
 
 entity* Player;
+int cameraPos[2];
+static GAME_SCREEN gameScreen = NOT_INITIALIZED;
 
 void TestGame()
 {	
-	static GAME_SCREEN gameScreen;
-	
-	if (gameScreen == NULL)
-	{
-		gameScreen = NOT_INITIALIZED;
-	}
-	
 	SDL_Rect tempSource;
 	tempSource.x = 0;
 	tempSource.y = 0;
@@ -46,13 +42,17 @@ void TestGame()
 
 		Player = entityFromID(allocateEntity(test));
 
-		CREScriptHandler.loadScript( testScript00, Player->getEntityID() );
+		CREScriptHandler.loadScript(viewportTestScript00, Player->getEntityID());
+		CREScriptHandler.loadScript(testScript00, Player->getEntityID());
+
+		Player->setPosition(200, 200, 0);
+
 
 		gameScreen = INITIALIZED;
 		break;
 		
 	case INITIALIZED:
-		if(Player != NULL)
+			if(Player != NULL)
 			Player->getPosition(tempPos);
 
 		CREInput.getUserInputs(userInputs);
@@ -83,6 +83,35 @@ void TestGame()
 		}
 
 		Player->setPosition(tempPos[0], tempPos[1], tempPos[2]);
+		
+		
+		CREVideo.getCameraPos(cameraPos);
+
+		//checks for updating camera position
+		
+		//check x position
+		if (tempPos[0] - cameraPos[0] < 200 )
+		{
+			cameraPos[0] = tempPos[0] - 200;
+		}
+		else if ( cameraPos[0] + 640 - tempPos[0] < 200)
+		{
+			cameraPos[0] = tempPos[0] + 200 - 640;
+		}
+
+		//check y position
+		if (tempPos[1] - cameraPos[1] < 200)
+		{
+			cameraPos[1] = tempPos[1] - 200;
+		}
+		else if (cameraPos[1] + 480 - tempPos[1] < 200)
+		{
+			cameraPos[1] = tempPos[1] + 200 - 480;
+		}
+
+		CREVideo.setCameraPos(cameraPos);
+
+		CREVideo.setCameraPos(cameraPos);
 
 		break;
 	}

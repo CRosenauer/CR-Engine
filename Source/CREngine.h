@@ -1,6 +1,10 @@
 #ifndef CRENGINE_H
 #define CRENGINE_H
 
+//#define COMPONENT_MS_TIMER
+//#define MANUAL_ADVANCE_FRAME
+//#define PRINT_FRAMECOUNT
+
 #include <cstdio>
 #include <new>
 #include <vector>
@@ -17,6 +21,7 @@
 #include "audio.h"
 #include "scriptHandler.h"
 #include "eventHandler.h"
+#include "timer.h"
 
 
 //initialized anything that needs to be set up in CR Engine

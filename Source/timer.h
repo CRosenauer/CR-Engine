@@ -1,6 +1,8 @@
 #ifndef TIMER_H
 #define TIMER_H
 
+#include <cstdio>
+
 #include <SDL_timer.h>
 
 void setFrameTimer();
@@ -13,5 +15,9 @@ void pollFrameTimer();
 
 void setFrameRate(const unsigned int& frameRate);
 //sets max framerate to inputted variable.
+
+void pollMSTimer();
+
+Uint32 getMSTimer();
 
 #endif //TIMER_H

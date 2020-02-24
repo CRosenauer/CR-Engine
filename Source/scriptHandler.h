@@ -30,6 +30,10 @@ private:
 	//pushes an event to event queue.
 	//event queue is not stored in "script.h" but is part of SDL.
 	void pushEvent(const std::list<script>::iterator& scriptLoc);
+
+	//performs operations on "goto" type events that would normally occur in eventHandler class.
+	//function needed to process goto event when they are loaded rather than after scriptes are loaded.
+	void processGotoEvent(script s);
 };
 
 #endif //SCRIPTHANDLER_H

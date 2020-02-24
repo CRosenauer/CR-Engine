@@ -6,10 +6,6 @@ extern vector<entity*> entityBlock;
 extern vector<ground*> background;
 extern vector<ground*> foreground;
 
-
-//flag to have only onscreen entites render to the image
-#define ONSCREEN_RENDER_ONLY
-
 video::video()
 {
 	title =  "Test Game";
@@ -129,13 +125,6 @@ void video::render()
 			{
 				SDL_Rect tempDest = entityBlock[i]->getTextureDest();
 				
-#ifdef ONSCREEN_RENDER_ONLY
-				//check if entity's texture is on screen
-				if( tempDest.x < cameraPosX + screenWidth &&
-				    tempDest.x + tempDest.w > cameraPosX &&
-					tempDest.y < cameraPosY + screenHeight &&
-					tempDest.y + tempDest.h > cameraPosY)
-#endif //ONSCREEN_RENDER_ONLY
 					switch (entityBlock[i]->getRenderingFlag())
 					{
 					case RENDERINGFLAG_STATIC_BACKGROUND:
@@ -184,30 +173,70 @@ void video::render()
 		backgroundQueue.pop();
 		//load background layer from queue for renderering
 
-		//unsure how to handle math for this
+		//variables for later use
+		SDL_Rect baseDestTempRect = tempTexture.getDestRect(); //destination rect of the entire image to draw
+		SDL_Rect onScreenDestRect;							       //destination rect of the image that will be rendered
+		SDL_Rect viewportRect = { cameraPosX, cameraPosY, screenWidth, screenHeight }; //rect to represent viewport
 
-		//render set up background layer for renderering.
-		SDL_RenderCopy(CRERenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), &tempTexture.getDestRect());
+		//render set up entity texture for renderering.
+		if (SDL_IntersectRect(&baseDestTempRect, &viewportRect, &onScreenDestRect))
+		{
+			//math to determine which part of the source image will be rendered
+			//used to save performance with drawing
+			SDL_Rect cutSource;
+			//destTempRect; //rect for what part of the source will be drawn
+
+			//int dx = cutSource.x - baseDestTempRect.x;
+			//int dy = cutSource.y - baseDestTempRect.y;
+
+			cutSource.x = onScreenDestRect.x - baseDestTempRect.x;
+			cutSource.y = onScreenDestRect.y - baseDestTempRect.y;
+			cutSource.w = onScreenDestRect.w;
+			cutSource.h = onScreenDestRect.h;
+
+			// math to render relative to viewport position
+			onScreenDestRect.x = onScreenDestRect.x - cameraPosX;  //convert the position relative to the viewport
+			onScreenDestRect.y = onScreenDestRect.y - cameraPosY;
+
+			SDL_RenderCopy(CRERenderer, tempTexture.getTexture(), &cutSource, &onScreenDestRect); //render to screen
+		}
 	}
 
 
 	/***  Render queued sprites  ***/
 	while (!spriteQueue.empty())
 	{
+		//load background layer from queue for renderering
 		tempTexture = *spriteQueue.front();
-
 		spriteQueue.pop();
 
-		//load entity from entity rendering queue
-		//and pop front element from queue
-
-		SDL_Rect tempRect = tempTexture.getDestRect();
-
-		tempRect.x = tempRect.x - cameraPosX;
-		tempRect.y = tempRect.y - cameraPosY;
+		//variables for later use
+		SDL_Rect baseDestTempRect = tempTexture.getDestRect(); //destination rect of the entire image to draw
+		SDL_Rect onScreenDestRect;							       //destination rect of the image that will be rendered
+		SDL_Rect viewportRect = { cameraPosX, cameraPosY, screenWidth, screenHeight }; //rect to represent viewport
 
 		//render set up entity texture for renderering.
-		SDL_RenderCopy(CRERenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), &tempRect);
+		if (SDL_IntersectRect(&baseDestTempRect, &viewportRect, &onScreenDestRect))
+		{
+			//math to determine which part of the source image will be rendered
+			//used to save performance with drawing
+			SDL_Rect cutSource;
+			//destTempRect; //rect for what part of the source will be drawn
+
+			//int dx = cutSource.x - baseDestTempRect.x;
+			//int dy = cutSource.y - baseDestTempRect.y;
+
+			cutSource.x = onScreenDestRect.x - baseDestTempRect.x;
+			cutSource.y = onScreenDestRect.y - baseDestTempRect.y;
+			cutSource.w = onScreenDestRect.w;
+			cutSource.h = onScreenDestRect.h;
+
+			// math to render relative to viewport position
+			onScreenDestRect.x = onScreenDestRect.x - cameraPosX;  //convert the position relative to the viewport
+			onScreenDestRect.y = onScreenDestRect.y - cameraPosY;
+
+			SDL_RenderCopy(CRERenderer, tempTexture.getTexture(), &cutSource, &onScreenDestRect); //render to screen
+		}
 	}
 
 
@@ -218,11 +247,34 @@ void video::render()
 		//load background layer from queue for renderering
 		tempTexture = *foregroundQueue.front();
 		foregroundQueue.pop();
+		
+		//variables for later use
+		SDL_Rect baseDestTempRect = tempTexture.getDestRect(); //destination rect of the entire image to draw
+		SDL_Rect onScreenDestRect;							       //destination rect of the image that will be rendered
+		SDL_Rect viewportRect = { cameraPosX, cameraPosY, screenWidth, screenHeight }; //rect to represent viewport
 
-		//unsure how to handle math for this
+		//render set up entity texture for renderering.
+		if (SDL_IntersectRect(&baseDestTempRect, &viewportRect, &onScreenDestRect))
+		{
+			//math to determine which part of the source image will be rendered
+			//used to save performance with drawing
+			SDL_Rect cutSource;
+			//destTempRect; //rect for what part of the source will be drawn
 
-		//render set up background layer for renderering.
-		SDL_RenderCopy(CRERenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), &tempTexture.getDestRect());
+			//int dx = cutSource.x - baseDestTempRect.x;
+			//int dy = cutSource.y - baseDestTempRect.y;
+
+			cutSource.x = onScreenDestRect.x - baseDestTempRect.x;
+			cutSource.y = onScreenDestRect.y - baseDestTempRect.y;
+			cutSource.w = onScreenDestRect.w;
+			cutSource.h = onScreenDestRect.h;
+
+			// math to render relative to viewport position
+			onScreenDestRect.x = onScreenDestRect.x - cameraPosX;  //convert the position relative to the viewport
+			onScreenDestRect.y = onScreenDestRect.y - cameraPosY;
+
+			SDL_RenderCopy(CRERenderer, tempTexture.getTexture(), &cutSource, &onScreenDestRect); //render to screen
+		}
 	}
 
 	//Static backgrounds queued to allow paralax b.g.
@@ -293,6 +345,12 @@ void video::setCameraPos(const int pos[2])
 {
 	cameraPosX = pos[0];
 	cameraPosY = pos[1];
+}
+
+void video::getResolution(int pos[2])
+{
+	pos[0] = screenWidth;
+	pos[1] = screenHeight;
 }
 
 #ifdef FRAMERATE_COUNTER

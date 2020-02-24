@@ -66,6 +66,10 @@ public:
 	//cameraPosX = pos[0], cameraPosY = pos[1]
 	void setCameraPos(const int pos[2]);
 
+	//returns current game resolution
+	//pos[0] = width, pos[1] = height
+	void getResolution(int pos[2]);
+
 #ifdef FRAMERATE_COUNTER
 	float getFrameRate();
 #endif

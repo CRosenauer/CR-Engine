@@ -3,6 +3,31 @@
  updates to the CR-Engine. For a more general overview see
  repository notes.
  
+# Feburary, 23, 2020
+ In this update the rendering system has been changed slightly
+ to (hopefully) optimize rendering and increase frame rates.
+ Additionally, I have made some fixes to the script handler class.
+ 
+ Starting with the rendering system; the render function in the video
+ class now calculates which textures are currently within view of the
+ viewport along with the portions of the textures that are within view
+ of the viewport. The rendering system only draws from the portions
+ of the textures that would be visible in the viewport and only
+ draws to the portion of the texture that would appear on the viewport.
+ 
+ In theory this should speed things up when drawing large textures,
+ however it seems that drawing large textures is just really
+ inefficient. In the futures I will liekly optimize this further.
+ 
+ As for the fixes to the script handler class; the interpretScripts
+ function in the scriptHandler class was not functioning as intended
+ in certain scenarios. These issues have been resolved and the
+ scriptHandler class is fully functional to my knowledge.
+ 
+ The next update will be working with the video rendering system
+ to allow for dynamic display resolutions (with fixed rendering resolutions)
+ along with texture scaling, rotating, and stretching.
+ 
 # Feburary, 19, 2020
  In this update the event handlering system was overhauled
  to allow for more robust events and scripting, along with
