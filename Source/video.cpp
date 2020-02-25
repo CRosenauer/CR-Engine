@@ -1,5 +1,4 @@
 #include "video.h"
-//#include <cassert>
 
 extern SDL_Renderer* CRERenderer;
 extern vector<entity*> entityBlock;
@@ -9,8 +8,8 @@ extern vector<ground*> foreground;
 video::video()
 {
 	title =  "Test Game";
-	screenWidth = 640;
-	screenHeight = 480;
+	screenWidth = RENDERING_SCREEN_WIDTH;
+	screenHeight = RENDERING_SCREEN_HEIGHT;
 	cameraPosX = 0;
 	cameraPosY = 0;
 	windowFlag = SDL_WINDOW_SHOWN;
@@ -296,17 +295,9 @@ void video::render()
 	//render frame to screen.
 	SDL_RenderPresent(CRERenderer);
 
-#ifdef FRAMECAP_60
+#ifdef FRAMECAP
 	pollFrameTimer();
 	setFrameTimer();
-#endif
-
-#ifdef FRAMERATE_COUNTER
-	prevTicks = currentTicks;
-	currentTicks = static_cast<float>(SDL_GetTicks());
-
-	frameRate = 1000.f / (currentTicks - prevTicks);
-	//printf("Frame rate: %f\n", frameRate);
 #endif
 }
 

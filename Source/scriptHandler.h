@@ -3,6 +3,8 @@
 
 #include <list>
 
+#include "config.h"
+
 #include "script.h"
 #include "event.h"
 #include "eventHandler.h"

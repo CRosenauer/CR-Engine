@@ -1,15 +1,14 @@
 #ifndef VIDEO_H
 #define VIDEO_H
 
-#define FRAMECAP_60
-#define FRAMERATE_COUNTER
-
 #include <SDL.h>
 #include <SDL_Surface.h>
 #include <SDL_Render.h>
 #include <queue>
 #include <vector>
 #include <string>
+
+#include "config.h"
 
 #include "entity.h"
 #include "texture.h"
