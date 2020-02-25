@@ -13,7 +13,6 @@
 #include "entity.h"
 #include "texture.h"
 #include "timer.h"
-#include "renderingFlags.hpp"
 #include "ground.h"
 
 /* video.h, main class used to write images to the screen
@@ -102,8 +101,6 @@ private:
 	queue<CRE_Texture*> spriteQueue;
 	queue<CRE_Texture*> backgroundQueue;
 	queue<CRE_Texture*> foregroundQueue;
-	queue<CRE_Texture*> staticBackgroundQueue;
-	queue<CRE_Texture*> staticForegroundQueue;
 };
 
 #endif //VIDEO_H

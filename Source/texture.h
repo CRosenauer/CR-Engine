@@ -9,6 +9,51 @@
 #include "file.h"
 
 
+enum CRE_RenderingFlag
+{
+	RENDERINGFLAG_SPRITE,
+	RENDERINGFLAG_BACKGROUND,
+	RENDERINGFLAG_FOREGROUND,
+	RENDERINGFLAG_STATIC_BACKGROUND,
+	RENDERINGFLAG_STATIC_FOREGROUND
+};
+
+/* Desciprtion of RENDERING_FLAGS members:
+ * enum RENDERINGFLAG
+ *
+ * RENDERINGFLAG_SPRITE
+ * Flag to render a texture as a sprite. In the middle priority between
+ * background and foreground.
+ *
+ * RENDERINGFLAG_BACKGROUND
+ * Flag to render a texture as a background. The second least priority
+ * rendering type behind RENDERINGFLAG_STATIC_BACKGROUND.
+ *
+ * RENDERINGFLAG_FOREGROUND
+ * Flag to render a texture as a foreground. The second highest priority
+ * rendering type behind RENDERINGFLAG_STATIC_FOREGROUND.
+ *
+ * RENDERINGFLAG_STATIC_BACKGROUND
+ * Flag to render a background texture that fits the entire screen
+ * and does not change position relative to the viewport. Like
+ * background  textures, is the least priority rendering type.
+ *
+ * RENDERINGFLAG_STATIC_FOREGROUND
+ * Flag to render a foreground texture that fits the entire screen
+ * and does not change position relative to the viewport. Like
+ * foregournd textures, is the most priority rendering type.
+ *
+ *
+ * Rendering priority (high to low)
+ * RENDERINGFLAG_STATIC_FOREGROUND
+ * RENDERINGFLAG_FOREGROUND
+ * RENDERINGFLAG_SPRITE
+ * RENDERINGFLAG_BACKGROUND
+ * RENDERINGFLAG_STATIC_BACKGROUND
+ *
+*/
+
+
 enum CRE_RotationFlag
 {
 	ENTITY_CENTER,			//rotation point as the center point of the entity which owns this texture
@@ -18,10 +63,12 @@ enum CRE_RotationFlag
 
 struct CRE_TextureData
 {
-	std::string path;
-	SDL_Rect source;
-	int xOffset;
+	std::string path;	//file name of the image to load ex.) "image.png"
+	SDL_Rect source;	//rectangle in the image which the video system will use to draw from
+	int xOffset;		//offsets to have the 0 point of the texture not on the origin of the entity.
 	int yOffset;
+
+	CRE_RenderingFlag flag;
 };
 
 class CRE_Texture
@@ -50,6 +97,10 @@ public:
 
 	void setRect(SDL_Rect source, SDL_Rect dest);
 
+	void setRenderingFlag(const CRE_RenderingFlag& flag) { renderingFlag = flag; }
+
+	CRE_RenderingFlag getRenderingFlag() { return renderingFlag; }
+
 private:
 	SDL_Texture* tTexture = NULL;
 	SDL_Rect     tSource;
@@ -74,6 +125,8 @@ private:
 	SDL_RendererFlip flipFlag;
 
 	CRE_RotationFlag rotationFlag;
+
+	CRE_RenderingFlag renderingFlag;
 };
 
 #endif //TEXTURE_H

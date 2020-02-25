@@ -42,6 +42,7 @@ CRE_Ground::CRE_Ground(const CRE_GroundData& data)
 		
 		//load texture from groundData struct
 		gTexture.loadTexture(*(data.data->text), destRect);
+		gTexture.setRenderingFlag(renderingFlag);
 		break;
 
 	case ANIMATION:
@@ -61,8 +62,11 @@ CRE_Ground::CRE_Ground(const CRE_GroundData& data)
 
 		//load first frame from the animation.
 		gTexture.loadTexture(*(data.data->anim->textureData), destRect);
+		gTexture.setRenderingFlag(renderingFlag);
 		break;
 	}
+
+	printf("Ground internal texture renderingFlag: %i\n", gTexture.getRenderingFlag());
 }
 
 CRE_Ground::~CRE_Ground()
@@ -99,6 +103,9 @@ void CRE_Ground::loadGround(const CRE_GroundData& data)
 
 		//load texture from groundData struct
 		gTexture.loadTexture(*(data.data->text), destRect);
+
+		gTexture.setRenderingFlag(renderingFlag);
+
 		break;
 
 	case ANIMATION:
@@ -118,8 +125,11 @@ void CRE_Ground::loadGround(const CRE_GroundData& data)
 
 		//load first frame from the animation.
 		gTexture.loadTexture(*(data.data->anim->textureData), destRect);
+		gTexture.setRenderingFlag(renderingFlag);
 		break;
 	}
+
+	printf("Ground internal texture renderingFlag: %i\n", gTexture.getRenderingFlag());
 }
 
 void CRE_Ground::update()
@@ -150,6 +160,7 @@ void CRE_Ground::update()
 				}
 
 				gTexture.loadTexture(*(gAnimation->textureData), destRect);
+				gTexture.setRenderingFlag(renderingFlag);
 			}
 
 			animFrameCount--;

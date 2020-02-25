@@ -102,14 +102,17 @@ void CRE_Entity::getAcceleration(int acc[3])
 
 void CRE_Entity::setAnimation(const CRE_Animation* anim, const CRE_AnimationFlag& flag)
 {
+	//set up internal animation data
 	eAnimation = anim;
-
 	animFrameCount = eAnimation->frameCount;
-
 	if (flag == ANIMATION_LOOP)
 		eFirstAnimation = anim;
 
+	//load animation texture
 	setTexture(*(eAnimation->textureData));
+
+	//decrement frame count
+	animFrameCount--;
 }
 
 unsigned int CRE_Entity::getEntityID()
@@ -130,6 +133,8 @@ CRE_RenderingFlag CRE_Entity::getRenderingFlag()
 void CRE_Entity::setRenderingFlag(CRE_RenderingFlag flag)
 {
 	renderingFlag = flag;
+
+	eTexture.setRenderingFlag(flag);
 }
 
 void CRE_Entity::setEntityType(const CRE_EntityType& i)
@@ -173,6 +178,7 @@ void CRE_Entity::updateAnimation()
 			}
 
 			setTexture(*(eAnimation->textureData));
+			eTexture.setRenderingFlag(renderingFlag);
 		}
 
 		animFrameCount--;

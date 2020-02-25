@@ -59,7 +59,8 @@ const CRE_TextureData test_background_anim_data_00 =
 	"test_background_anim_00.png",
 	{0, 0, 640, 480},
 	0,
-	0
+	0,
+	RENDERINGFLAG_STATIC_BACKGROUND
 };
 
 const CRE_TextureData test_background_anim_data_01 =
@@ -67,7 +68,8 @@ const CRE_TextureData test_background_anim_data_01 =
 	"test_background_anim_01.png",
 	{0, 0, 640, 480},
 	0,
-	0
+	0,
+	RENDERINGFLAG_STATIC_BACKGROUND
 };
 
 const CRE_TextureData test_HUD_data =
@@ -75,7 +77,8 @@ const CRE_TextureData test_HUD_data =
 	"test_HUD.png",
 	{0, 0, 640, 480},
 	0,
-	0
+	0,
+	RENDERINGFLAG_STATIC_FOREGROUND
 };
 
 const CRE_TextureData test_scrolling_foreground_data =
@@ -83,7 +86,8 @@ const CRE_TextureData test_scrolling_foreground_data =
 	"test_scrolling_foreground.png",
 	{0, 0, 1280, 960},
 	0,
-	0
+	0,
+	RENDERINGFLAG_BACKGROUND
 };
 
 const CRE_Animation test_background_anim_01 =

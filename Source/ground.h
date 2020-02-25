@@ -84,6 +84,8 @@ public:
 	void getPosition(int pos[3]) { pos[0] = posX; pos[1] = posY; pos[2] = posZ; }
 	void setPosition(int pos[3]) { posX = pos[0]; posY = pos[2]; posZ = pos[3]; }
 
+	unsigned int getDepth() { return posZ; }
+
 	//functions to update texture data for animations
 	//to be used at the end of a frame render.
 	//don't touch it, just let the engine handle this function.

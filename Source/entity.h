@@ -9,7 +9,6 @@
 
 #include "texture.h"
 #include "animation.h"
-#include "renderingFlags.hpp"
 
 using namespace std;
 
