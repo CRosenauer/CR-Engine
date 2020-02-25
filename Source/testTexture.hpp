@@ -3,7 +3,7 @@
 
 #include "texture.h"
 
-const textureData ship =
+const CRE_TextureData ship =
 {
 	"ship.png",
 	{0, 0, 16, 16},
@@ -11,7 +11,7 @@ const textureData ship =
 	8
 };
 
-const textureData animationTest2
+const CRE_TextureData animationTest2
 {
 	"AnimationTest_02.png",
 	{ 0, 0, 16, 16 },
@@ -19,7 +19,7 @@ const textureData animationTest2
 	8
 };
 
-const textureData animationTest1
+const CRE_TextureData animationTest1
 {
 	"AnimationTest_01.png",
 	{ 0, 0, 16, 16 },
@@ -27,7 +27,7 @@ const textureData animationTest1
 	8
 };
 
-const textureData animationTest0
+const CRE_TextureData animationTest0
 {
 	"AnimationTest_00.png",
 	{ 0, 0, 16, 16 },

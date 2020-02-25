@@ -1,21 +1,21 @@
 #include "eventHandler.h"
 
-extern vector<entity*> entityBlock;
+extern vector<CRE_Entity*> entityBlock;
 
-extern queue<script>    primitiveScriptQueue;
+extern queue<CRE_Script>    primitiveScriptQueue;
 extern queue<CRE_Event> primitiveEventQueue;
 
-extern video CREVideo;
-extern audio CREAudio;
+extern CRE_Video CREVideo;
+extern CRE_Audio CREAudio;
 
 
-void eventHandler::queueEvent(CRE_Event e, unsigned int ID)
+void CRE_EventHandler::queueEvent(CRE_Event e, unsigned int ID)
 {
 	e.entityID = ID;
 	CREEventQueue.push(e);
 }
 
-void eventHandler::passQuitEvent()
+void CRE_EventHandler::passQuitEvent()
 {
 	CRE_Event e = 
 	{
@@ -35,7 +35,7 @@ void eventHandler::passQuitEvent()
 	CREEventQueue.push(e);
 }
 
-bool eventHandler::processEvents()
+bool CRE_EventHandler::processEvents()
 {
 	queuePrimitiveEvents();
 
@@ -71,25 +71,25 @@ bool eventHandler::processEvents()
 
 #ifdef EVENT_LOAD_TEXTURE
 		case CRE_EVENT_LOAD_TEXTURE:
-			entityFromID(e.entityID)->setTexture( * (textureData*) (e.generic1.pointer) );
+			entityFromID(e.entityID)->setTexture( * (CRE_TextureData*) (e.generic1.pointer) );
 			break;
 #endif
 
 #ifdef EVENT_LOAD_ANIMATION
 		case CRE_EVENT_LOAD_ANIMATION:
-			entityFromID(e.entityID)->setAnimation( (animationPtr) (e.generic1.pointer), (ANIMATION_FLAG) e.generic2.data );
+			entityFromID(e.entityID)->setAnimation( (CRE_AnimationPtr) (e.generic1.pointer), (CRE_AnimationFlag) e.generic2.data );
 			break;
 #endif
 
 #ifdef EVENT_LOAD_GROUNDS
 		case CRE_EVENT_LOAD_GROUNDS:
-			loadGround(* ( groundData*) e.generic1.pointer);
+			loadGround(* ( CRE_GroundData*) e.generic1.pointer);
 			break;
 #endif
 
 #ifdef EVENT_SET_GROUNDS
 		case CRE_EVENT_SET_GROUNDS:
-			setGround(* (groundData*) e.generic1.pointer);
+			setGround(* (CRE_GroundData*) e.generic1.pointer);
 			break;
 #endif
 
@@ -101,7 +101,7 @@ bool eventHandler::processEvents()
 			
 #ifdef EVENT_LOAD_SCRIPT
 		case CRE_EVENT_LOAD_SCRIPT:
-			primitiveScriptQueue.push( * (script*) e.generic1.pointer);
+			primitiveScriptQueue.push( * (CRE_Script*) e.generic1.pointer);
 			break;
 #endif
 
@@ -121,9 +121,9 @@ bool eventHandler::processEvents()
 					if (e.generic4.pointer == NULL)
 						throw 0;
 
-						tempID = ((const script*)e.generic4.pointer)->entityID;
-					*(script*)e.generic4.pointer = *(script*)e.generic3.function(NULL, NULL);
-					((script*)e.generic4.pointer)->entityID = tempID;
+						tempID = ((const CRE_Script*)e.generic4.pointer)->entityID;
+					*(CRE_Script*)e.generic4.pointer = *(CRE_Script*)e.generic3.function(NULL, NULL);
+					((CRE_Script*)e.generic4.pointer)->entityID = tempID;
 
 				}
 				catch(int)
@@ -143,9 +143,9 @@ bool eventHandler::processEvents()
 				if (e.generic2.pointer == NULL)
 					throw 0;
 
-				tempID = ((const script*)e.generic2.pointer)->entityID;
-				*(script*)e.generic2.pointer = *(script*)e.generic1.function(NULL, NULL);
-				((script*)e.generic2.pointer)->entityID = tempID;
+				tempID = ((const CRE_Script*)e.generic2.pointer)->entityID;
+				*(CRE_Script*)e.generic2.pointer = *(CRE_Script*)e.generic1.function(NULL, NULL);
+				((CRE_Script*)e.generic2.pointer)->entityID = tempID;
 
 			}
 			catch (int)
@@ -165,7 +165,7 @@ bool eventHandler::processEvents()
 	return true;
 }
 
-void eventHandler::queuePrimitiveEvents()
+void CRE_EventHandler::queuePrimitiveEvents()
 {
 	while (!primitiveEventQueue.empty())
 	{
@@ -174,7 +174,7 @@ void eventHandler::queuePrimitiveEvents()
 	}
 }
 
-void eventHandler::queueEvent(CRE_Event e)
+void CRE_EventHandler::queueEvent(CRE_Event e)
 {
 	CREEventQueue.push(e);
 }

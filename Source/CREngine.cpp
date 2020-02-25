@@ -15,14 +15,14 @@ Uint32 windowFlag = SDL_WINDOW_SHOWN;
 SDL_Renderer *CRERenderer = NULL;
 //main renderer for drawing to screen
 
-extern vector<entity*> entityBlock;
+extern vector<CRE_Entity*> entityBlock;
 
 //Handlers for input, video, etc.
-inputHandler  CREInput;
-video         CREVideo;
-audio         CREAudio;
-scriptHandler CREScriptHandler;
-eventHandler  CREEventHandler;
+CRE_InputHandler  CREInput;
+CRE_Video         CREVideo;
+CRE_Audio         CREAudio;
+CRE_ScriptHandler CREScriptHandler;
+CRE_EventHandler  CREEventHandler;
 
 
 void CREInit()
@@ -30,7 +30,7 @@ void CREInit()
 	/*** Engine Component Initialization Block ***/
 
 	//video window associated with current title, screen size, widescreen support, etc.
-	CREVideo = video(TITLE, screenWidth, screenHeight, windowFlag);
+	CREVideo = CRE_Video(TITLE, screenWidth, screenHeight, windowFlag);
 
 	const int IMG_FLAGS = IMG_INIT_PNG;
 

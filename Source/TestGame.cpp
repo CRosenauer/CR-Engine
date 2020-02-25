@@ -1,15 +1,15 @@
 #include "TestGame.h"
 
 //Buses to hold entities
-extern vector<entity*> entityBlock;
+extern vector<CRE_Entity*> entityBlock;
 
 //handlers for audio, inputs, etc. Most externally defined in CREngine.cpp
-extern video		CREVideo;
-extern audio        CREAudio;
-extern inputHandler CREInput;
+extern CRE_Video		CREVideo;
+extern CRE_Audio        CREAudio;
+extern CRE_InputHandler CREInput;
 
-extern scriptHandler CREScriptHandler;
-extern eventHandler  CREEventHandler;
+extern CRE_ScriptHandler CREScriptHandler;
+extern CRE_EventHandler  CREEventHandler;
 
 
 const SDL_Rect UNDEFINED_RECT = { -1, -1, -1, -1 };
@@ -20,7 +20,7 @@ enum GAME_SCREEN
 	INITIALIZED
 };
 
-entity* Player;
+CRE_Entity* Player;
 int cameraPos[2];
 static GAME_SCREEN gameScreen = NOT_INITIALIZED;
 

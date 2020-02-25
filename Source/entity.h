@@ -13,7 +13,7 @@
 
 using namespace std;
 
-enum ENTITY_TYPE
+enum CRE_EntityType
 {
 	test //0
 };
@@ -23,31 +23,31 @@ union componentData
 
 };
 
-struct entityData
+struct CRE_EntityData
 {
-	ENTITY_TYPE entityType;
+	CRE_EntityType entityType;
 	componentData componentData;
 };
 
-class entity
+class CRE_Entity
 {
 public:
-	entity();
+	CRE_Entity();
 
 	//sets texture data based on passed data
 	//loads texture of .png image of path
 	//loads source to draw from source
 	//loads location to draw to from dest
-	void setTexture(const textureData& text);
+	void setTexture(const CRE_TextureData& text);
 
 	//sets eTexture to passed texture.
-	void setTexture(const texture& text);
+	void setTexture(const CRE_Texture& text);
 
 	//sets rendering flag of the entity. See renderingFlags.hpp for rendering flag information.
-	void setRenderingFlag(RENDERING_FLAG flag);
+	void setRenderingFlag(CRE_RenderingFlag flag);
 
 	//returns the texture associated with the entity
-	texture* getTexture();
+	CRE_Texture* getTexture();
 
 	//kinematic mutators for positon, velocity, and acceleration
 	void setPosition(int x, int y, int z);
@@ -61,7 +61,7 @@ public:
 	void getAcceleration(int acc[3]);
 	
 	//loads passed animation into memory.
-	void setAnimation(const animation* anim, const ANIMATION_FLAG& flag);
+	void setAnimation(const CRE_Animation* anim, const CRE_AnimationFlag& flag);
 
 	//returns ID of the entity
 	unsigned int getEntityID();
@@ -70,13 +70,13 @@ public:
 	int getDepth();
 
 	//returns current rendering mode of the entity
-	RENDERING_FLAG getRenderingFlag();
+	CRE_RenderingFlag getRenderingFlag();
 
 	//sets data.entityType to the passed interger.
-	void setEntityType(const ENTITY_TYPE& i);
+	void setEntityType(const CRE_EntityType& i);
 
 	//returns current entity type found in data.entityType
-	ENTITY_TYPE getEntityType();
+	CRE_EntityType getEntityType();
 
 	//returns internal texture's destination rect.
 	SDL_Rect getTextureDest();
@@ -94,20 +94,20 @@ private:
 	int velX, velY, velZ;
 	int accX, accY, accZ;
 
-	texture eTexture;
+	CRE_Texture eTexture;
 
 	bool rectIsUndefined(SDL_Rect);
 
-	const animation* eAnimation;
-	const animation* eFirstAnimation;
+	const CRE_Animation* eAnimation;
+	const CRE_Animation* eFirstAnimation;
 
 	int animFrameCount;
 
-	RENDERING_FLAG renderingFlag;
+	CRE_RenderingFlag renderingFlag;
 
 	unsigned int entityID;
 
-	entityData data;
+	CRE_EntityData data;
 };
 
 #endif //ENTITY_H

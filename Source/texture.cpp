@@ -2,7 +2,7 @@
 
 extern SDL_Renderer* CRERenderer;
 
-texture::texture()
+CRE_Texture::CRE_Texture()
 {
 	tDest = { 0, 0, 0, 0 };
 	tSource = tDest;
@@ -10,12 +10,12 @@ texture::texture()
 	yOffset = 0;
 }
 
-texture::~texture()
+CRE_Texture::~CRE_Texture()
 {
 	SDL_DestroyTexture(tTexture);
 }
 
-texture::texture(const texture& t)
+CRE_Texture::CRE_Texture(const CRE_Texture& t)
 {
 	//loads internal variables
 	tDest    = t.tDest;
@@ -27,7 +27,7 @@ texture::texture(const texture& t)
 	//creates a new SDL_Texture for internal texture rendering
 	loadTexture(textData, tDest);
 }
-void texture::operator = (const texture& t)
+void CRE_Texture::operator = (const CRE_Texture& t)
 {
 	//deallocate old texture
 	SDL_DestroyTexture(tTexture);
@@ -43,7 +43,7 @@ void texture::operator = (const texture& t)
 	loadTexture(textData, tDest);
 }
 
-void texture::loadTexture(const textureData& text, const SDL_Rect& dest)
+void CRE_Texture::loadTexture(const CRE_TextureData& text, const SDL_Rect& dest)
 {
 	textData = text;
 
@@ -82,22 +82,22 @@ void texture::loadTexture(const textureData& text, const SDL_Rect& dest)
 	tDest.y -= yOffset;
 }
 
-SDL_Texture* texture::getTexture()
+SDL_Texture* CRE_Texture::getTexture()
 {
 	return tTexture;
 }
 
-SDL_Rect texture::getSourceRect()
+SDL_Rect CRE_Texture::getSourceRect()
 {
 	return tSource;
 }
 
-SDL_Rect texture::getDestRect()
+SDL_Rect CRE_Texture::getDestRect()
 {
 	return tDest;
 }
 
-void texture::setRect(SDL_Rect source, SDL_Rect dest)
+void CRE_Texture::setRect(SDL_Rect source, SDL_Rect dest)
 {
 	tSource = source;
 	tDest   = dest;

@@ -1,6 +1,6 @@
 #include "file.h"
 
-std::string getFilePath(const std::string& name, const RESOURCE_PATH& path)
+std::string getFilePath(const std::string& name, const CRE_ResourcePath& path)
 {
 	//char* used to allow deallocation of memory as SDL_GetBasePath()
 	//returns dynamic pointer.

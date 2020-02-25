@@ -1,11 +1,11 @@
 #include "video.h"
 
 extern SDL_Renderer* CRERenderer;
-extern vector<entity*> entityBlock;
-extern vector<ground*> background;
-extern vector<ground*> foreground;
+extern vector<CRE_Entity*> entityBlock;
+extern vector<CRE_Ground*> background;
+extern vector<CRE_Ground*> foreground;
 
-video::video()
+CRE_Video::CRE_Video()
 {
 	title =  "Test Game";
 	screenWidth = RENDERING_SCREEN_WIDTH;
@@ -18,7 +18,7 @@ video::video()
 	CREVSurface = NULL;
 }
 
-video::video(const std::string& TITLE , const int& SCREENWIDTH, const int& SCREENHEIGHT, const Uint32& WINDOWFLAG)
+CRE_Video::CRE_Video(const std::string& TITLE , const int& SCREENWIDTH, const int& SCREENHEIGHT, const Uint32& WINDOWFLAG)
 {
 	title = TITLE;
 	screenWidth = SCREENWIDTH;
@@ -31,7 +31,7 @@ video::video(const std::string& TITLE , const int& SCREENWIDTH, const int& SCREE
 	CREVSurface = NULL;
 }
 
-void video::init()
+void CRE_Video::init()
 {
 	CREVWindow = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight, windowFlag);
 	if (CREVWindow == NULL)
@@ -59,7 +59,7 @@ void video::init()
 	setFrameTimer();
 }
 
-void video::render()
+void CRE_Video::render()
 {
 	//clear the frame to blank for renderering
 	SDL_RenderClear(CRERenderer);
@@ -70,7 +70,7 @@ void video::render()
 
 	//temperary texture for renderering
 	//use to place entities from rendering queue and to render to frame
-	texture tempTexture;
+	CRE_Texture tempTexture;
 
 	/***  Queue backgrounds and g=foregrounds to render queues based on depth  ***/
 	for (unsigned int i = 0; i < background.size(); i++)
@@ -301,7 +301,7 @@ void video::render()
 #endif
 }
 
-void video::loadTexture(texture* texture, RENDERING_FLAG flag)
+void CRE_Video::loadTexture(CRE_Texture* texture, CRE_RenderingFlag flag)
 {
 	switch (flag)
 	{
@@ -326,19 +326,19 @@ void video::loadTexture(texture* texture, RENDERING_FLAG flag)
 	}
 }
 
-void video::getCameraPos(int pos[2])
+void CRE_Video::getCameraPos(int pos[2])
 {
 	pos[0] = cameraPosX;
 	pos[1] = cameraPosY;
 }
 
-void video::setCameraPos(const int pos[2])
+void CRE_Video::setCameraPos(const int pos[2])
 {
 	cameraPosX = pos[0];
 	cameraPosY = pos[1];
 }
 
-void video::getResolution(int pos[2])
+void CRE_Video::getResolution(int pos[2])
 {
 	pos[0] = screenWidth;
 	pos[1] = screenHeight;

@@ -8,7 +8,15 @@
 
 #include "file.h"
 
-struct textureData
+
+enum CRE_RotationFlag
+{
+	ENTITY_CENTER,			//rotation point as the center point of the entity which owns this texture
+	TEXTURE_ZERO_CORNER,	//rotation point as the top-left corner of the texture
+	CUSTOM					//rotation point set relative to the entity which owns this texture
+};
+
+struct CRE_TextureData
 {
 	std::string path;
 	SDL_Rect source;
@@ -16,23 +24,23 @@ struct textureData
 	int yOffset;
 };
 
-class texture
+class CRE_Texture
 {
 public:
 	//default constructor
-	texture();
+	CRE_Texture();
 
 	//copy constructor
-	texture(const texture& t);
+	CRE_Texture(const CRE_Texture& t);
 
 	//destructor
 	//deallocates internal texture
-	~texture();
+	~CRE_Texture();
 
 	//overloaded = operatror
-	void operator = (const texture& t);
+	void operator = (const CRE_Texture& t);
 
-	void loadTexture(const textureData& text, const SDL_Rect& dest);
+	void loadTexture(const CRE_TextureData& text, const SDL_Rect& dest);
 
 	SDL_Texture* getTexture();
 
@@ -48,9 +56,24 @@ private:
 	SDL_Rect     tDest;
 
 	//used for overloaded = operator and copy constructor.
-	textureData textData;
+	CRE_TextureData textData;
 
+	//offsets used to create textures that aren't zeroed on the entity position
 	int xOffset, yOffset;
+
+	//scales used for texture stretching
+	unsigned int xScale, yScale;
+
+	//position to hold which point to rotate around for texture rotation
+	int rotationCenterX, rotationCenterY;
+
+	//degree to hold rotation angle of the texture.
+	double rotationDegree;
+
+	//flag for which way to flip the texture (if the texture is flipped)
+	SDL_RendererFlip flipFlag;
+
+	CRE_RotationFlag rotationFlag;
 };
 
 #endif //TEXTURE_H

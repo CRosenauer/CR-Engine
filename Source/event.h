@@ -152,16 +152,16 @@
 		the script in generic 1 will be loaded to the newly spawned entity.
 */
 
-union genericData
+union CRE_GenericData
 {
 	void* pointer;
-	void* (*function)( entity*, void* );
+	void* (*function)( CRE_Entity*, void* );
 	int data;
 };
 
 //event codes used for testing.
 //should be located in the "eventType" member of CRE_Event
-enum CREEventCode
+enum CRE_EventCode
 {
 #ifdef EVENT_QUIT
 	CRE_EVENT_QUIT,
@@ -240,13 +240,13 @@ enum CREEventCode
 struct CRE_Event
 {
 	//piece of data telling the engine what do to with this information
-	CREEventCode eventType = CRE_EVENT_QUIT;
+	CRE_EventCode eventType = CRE_EVENT_QUIT;
 
 	//generic unions to store data, function, and addresses
-	genericData generic1 = { NULL };
-	genericData generic2 = { NULL };
-	genericData generic3 = { NULL };
-	genericData generic4 = { NULL };
+	CRE_GenericData generic1 = { NULL };
+	CRE_GenericData generic2 = { NULL };
+	CRE_GenericData generic3 = { NULL };
+	CRE_GenericData generic4 = { NULL };
 
 	//reference entity ID.
 	unsigned int entityID = 0;
@@ -254,6 +254,6 @@ struct CRE_Event
 
 //returns string version of the passed event code
 //basically what you see in enum CRE_EVENT_CODE
-string eventCodeToString(const CREEventCode& code);
+string eventCodeToString(const CRE_EventCode& code);
 
 #endif //EVENT_HPP

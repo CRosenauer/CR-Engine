@@ -32,7 +32,7 @@ enum RENDERINGFLAG
 */
 
 
-enum IMAGE_TYPE
+enum CRE_GroundImageType
 {
 	TEXTURE,	//0
 	ANIMATION	//1
@@ -43,44 +43,44 @@ enum IMAGE_TYPE
 //texture* contains a pointer to an already in use texture
 //for use or say item incons on the HUD
 //animation contains a animation
-union groundImageData
+union CRE_GroundImageData
 {
-	const textureData* text;	//information for texture data
-	const animation* anim;		//information for animation data
+	const CRE_TextureData* text;	//information for texture data
+	const CRE_Animation* anim;		//information for animation data
 
-	~groundImageData() {}		//unused destructor. Included to prevent compilation warnings
+	~CRE_GroundImageData() {}		//unused destructor. Included to prevent compilation warnings
 };
 
 //struct to contain foreground and background data
-struct groundData
+struct CRE_GroundData
 {
-	const IMAGE_TYPE imageType;		//flag for if the ground is animated or a static texture
-	const groundImageData* data;		//union containing texture and animation data
-	const ANIMATION_FLAG animFlag;	//flag if the animation is looping or not
-	const RENDERING_FLAG flag;		//flag for the rendering layer this 
+	const CRE_GroundImageType imageType;		//flag for if the ground is animated or a static texture
+	const CRE_GroundImageData* data;		//union containing texture and animation data
+	const CRE_AnimationFlag animFlag;	//flag if the animation is looping or not
+	const CRE_RenderingFlag flag;		//flag for the rendering layer this 
 	const unsigned int groundDepth;	//data containing the depth of the ground layer.
 									//Larger depth means higher priority (currently unused)
 
-	const groundData* next;			//pointer to the next ground layer
+	const CRE_GroundData* next;			//pointer to the next ground layer
 
-	~groundData() {}				//unused destructor. Included to revent compilations warnings
+	~CRE_GroundData() {}				//unused destructor. Included to revent compilations warnings
 };
 
 //class used as container for foreground and background data
-class ground
+class CRE_Ground
 {
 public:
-	ground();
-	ground(const groundData& data);
+	CRE_Ground();
+	CRE_Ground(const CRE_GroundData& data);
 
-	~ground();
+	~CRE_Ground();
 
 	//loads passed ground data to this current ground
-	void loadGround(const groundData& groundDat);
+	void loadGround(const CRE_GroundData& groundDat);
 
 	//accessors
-	RENDERING_FLAG getRenderingFlag() { return renderingFlag; }
-	texture* getTexture() { return &gTexture; }
+	CRE_RenderingFlag getRenderingFlag() { return renderingFlag; }
+	CRE_Texture* getTexture() { return &gTexture; }
 	void getPosition(int pos[3]) { pos[0] = posX; pos[1] = posY; pos[2] = posZ; }
 	void setPosition(int pos[3]) { posX = pos[0]; posY = pos[2]; posZ = pos[3]; }
 
@@ -91,34 +91,34 @@ public:
 
 private:
 	//internal functions for setting image data.
-	void setRenderingFlag(const RENDERING_FLAG& flag) { renderingFlag = flag; }
-	void setTexture(const texture& text) { gTexture = text; }
-	void setAnination(const animation& anim, const ANIMATION_FLAG& flag) { gAnimation = &anim; gFirstAnim = &anim; }
+	void setRenderingFlag(const CRE_RenderingFlag& flag) { renderingFlag = flag; }
+	void setTexture(const CRE_Texture& text) { gTexture = text; }
+	void setAnination(const CRE_Animation& anim, const CRE_AnimationFlag& flag) { gAnimation = &anim; gFirstAnim = &anim; }
 
 	//member image information
-	texture   gTexture;
-	const animation* gAnimation;
-	const animation* gFirstAnim;
+	CRE_Texture   gTexture;
+	const CRE_Animation* gAnimation;
+	const CRE_Animation* gFirstAnim;
 	int animFrameCount;
 
 	SDL_Rect destRect = { 0, 0, 0, 0 };
 
-	IMAGE_TYPE imageType;
+	CRE_GroundImageType imageType;
 
-	RENDERING_FLAG renderingFlag;
+	CRE_RenderingFlag renderingFlag;
 		
 	int posX, posY;
 	unsigned int posZ;
 };
 
 //resets current background and foreground vetors and loads passed groundData
-void setGround(const groundData& groundDat);
+void setGround(const CRE_GroundData& groundDat);
 
 //loads passed groundData without resetting all foreground and background vectors.
-void loadGround(const groundData& groundDat);
+void loadGround(const CRE_GroundData& groundDat);
 
 //removes all foreground and background layers of the passed rendering flag
-void resetGround(const RENDERING_FLAG& flag);
+void resetGround(const CRE_RenderingFlag& flag);
 
 //removes all loaded foreground and background layers
 void resetGround();

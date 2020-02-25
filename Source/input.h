@@ -11,7 +11,7 @@
 //ex. for implementing WASD movement you would only need 2 width, one for WS one for AD.
 const int INPUTWIDTH = 4;
 
-enum INPUTMAP
+enum CRE_InputMap
 {
 	INPUT_X,   //0
 	INPUT_Y,   //1
@@ -19,10 +19,10 @@ enum INPUTMAP
 	INPUT_QUIT //3
 };
 
-class inputHandler
+class CRE_InputHandler
 {
 public:
-	inputHandler();
+	CRE_InputHandler();
 
 	//reads inputs from user and sets input values to the internal input array: inputBus.
 	void pollInputs();

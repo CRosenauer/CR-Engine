@@ -25,12 +25,12 @@
 
 using namespace std;
 
-class video
+class CRE_Video
 {
 public:
 	//Constructor Block
-	video();
-	video(const std::string& TITLE, const int& SCREENWIDTH, const int& SCREENHEIGHT, const Uint32& WINDOWFLAG);
+	CRE_Video();
+	CRE_Video(const std::string& TITLE, const int& SCREENWIDTH, const int& SCREENHEIGHT, const Uint32& WINDOWFLAG);
 	//initialized the rendering window and sets all over internal variables to NULL
 
 	//Graphics Queue Loading
@@ -46,7 +46,7 @@ public:
 	//
 	//Flag information can be found in renderingFlags.hpp
 	//
-	void loadTexture(texture* texture, RENDERING_FLAG flag);
+	void loadTexture(CRE_Texture* texture, CRE_RenderingFlag flag);
 
 	//Render current frame
 	//renders current game screen
@@ -99,11 +99,11 @@ private:
 	//queues add potential memory fragmentation problems
 	//for future iterations, make vectors with loadsize from file
 	//or have a set vram size in file and manage loading of backgrounds, sprites, and foregrounds
-	queue<texture*> spriteQueue;
-	queue<texture*> backgroundQueue;
-	queue<texture*> foregroundQueue;
-	queue<texture*> staticBackgroundQueue;
-	queue<texture*> staticForegroundQueue;
+	queue<CRE_Texture*> spriteQueue;
+	queue<CRE_Texture*> backgroundQueue;
+	queue<CRE_Texture*> foregroundQueue;
+	queue<CRE_Texture*> staticBackgroundQueue;
+	queue<CRE_Texture*> staticForegroundQueue;
 };
 
 #endif //VIDEO_H

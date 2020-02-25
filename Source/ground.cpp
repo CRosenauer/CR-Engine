@@ -1,9 +1,9 @@
 #include "ground.h"
 
-vector<ground*> background;
-vector<ground*> foreground;
+vector<CRE_Ground*> background;
+vector<CRE_Ground*> foreground;
 
-ground::ground()
+CRE_Ground::CRE_Ground()
 {
 	posX = 0;
 	posY = 0;
@@ -15,7 +15,7 @@ ground::ground()
 	renderingFlag = RENDERINGFLAG_BACKGROUND;
 }
 
-ground::ground(const groundData& data)
+CRE_Ground::CRE_Ground(const CRE_GroundData& data)
 {
 	posX = 0;
 	posY = 0;
@@ -65,14 +65,14 @@ ground::ground(const groundData& data)
 	}
 }
 
-ground::~ground()
+CRE_Ground::~CRE_Ground()
 {
-	gTexture.~texture();
+	gTexture.~CRE_Texture();
 	gAnimation = NULL;
 	gFirstAnim = NULL;
 }
 
-void ground::loadGround(const groundData& data)
+void CRE_Ground::loadGround(const CRE_GroundData& data)
 {
 	posX = 0;
 	posY = 0;
@@ -122,7 +122,7 @@ void ground::loadGround(const groundData& data)
 	}
 }
 
-void ground::update()
+void CRE_Ground::update()
 {
 	if (imageType == ANIMATION)
 	{
@@ -157,12 +157,12 @@ void ground::update()
 	}
 }
 
-void setGround(const groundData& groundDat)
+void setGround(const CRE_GroundData& groundDat)
 {
 	printf("Stub: setGround in ground.cpp.\nTo be altered and improved upon later.\n");
 	resetGround();
 
-	const groundData* tempData = &groundDat;
+	const CRE_GroundData* tempData = &groundDat;
 
 	while (tempData != NULL)
 	{
@@ -170,11 +170,11 @@ void setGround(const groundData& groundDat)
 		{
 		case RENDERINGFLAG_BACKGROUND:
 		case RENDERINGFLAG_STATIC_BACKGROUND:
-			background.push_back(new ground(*tempData));
+			background.push_back(new CRE_Ground(*tempData));
 			break;
 		case RENDERINGFLAG_FOREGROUND:
 		case RENDERINGFLAG_STATIC_FOREGROUND:
-			foreground.push_back(new ground(*tempData));
+			foreground.push_back(new CRE_Ground(*tempData));
 		default:
 			break;
 		}
@@ -183,9 +183,9 @@ void setGround(const groundData& groundDat)
 	}
 }
 
-void resetGround(const RENDERING_FLAG& flag)
+void resetGround(const CRE_RenderingFlag& flag)
 {
-	vector<ground*>::iterator itr;
+	vector<CRE_Ground*>::iterator itr;
 
 	switch (flag)
 	{
@@ -230,12 +230,12 @@ void resetGround()
 {
 	for (unsigned int i = 0; i < foreground.size(); i++)
 	{
-		foreground[i]->~ground();
+		foreground[i]->~CRE_Ground();
 	}
 
 	for (unsigned int i = 0; i < background.size(); i++)
 	{
-		background[i]->~ground();
+		background[i]->~CRE_Ground();
 	}
 
 	foreground.clear();
@@ -260,7 +260,7 @@ bool groundsEmpty()
 	return foreground.empty() && background.empty();
 }
 
-void loadGround(const groundData& groundDat)
+void loadGround(const CRE_GroundData& groundDat)
 {
 
 }

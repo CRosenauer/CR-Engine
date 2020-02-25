@@ -1,6 +1,6 @@
 #include "input.h"
 
-inputHandler::inputHandler()
+CRE_InputHandler::CRE_InputHandler()
 {
 	//To implement: load keymap from file.
 
@@ -12,7 +12,7 @@ inputHandler::inputHandler()
 		
 }
 
-void inputHandler::pollInputs()
+void CRE_InputHandler::pollInputs()
 {
 	SDL_PumpEvents();
 	currentInputs = SDL_GetKeyboardState(NULL);
@@ -65,7 +65,7 @@ void inputHandler::pollInputs()
 		repeatInput[i] = prevInput[i] == inputBus[i];
 }
 
-void inputHandler::getUserInputs(__int8 readInputs[INPUTWIDTH])
+void CRE_InputHandler::getUserInputs(__int8 readInputs[INPUTWIDTH])
 {
 	for (int i = 0; i < INPUTWIDTH; i++)
 	{
@@ -73,7 +73,7 @@ void inputHandler::getUserInputs(__int8 readInputs[INPUTWIDTH])
 	}
 }
 
-void inputHandler::getRepeatInputs(bool readInputs[INPUTWIDTH])
+void CRE_InputHandler::getRepeatInputs(bool readInputs[INPUTWIDTH])
 {
 	for (int i = 0; i < INPUTWIDTH; i++)
 	{

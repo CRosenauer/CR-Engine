@@ -2,9 +2,9 @@
 
 static unsigned int IDCounter = 0;
 
-vector<entity*> entityBlock;
+vector<CRE_Entity*> entityBlock;
 
-entity::entity()
+CRE_Entity::CRE_Entity()
 {
 	posX = 0;
 	posY = 0;
@@ -22,7 +22,7 @@ entity::entity()
 	entityID = ++IDCounter;
 }
 
-void entity::setTexture(const textureData& text)
+void CRE_Entity::setTexture(const CRE_TextureData& text)
 {
 	SDL_Rect dest = text.source;
 
@@ -32,22 +32,22 @@ void entity::setTexture(const textureData& text)
 	eTexture.loadTexture(text, dest);
 }
 
-bool entity::rectIsUndefined(SDL_Rect rect)
+bool CRE_Entity::rectIsUndefined(SDL_Rect rect)
 {
 	return (rect.x < 0)||(rect.y < 0)||(rect.w < 0)||(rect.h < 0);
 }
 
-void entity::setTexture(const texture& text)
+void CRE_Entity::setTexture(const CRE_Texture& text)
 {
 	eTexture = text;
 }
 
-texture* entity::getTexture()
+CRE_Texture* CRE_Entity::getTexture()
 {
 	return &eTexture;
 }
 
-void entity::setPosition(int x, int y, int z)
+void CRE_Entity::setPosition(int x, int y, int z)
 {
 	SDL_Rect tempDest = eTexture.getDestRect();
 
@@ -65,42 +65,42 @@ void entity::setPosition(int x, int y, int z)
 	eTexture.setRect(eTexture.getSourceRect(), tempDest);
 }
 
-void entity::setVelocity(int x, int y, int z)
+void CRE_Entity::setVelocity(int x, int y, int z)
 {
 	velX = x;
 	velY = y;
 	velZ = z;
 }
 
-void entity::setAcceleration(int x, int y, int z)
+void CRE_Entity::setAcceleration(int x, int y, int z)
 {
 	accX = x;
 	accY = y;
 	accZ = z;
 }
 
-void entity::getPosition(int pos[3])
+void CRE_Entity::getPosition(int pos[3])
 {
 	pos[0] = posX;
 	pos[1] = posY;
 	pos[2] = posZ;
 }
 
-void entity::getVelocity(int vel[3])
+void CRE_Entity::getVelocity(int vel[3])
 {
 	vel[0] = velX;
 	vel[1] = velY;
 	vel[2] = velZ;
 }
 
-void entity::getAcceleration(int acc[3])
+void CRE_Entity::getAcceleration(int acc[3])
 {
 	acc[0] = accX;
 	acc[1] = accY;
 	acc[2] = accZ;
 }
 
-void entity::setAnimation(const animation* anim, const ANIMATION_FLAG& flag)
+void CRE_Entity::setAnimation(const CRE_Animation* anim, const CRE_AnimationFlag& flag)
 {
 	eAnimation = anim;
 
@@ -112,42 +112,42 @@ void entity::setAnimation(const animation* anim, const ANIMATION_FLAG& flag)
 	setTexture(*(eAnimation->textureData));
 }
 
-unsigned int entity::getEntityID()
+unsigned int CRE_Entity::getEntityID()
 {
 	return entityID;
 }
 
-int entity::getDepth()
+int CRE_Entity::getDepth()
 {
 	return posZ;
 }
 
-RENDERING_FLAG entity::getRenderingFlag()
+CRE_RenderingFlag CRE_Entity::getRenderingFlag()
 {
 	return renderingFlag;
 }
 
-void entity::setRenderingFlag(RENDERING_FLAG flag)
+void CRE_Entity::setRenderingFlag(CRE_RenderingFlag flag)
 {
 	renderingFlag = flag;
 }
 
-void entity::setEntityType(const ENTITY_TYPE& i)
+void CRE_Entity::setEntityType(const CRE_EntityType& i)
 {
 	data.entityType = i;
 }
 
-ENTITY_TYPE entity::getEntityType()
+CRE_EntityType CRE_Entity::getEntityType()
 {
 	return data.entityType;
 }
 
-SDL_Rect entity::getTextureDest()
+SDL_Rect CRE_Entity::getTextureDest()
 {
 	return eTexture.getDestRect();
 }
 
-void entity::updateAnimation()
+void CRE_Entity::updateAnimation()
 {
 	if (eAnimation != NULL)
 	{

@@ -1,16 +1,16 @@
 #include "scriptHandler.h"
 
-extern queue<script>    primitiveScriptQueue;
+extern queue<CRE_Script>    primitiveScriptQueue;
 extern queue<CRE_Event> primitiveEventQueue;
 
 namespace
 {
 	//boolean function to remove complete scripts
 	//to be used by list::remove_if
-	bool scriptComplete(const script& script) { return script.frameCount < 0 && script.nextScript == NULL; };
+	bool scriptComplete(const CRE_Script& script) { return script.frameCount < 0 && script.nextScript == NULL; };
 }
 
-void scriptHandler::loadScript(script eScript, unsigned int ID)
+void CRE_ScriptHandler::loadScript(CRE_Script eScript, unsigned int ID)
 {
 	//script is pushed to the front of the list
 	//order of this list doesn't really matter
@@ -22,14 +22,14 @@ void scriptHandler::loadScript(script eScript, unsigned int ID)
 		scriptIndex->entityID = ID;
 }
 
-void scriptHandler::pushEvent(const std::list<script>::iterator& scriptLoc)
+void CRE_ScriptHandler::pushEvent(const std::list<CRE_Script>::iterator& scriptLoc)
 {
 	scriptLoc->event.entityID = scriptLoc->entityID;
 	primitiveEventQueue.push(scriptLoc->event);
 }
 
 //broken function. rewrite.
-void scriptHandler::processScripts()
+void CRE_ScriptHandler::processScripts()
 {
 	//traverses script list and processes each event in the script list.
 	for (scriptIndex = scriptList.begin(); scriptIndex != scriptList.end(); scriptIndex++)
@@ -90,7 +90,7 @@ void scriptHandler::processScripts()
 	scriptList.remove_if(scriptComplete);
 }
 
-void scriptHandler::processGotoEvent(script s)
+void CRE_ScriptHandler::processGotoEvent(CRE_Script s)
 {
 	//set up temp holding variables
 	int tempID = s.entityID;
@@ -108,9 +108,9 @@ void scriptHandler::processGotoEvent(script s)
 					if (e.generic4.pointer == NULL)
 						throw 0;
 
-					tempID = ((const script*)e.generic4.pointer)->entityID;
-					*(script*)e.generic4.pointer = *(script*)e.generic3.function(NULL, NULL);
-					((script*)e.generic4.pointer)->entityID = tempID;
+					tempID = ((const CRE_Script*)e.generic4.pointer)->entityID;
+					*(CRE_Script*)e.generic4.pointer = *(CRE_Script*)e.generic3.function(NULL, NULL);
+					((CRE_Script*)e.generic4.pointer)->entityID = tempID;
 
 				}
 				catch (int)
@@ -130,9 +130,9 @@ void scriptHandler::processGotoEvent(script s)
 				if (e.generic2.pointer == NULL)
 					throw 0;
 
-				tempID = ((const script*)e.generic2.pointer)->entityID;
-				*(script*)e.generic2.pointer = *(script*)e.generic1.function(NULL, NULL);
-				((script*)e.generic2.pointer)->entityID = tempID;
+				tempID = ((const CRE_Script*)e.generic2.pointer)->entityID;
+				*(CRE_Script*)e.generic2.pointer = *(CRE_Script*)e.generic1.function(NULL, NULL);
+				((CRE_Script*)e.generic2.pointer)->entityID = tempID;
 
 			}
 			catch (int)

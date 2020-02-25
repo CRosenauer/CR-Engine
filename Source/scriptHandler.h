@@ -10,12 +10,12 @@
 #include "eventHandler.h"
 
 // class to handle reading, storing and interpreting events/updates from scripts.
-class scriptHandler
+class CRE_ScriptHandler
 {
 public:
 
 	//loads a script into the linked list and pushes the event located in the script
-	void loadScript(script eScript, unsigned int ID);
+	void loadScript(CRE_Script eScript, unsigned int ID);
 
 	//goes through every script stored in the current scriptList
 	//advances the frame count of each script
@@ -24,18 +24,18 @@ public:
 
 private:
 	//linked list that holds copies of scripts stored in rom
-	std::list<script> scriptList;
+	std::list<CRE_Script> scriptList;
 
 	//iterator used to access and traverse scriptList.
-	std::list<script>::iterator scriptIndex;
+	std::list<CRE_Script>::iterator scriptIndex;
 
 	//pushes an event to event queue.
 	//event queue is not stored in "script.h" but is part of SDL.
-	void pushEvent(const std::list<script>::iterator& scriptLoc);
+	void pushEvent(const std::list<CRE_Script>::iterator& scriptLoc);
 
 	//performs operations on "goto" type events that would normally occur in eventHandler class.
 	//function needed to process goto event when they are loaded rather than after scriptes are loaded.
-	void processGotoEvent(script s);
+	void processGotoEvent(CRE_Script s);
 };
 
 #endif //SCRIPTHANDLER_H

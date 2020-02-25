@@ -1,12 +1,12 @@
 #include "entityHandler.h"
 
-extern vector<entity*> entityBlock;
+extern vector<CRE_Entity*> entityBlock;
 
 void deleteEntity(const unsigned int& entityID)
 {
 	//cycles through entityBus until an entity is found with the passed ID
 	//entity with that id is then deallocated from memory and removed from entityBlock.
-	for (vector<entity*>::iterator itr = entityBlock.begin(); itr < entityBlock.end(); itr++)
+	for (vector<CRE_Entity*>::iterator itr = entityBlock.begin(); itr < entityBlock.end(); itr++)
 	{
 		if (entityID == (*itr)->getEntityID())
 		{
@@ -18,7 +18,7 @@ void deleteEntity(const unsigned int& entityID)
 	}
 }
 
-unsigned int allocateEntity(const ENTITY_TYPE& type)
+unsigned int allocateEntity(const CRE_EntityType& type)
 {
 	//allocates memory to a new entity in entityBlock
 	//then returns the ID of the allocated ID
@@ -27,14 +27,14 @@ unsigned int allocateEntity(const ENTITY_TYPE& type)
 	{
 	default:
 	case test:
-		entityBlock.push_back(new entity);
+		entityBlock.push_back(new CRE_Entity);
 		break;
 	}
 
 	return entityBlock.back()->getEntityID();
 }
 
-entity* entityFromID(const unsigned int& id)
+CRE_Entity* entityFromID(const unsigned int& id)
 {
 	//cycles through entityBlock until an entity is found whose internal ID
 	//equals the passed ID. A pointer to this entity is returned.

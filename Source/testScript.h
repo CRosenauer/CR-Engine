@@ -16,11 +16,11 @@ namespace TSF
 {
 	void TE__testPrint(void* unused, char* text);
 
-	void TE__moveEntity(entity* entity, SDL_Point* pos);
+	void TE__moveEntity(CRE_Entity* entity, SDL_Point* pos);
 
-	void TE__validatePos(entity* entity, SDL_Point* pos);
+	void TE__validatePos(CRE_Entity* entity, SDL_Point* pos);
 
-	void TE__validateDestRect(entity* entity, SDL_Point* pos);
+	void TE__validateDestRect(CRE_Entity* entity, SDL_Point* pos);
 
 	void TE__moveViewport(void* unused, SDL_Point* pos);
 
@@ -28,7 +28,7 @@ namespace TSF
 
 	bool returnTrue(void* unused1, void* unused2);
 
-	const script* returnTestScript04(void* unused1, void* unused2);
+	const CRE_Script* returnTestScript04(void* unused1, void* unused2);
 
 	void ST_testPrintf_1(void* unused1, void* unused2);
 	void ST_testPrintf_2(void* unused1, void* unused2);
@@ -36,7 +36,7 @@ namespace TSF
 	void ST_testPrintf_4(void* unused1, void* unused2);
 	void ST_testPrintf_5(void* unused1, void* unused2);
 
-	const script* returnScriptTest12(void* unused1, void* unused2);
+	const CRE_Script* returnScriptTest12(void* unused1, void* unused2);
 }
 
 const SDL_Point testPos = { 128, 128 };
@@ -142,7 +142,7 @@ const CRE_Event scriptTestEvent00 =
 };
 
 
-const script scriptTest20 =
+const CRE_Script scriptTest20 =
 {
 	scriptTestEvent20,
 	2,
@@ -150,7 +150,7 @@ const script scriptTest20 =
 	NULL
 };
 
-const script scriptTest12 =
+const CRE_Script scriptTest12 =
 {
 	scriptTestEvent12,
 	0,
@@ -158,7 +158,7 @@ const script scriptTest12 =
 	NULL
 };
 
-const script scriptTest11 =
+const CRE_Script scriptTest11 =
 {
 	scriptTestEvent11,
 	0,
@@ -166,7 +166,7 @@ const script scriptTest11 =
 	NULL
 };
 
-const script scriptTest10 =
+const CRE_Script scriptTest10 =
 {
 	scriptTestEvent10,
 	1,
@@ -174,7 +174,7 @@ const script scriptTest10 =
 	&scriptTest11
 };
 
-const script scriptTest01 =
+const CRE_Script scriptTest01 =
 {
 	scriptTestEvent01,
 	0,
@@ -182,7 +182,7 @@ const script scriptTest01 =
 	NULL
 };
 
-const script scriptTest00 =
+const CRE_Script scriptTest00 =
 {
 	scriptTestEvent00,
 	0,
@@ -238,7 +238,7 @@ const CRE_Event viewportTest00 =
 	0
 };
 
-const script viewportTestScript04 =
+const CRE_Script viewportTestScript04 =
 {
 	viewportTest04,
 	0,
@@ -247,40 +247,40 @@ const script viewportTestScript04 =
 	NULL
 };
 
-const script viewportTestScript03 =
+const CRE_Script viewportTestScript03 =
 {
 	viewportTest03,
 	0,
 	0,
 
-	(script*)&viewportTestScript04
+	(CRE_Script*)&viewportTestScript04
 };
 
-const script viewportTestScript02 =
+const CRE_Script viewportTestScript02 =
 {
 	viewportTest02,
 	0,
 	0,
 
-	(script*)&viewportTestScript03
+	(CRE_Script*)&viewportTestScript03
 };
 
-const script viewportTestScript01 =
+const CRE_Script viewportTestScript01 =
 {
 	viewportTest01,
 	0,
 	0,
 
-	(script*)&viewportTestScript02
+	(CRE_Script*)&viewportTestScript02
 };
 
-const script viewportTestScript00 = 
+const CRE_Script viewportTestScript00 = 
 {
 	viewportTest00,
 	0,
 	0,
 
-	(script*)&viewportTestScript01
+	(CRE_Script*)&viewportTestScript01
 };
 
 const CRE_Event testEvent08 =
@@ -373,7 +373,7 @@ const CRE_Event testEvent00 =
 	0
 };
 
-const struct script testScript08 =
+const struct CRE_Script testScript08 =
 {
 	testEvent08,
 	0,
@@ -381,7 +381,7 @@ const struct script testScript08 =
 	NULL
 };
 
-const struct script testScript07 =
+const struct CRE_Script testScript07 =
 {
 	testEvent07,
 	120,
@@ -389,7 +389,7 @@ const struct script testScript07 =
 	&testScript08
 };
 
-const struct script testScript06 =
+const struct CRE_Script testScript06 =
 {
 	testEvent06,
 	0,
@@ -397,7 +397,7 @@ const struct script testScript06 =
 	&testScript07
 };
 
-const struct script testScript05 =
+const struct CRE_Script testScript05 =
 {
 	testEvent05,
 	0,
@@ -405,7 +405,7 @@ const struct script testScript05 =
 	NULL
 };
 
-const struct script testScript04 =
+const struct CRE_Script testScript04 =
 {
 	testEvent04,
 	0,
@@ -413,7 +413,7 @@ const struct script testScript04 =
 	&testScript05
 };
 
-const struct script testScript03 =
+const struct CRE_Script testScript03 =
 {
 	testEvent03,
 	0,
@@ -421,7 +421,7 @@ const struct script testScript03 =
 	&testScript04
 };
 
-const struct script testScript02 =
+const struct CRE_Script testScript02 =
 {
 	testEvent02,
 	0,
@@ -430,7 +430,7 @@ const struct script testScript02 =
 	&testScript03
 };
 
-const struct script testScript01 =
+const struct CRE_Script testScript01 =
 {
 	testEvent01,
 	0,
@@ -439,7 +439,7 @@ const struct script testScript01 =
 	&testScript04
 };
 
-const struct script testScript00 =
+const struct CRE_Script testScript00 =
 {
 	testEvent00,
 	0,

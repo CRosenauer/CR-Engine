@@ -1,11 +1,11 @@
 #include "audio.h"
 
-audio::audio()
+CRE_Audio::CRE_Audio()
 {
 	music = NULL;
 }
 
-void audio::loadSFX(const std::string& path)
+void CRE_Audio::loadSFX(const std::string& path)
 {
 	std::string tempString = getFilePath(path, AUDIO);
 	Mix_Chunk* audio = Mix_LoadWAV(tempString.c_str());
@@ -24,7 +24,7 @@ void audio::loadSFX(const std::string& path)
 	
 }
 
-void audio::playAudio()
+void CRE_Audio::playAudio()
 {
 	//loads sounds from audio queue to play.
 	while (!audioQueue.empty())
@@ -42,7 +42,7 @@ void audio::playAudio()
 	}
 }
 
-void audio::loadMusic(const std::string& path)
+void CRE_Audio::loadMusic(const std::string& path)
 {
 	std::string tempString = getFilePath(path, AUDIO);
 	music = Mix_LoadMUS(tempString.c_str());
@@ -53,7 +53,7 @@ void audio::loadMusic(const std::string& path)
 	}
 }
 
-Mix_Music* audio::getMusic()
+Mix_Music* CRE_Audio::getMusic()
 {
 	return music;
 }
