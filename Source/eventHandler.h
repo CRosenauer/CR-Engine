@@ -6,6 +6,8 @@
 #include <vector>
 #include <queue>
 
+#include "config.h"
+
 #include "event.h"
 #include "script.h"
 

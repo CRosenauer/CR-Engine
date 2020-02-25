@@ -228,12 +228,12 @@ void resetGround(const RENDERING_FLAG& flag)
 
 void resetGround()
 {
-	for (int i = 0; i < foreground.size(); i++)
+	for (unsigned int i = 0; i < foreground.size(); i++)
 	{
 		foreground[i]->~ground();
 	}
 
-	for (int i = 0; i < background.size(); i++)
+	for (unsigned int i = 0; i < background.size(); i++)
 	{
 		background[i]->~ground();
 	}

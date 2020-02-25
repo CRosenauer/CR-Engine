@@ -42,7 +42,6 @@ void TestGame()
 
 		Player = entityFromID(allocateEntity(test));
 
-		CREScriptHandler.loadScript(viewportTestScript00, Player->getEntityID());
 		CREScriptHandler.loadScript(testScript00, Player->getEntityID());
 
 		Player->setPosition(200, 200, 0);

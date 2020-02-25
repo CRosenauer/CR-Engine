@@ -4,9 +4,7 @@
 #include <SDL.h>
 #include <SDL_events.h>
 
-#include <cstdio>
-
-//#define CONTROLLER_SUPPORT
+#include "config.h"
 
 //const int to determine how many inputs are read
 //note: x and y inputs on d-pads or control sticks are counted as 1 input

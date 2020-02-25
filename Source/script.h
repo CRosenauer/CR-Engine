@@ -3,6 +3,8 @@
 
 #include <queue>
 
+#include "config.h"
+
 #include "event.h"
 
 

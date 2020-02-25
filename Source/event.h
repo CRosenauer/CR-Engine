@@ -1,37 +1,11 @@
 #ifndef EVENT_HPP
 #define EVENT_HPP
 
-//Event type preproccessor
-#define EVENT_QUIT
-
-//audio events
-#define EVENT_LOAD_SFX
-#define EVENT_LOAD_MUSIC
-//#define FORCE_STOP_MUSIC
-
-//video events
-
-//entity graphics events
-#define EVENT_LOAD_TEXTURE
-#define EVENT_LOAD_ANIMATION
-
-//grounds events
-#define EVENT_LOAD_GROUNDS
-#define EVENT_SET_GROUNDS
-#define EVENT_RESET_GROUNDS
-
-//operation script events
-#define EVENT_LOAD_SCRIPT
-#define EVENT_FUNCTION
-#define EVENT_GOTO
-
-//logical script events
-#define EVENT_IF_GOTO
-
-
 #include <SDL_events.h>
 #include <queue>
 #include <vector>
+
+#include "config.h"
 
 #include "video.h"
 #include "audio.h"
