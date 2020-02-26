@@ -254,6 +254,6 @@ struct CRE_Event
 
 //returns string version of the passed event code
 //basically what you see in enum CRE_EVENT_CODE
-string eventCodeToString(const CRE_EventCode& code);
+std::string eventCodeToString(const CRE_EventCode& code);
 
 #endif //EVENT_HPP

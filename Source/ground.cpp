@@ -65,8 +65,6 @@ CRE_Ground::CRE_Ground(const CRE_GroundData& data)
 		gTexture.setRenderingFlag(renderingFlag);
 		break;
 	}
-
-	printf("Ground internal texture renderingFlag: %i\n", gTexture.getRenderingFlag());
 }
 
 CRE_Ground::~CRE_Ground()
@@ -128,8 +126,6 @@ void CRE_Ground::loadGround(const CRE_GroundData& data)
 		gTexture.setRenderingFlag(renderingFlag);
 		break;
 	}
-
-	printf("Ground internal texture renderingFlag: %i\n", gTexture.getRenderingFlag());
 }
 
 void CRE_Ground::update()
@@ -170,28 +166,8 @@ void CRE_Ground::update()
 
 void setGround(const CRE_GroundData& groundDat)
 {
-	printf("Stub: setGround in ground.cpp.\nTo be altered and improved upon later.\n");
 	resetGround();
-
-	const CRE_GroundData* tempData = &groundDat;
-
-	while (tempData != NULL)
-	{
-		switch (tempData->flag)
-		{
-		case RENDERINGFLAG_BACKGROUND:
-		case RENDERINGFLAG_STATIC_BACKGROUND:
-			background.push_back(new CRE_Ground(*tempData));
-			break;
-		case RENDERINGFLAG_FOREGROUND:
-		case RENDERINGFLAG_STATIC_FOREGROUND:
-			foreground.push_back(new CRE_Ground(*tempData));
-		default:
-			break;
-		}
-
-		tempData = tempData->next;
-	}
+	loadGround(groundDat);
 }
 
 void resetGround(const CRE_RenderingFlag& flag)
@@ -273,5 +249,23 @@ bool groundsEmpty()
 
 void loadGround(const CRE_GroundData& groundDat)
 {
+	const CRE_GroundData* tempData = &groundDat;
 
+	while (tempData != NULL)
+	{
+		switch (tempData->flag)
+		{
+		case RENDERINGFLAG_BACKGROUND:
+		case RENDERINGFLAG_STATIC_BACKGROUND:
+			background.push_back(new CRE_Ground(*tempData));
+			break;
+		case RENDERINGFLAG_FOREGROUND:
+		case RENDERINGFLAG_STATIC_FOREGROUND:
+			foreground.push_back(new CRE_Ground(*tempData));
+		default:
+			break;
+		}
+
+		tempData = tempData->next;
+	}
 }

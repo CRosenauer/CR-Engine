@@ -53,6 +53,7 @@ enum CRE_RenderingFlag
  *
 */
 
+std::string renderingFlagToString(const CRE_RenderingFlag& flag);
 
 enum CRE_RotationFlag
 {

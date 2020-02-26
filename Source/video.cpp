@@ -237,7 +237,6 @@ void CRE_Video::render()
 			}
 			else
 			{
-				printf("Static background dest rect:\nx: %i\ny: %i\nw: %i\nh: %i\n", baseDestTempRect.x, baseDestTempRect.y, baseDestTempRect.w, baseDestTempRect.h);
 				//case destination rect is valid. Draws to texture's destination rect
 				SDL_RenderCopy(CRERenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), &baseDestTempRect);
 			}

@@ -2,6 +2,35 @@
 
 extern SDL_Renderer* CRERenderer;
 
+std::string renderingFlagToString(const CRE_RenderingFlag& flag)
+{
+	std::string s;
+
+	switch (flag)
+	{
+	case RENDERINGFLAG_BACKGROUND:
+		s = "RENDERINGFLAG_BACKGROUND";
+		break;
+	case RENDERINGFLAG_STATIC_BACKGROUND:
+		s = "RENDERINGFLAG_STATIC_BACKGROUND";
+		break;
+	case RENDERINGFLAG_SPRITE:
+		s = "RENDERINGFLAG_SPRITE";
+		break;
+	case RENDERINGFLAG_STATIC_FOREGROUND:
+		s = "RENDERINGFLAG_STATIC_FOREGROUND";
+		break;
+	case RENDERINGFLAG_FOREGROUND:
+		s = "RENDERINGFLAG_FOREGROUND";
+		break;
+	default:
+		s = "";
+		break;
+	}
+
+	return s;
+}
+
 CRE_Texture::CRE_Texture()
 {
 	tDest = { 0, 0, 0, 0 };
@@ -24,6 +53,8 @@ CRE_Texture::CRE_Texture(const CRE_Texture& t)
 	yOffset  = t.yOffset;
 	textData = t.textData;
 
+	renderingFlag = t.renderingFlag;
+
 	//creates a new SDL_Texture for internal texture rendering
 	loadTexture(textData, tDest);
 }
@@ -38,6 +69,8 @@ void CRE_Texture::operator = (const CRE_Texture& t)
 	xOffset = t.xOffset;
 	yOffset = t.yOffset;
 	textData = t.textData;
+
+	renderingFlag = t.renderingFlag;
 
 	//creates a new SDL_Texture for internal texture rendering
 	loadTexture(textData, tDest);
