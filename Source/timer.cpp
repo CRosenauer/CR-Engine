@@ -12,6 +12,7 @@ void setFrameTimer()
 
 void pollFrameTimer()
 {
+	//delays the program atleast until msPerFrame milliseconds have passed since setFrameTimer was last called.
 	while (true)
 	{
 		if (SDL_GetTicks() - ticks >= msPerFrame)
@@ -22,7 +23,6 @@ void pollFrameTimer()
 void setFrameRate(const unsigned int& frameRate)
 {
 	msPerFrame = (unsigned int) (float) 1000 / (float) frameRate;
-	printf("msPerFrame: %i\n", msPerFrame);
 }
 
 static Uint32 msTicks;

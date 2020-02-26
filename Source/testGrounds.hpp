@@ -20,7 +20,7 @@ struct animation
 
 	const unsigned int frameCount;
 	//number of frames this texture is used.
-	//CREngine runs at 60 Hz, use this as a baseline.
+	//CREngine runs at 60 Hz (be default), use this as a baseline.
 
 	const animation* nextFrame;
 	//pointer to the next frame of animation
@@ -60,7 +60,6 @@ const CRE_TextureData test_background_anim_data_00 =
 	{0, 0, 640, 480},
 	0,
 	0,
-	RENDERINGFLAG_STATIC_BACKGROUND
 };
 
 const CRE_TextureData test_background_anim_data_01 =
@@ -69,7 +68,6 @@ const CRE_TextureData test_background_anim_data_01 =
 	{0, 0, 640, 480},
 	0,
 	0,
-	RENDERINGFLAG_STATIC_BACKGROUND
 };
 
 const CRE_TextureData test_HUD_data =
@@ -78,7 +76,6 @@ const CRE_TextureData test_HUD_data =
 	{0, 0, 640, 480},
 	0,
 	0,
-	RENDERINGFLAG_STATIC_FOREGROUND
 };
 
 const CRE_TextureData test_scrolling_foreground_data =
@@ -87,7 +84,6 @@ const CRE_TextureData test_scrolling_foreground_data =
 	{0, 0, 1280, 960},
 	0,
 	0,
-	RENDERINGFLAG_BACKGROUND
 };
 
 const CRE_Animation test_background_anim_01 =

@@ -55,7 +55,7 @@ void CRE_Video::init()
 		exit(-1);
 	}
 
-	setFrameRate(60);
+	setFrameRate(DEAFULT_FRAME_RATE);
 	setFrameTimer();
 }
 

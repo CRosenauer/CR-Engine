@@ -9,7 +9,6 @@ const CRE_TextureData ship =
 	{0, 0, 16, 16},
 	8,
 	8,
-	RENDERINGFLAG_SPRITE
 };
 
 const CRE_TextureData animationTest2
@@ -18,7 +17,6 @@ const CRE_TextureData animationTest2
 	{ 0, 0, 16, 16 },
 	8,
 	8,
-	RENDERINGFLAG_SPRITE
 };
 
 const CRE_TextureData animationTest1
@@ -27,7 +25,6 @@ const CRE_TextureData animationTest1
 	{ 0, 0, 16, 16 },
 	8,
 	8,
-	RENDERINGFLAG_SPRITE
 };
 
 const CRE_TextureData animationTest0
@@ -36,7 +33,6 @@ const CRE_TextureData animationTest0
 	{ 0, 0, 16, 16 },
 	8,
 	8,
-	RENDERINGFLAG_SPRITE
 };
 
 #endif //TESTTEXTURE_HPP

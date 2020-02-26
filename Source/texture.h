@@ -68,8 +68,6 @@ struct CRE_TextureData
 	SDL_Rect source;	//rectangle in the image which the video system will use to draw from
 	int xOffset;		//offsets to have the 0 point of the texture not on the origin of the entity.
 	int yOffset;
-
-	CRE_RenderingFlag flag;
 };
 
 class CRE_Texture
@@ -102,6 +100,27 @@ public:
 
 	CRE_RenderingFlag getRenderingFlag() { return renderingFlag; }
 
+	float getXScale() { return xScale; }
+	float getYScale() { return yScale; }
+	
+	double getRotationDegree() { return rotationAngle; }
+	SDL_RendererFlip getFlipFlag() { return flipFlag; }
+	CRE_RotationFlag getRotationFlag() { return rotationFlag; }
+	void setRotationCenter(const int& x, const int& y);
+	Uint8 getAlpha() { return alpha; }
+
+	SDL_Point getRotationCenter();
+	void getRotationCenter(int center[2]);
+
+	void setXScale(const float& xS) { xScale = abs(xS); }
+	void setYScale(const float& yS) { yScale = abs(yS); }
+	
+	void setRotationDegree(const double& angle) { rotationAngle = angle; }
+	void addRotationDegree(const double& angle) { rotationAngle += angle; }
+
+	void setFlipFlag(const SDL_RendererFlip& flag) { flipFlag = flag; }
+	void setRotationFlag(const CRE_RotationFlag& flag) { rotationFlag = flag; }
+
 private:
 	SDL_Texture* tTexture = NULL;
 	SDL_Rect     tSource;
@@ -114,13 +133,13 @@ private:
 	int xOffset, yOffset;
 
 	//scales used for texture stretching
-	unsigned int xScale, yScale;
+	float xScale, yScale;
 
 	//position to hold which point to rotate around for texture rotation
 	int rotationCenterX, rotationCenterY;
 
-	//degree to hold rotation angle of the texture.
-	double rotationDegree;
+	//degree to hold rotation angle of the texture. Angle is clockwise.
+	double rotationAngle;
 
 	//flag for which way to flip the texture (if the texture is flipped)
 	SDL_RendererFlip flipFlag;
@@ -128,6 +147,9 @@ private:
 	CRE_RotationFlag rotationFlag;
 
 	CRE_RenderingFlag renderingFlag;
+
+	//measurement of texture alpha (transparency). 255 is completely opaque, 0 is completely transparent.
+	Uint8 alpha;
 };
 
 #endif //TEXTURE_H
