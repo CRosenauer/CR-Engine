@@ -128,7 +128,7 @@ void CRE_Ground::loadGround(const CRE_GroundData& data)
 	}
 }
 
-void CRE_Ground::update()
+void CRE_Ground::updateAnimation()
 {
 	if (imageType == ANIMATION)
 	{
@@ -233,12 +233,12 @@ void updateGrounds()
 {
 	for (unsigned int i = 0; i < foreground.size(); i++)
 	{
-		foreground[i]->update();
+		foreground[i]->updateAnimation();
 	}
 
 	for (unsigned int i = 0; i < background.size(); i++)
 	{
-		background[i]->update();
+		background[i]->updateAnimation();
 	}
 }
 

@@ -72,17 +72,61 @@ void CRE_Video::render()
 	//use to place entities from rendering queue and to render to frame
 	CRE_Texture tempTexture;
 
-	/***  Queue backgrounds and foregrounds to render queues based on depth  ***/
 
+	//union and vectors to allow for entities and grounds to be interlaced in forebround and background
+	//layers. Allows for interlaced depth-based rendering.
+	union entityGround
+	{
+		CRE_Entity* e;
+		CRE_Ground* g;
+	};
+
+	vector<entityGround> backgroundUnion;
+	vector<entityGround> foregroundUnion;
+
+
+	/***  Queue backgrounds and foregrounds to render queues based on depth  ***/
 
 	unsigned int maxDepth = 0;
 	unsigned int currentDepth = 0;
 
-	//find the maximum depth of the backgrounds
+	entityGround tempUnion;
+
 	for (unsigned int i = 0; i < background.size(); i++)
 	{
+		tempUnion.g = background[i];
+		backgroundUnion.push_back(tempUnion);
+	}
+
+	for (unsigned int i = 0; i < foreground.size(); i++)
+	{
+		tempUnion.g = foreground[i];
+		foregroundUnion.push_back(tempUnion);
+	}
+
+	for (unsigned int i = 0; i < entityBlock.size(); i++)
+	{
+		tempUnion.e = entityBlock[i];
+		switch (tempUnion.e->getRenderingFlag())
+		{
+		case RENDERINGFLAG_STATIC_BACKGROUND:
+		case RENDERINGFLAG_BACKGROUND:
+			backgroundUnion.push_back(tempUnion);
+			break;
+		case RENDERINGFLAG_FOREGROUND:
+		case RENDERINGFLAG_STATIC_FOREGROUND:
+			foregroundUnion.push_back(tempUnion);
+			break;
+		default:
+			break;
+		}
+	}
+
+	//find the maximum depth of the backgrounds
+	for (unsigned int i = 0; i < backgroundUnion.size(); i++)
+	{
 		unsigned int finderDepth;
-		finderDepth = background[i]->getDepth();
+		finderDepth = backgroundUnion[i].g->getDepth();
 
 		if (finderDepth > maxDepth)
 			maxDepth = finderDepth;
@@ -91,12 +135,12 @@ void CRE_Video::render()
 	//push backgrounds to background rendering queue based on depth
 	for (currentDepth = 0; currentDepth <= maxDepth; currentDepth++)
 	{
-		for (unsigned int i = 0; i < background.size(); i++)
+		for (unsigned int i = 0; i < backgroundUnion.size(); i++)
 		{
-			if (background[i]->getDepth() == currentDepth)
+			if (backgroundUnion[i].g->getDepth() == currentDepth)
 			{
-				backgroundQueue.push(background[i]->getTexture());
-				background[i]->update();
+				backgroundQueue.push(backgroundUnion[i].g->getTexture());
+				backgroundUnion[i].g->updateAnimation();
 			}
 		}
 	}
@@ -106,10 +150,10 @@ void CRE_Video::render()
 	currentDepth = 0;
 
 	//find the maximum depth of the backgrounds
-	for (unsigned int i = 0; i < foreground.size(); i++)
+	for (unsigned int i = 0; i < foregroundUnion.size(); i++)
 	{
 		unsigned int finderDepth;
-		finderDepth = foreground[i]->getDepth();
+		finderDepth = foregroundUnion[i].g->getDepth();
 
 		if (finderDepth > maxDepth)
 			maxDepth = finderDepth;
@@ -118,12 +162,12 @@ void CRE_Video::render()
 	//push backgrounds to background rendering queue based on depth
 	for (currentDepth = 0; currentDepth <= maxDepth; currentDepth++)
 	{
-		for (unsigned int i = 0; i < foreground.size(); i++)
+		for (unsigned int i = 0; i < foregroundUnion.size(); i++)
 		{
-			if (foreground[i]->getDepth() == currentDepth)
+			if (foregroundUnion[i].g->getDepth() == currentDepth)
 			{
-				foregroundQueue.push(foreground[i]->getTexture());
-				foreground[i]->update();
+				foregroundQueue.push(foregroundUnion[i].g->getTexture());
+				foregroundUnion[i].g->updateAnimation();
 			}
 		}
 	}
@@ -148,25 +192,10 @@ void CRE_Video::render()
 	{
 		for (unsigned int i = 0; i < entityBlock.size(); i++)
 		{
-			if (entityBlock[i]->getDepth() == currentDepth)
+			if (entityBlock[i]->getDepth() == currentDepth &&
+				entityBlock[i]->getRenderingFlag() == RENDERINGFLAG_SPRITE)
 			{
-				
-				switch (entityBlock[i]->getRenderingFlag())
-				{
-				case RENDERINGFLAG_STATIC_BACKGROUND:
-				case RENDERINGFLAG_BACKGROUND:
-					backgroundQueue.push(entityBlock[i]->getTexture());
-					break;
-				default:
-				case RENDERINGFLAG_SPRITE:
-					spriteQueue.push(entityBlock[i]->getTexture());
-					break;
-				case RENDERINGFLAG_FOREGROUND:
-				case RENDERINGFLAG_STATIC_FOREGROUND:
-					foregroundQueue.push(entityBlock[i]->getTexture());
-					break;
-				}
-				
+				spriteQueue.push(entityBlock[i]->getTexture());
 				entityBlock[i]->updateAnimation();
 			}
 		}

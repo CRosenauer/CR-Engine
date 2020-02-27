@@ -102,8 +102,6 @@ private:
 
 	int animFrameCount;
 
-	CRE_RenderingFlag renderingFlag;
-
 	unsigned int entityID;
 
 	CRE_EntityData data;

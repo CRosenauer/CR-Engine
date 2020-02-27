@@ -18,7 +18,6 @@ CRE_Entity::CRE_Entity()
 	animFrameCount = 0;
 	eAnimation = NULL;
 	eFirstAnimation = NULL;
-	renderingFlag = RENDERINGFLAG_SPRITE;
 	entityID = ++IDCounter;
 }
 
@@ -127,13 +126,11 @@ int CRE_Entity::getDepth()
 
 CRE_RenderingFlag CRE_Entity::getRenderingFlag()
 {
-	return renderingFlag;
+	return eTexture.getRenderingFlag();
 }
 
 void CRE_Entity::setRenderingFlag(CRE_RenderingFlag flag)
 {
-	renderingFlag = flag;
-
 	eTexture.setRenderingFlag(flag);
 }
 
@@ -176,8 +173,11 @@ void CRE_Entity::updateAnimation()
 				eAnimation = eAnimation->nextFrame;
 				animFrameCount = eAnimation->frameCount;
 			}
+			
+			CRE_RenderingFlag renderingFlag = eTexture.getRenderingFlag();
 
 			setTexture(*(eAnimation->textureData));
+
 			eTexture.setRenderingFlag(renderingFlag);
 		}
 

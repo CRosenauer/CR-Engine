@@ -89,7 +89,7 @@ public:
 	//functions to update texture data for animations
 	//to be used at the end of a frame render.
 	//don't touch it, just let the engine handle this function.
-	void update();
+	void updateAnimation();
 
 private:
 	//internal functions for setting image data.
