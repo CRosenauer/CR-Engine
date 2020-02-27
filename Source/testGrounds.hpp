@@ -112,7 +112,7 @@ const CRE_GroundData test_ground_02 =
 	&test_scrolling_foreground,
 	ANIMATION_NOLOOP,
 	RENDERINGFLAG_FOREGROUND,
-	0,
+	1,
 	NULL
 };
 

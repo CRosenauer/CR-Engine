@@ -172,7 +172,7 @@ SDL_Point CRE_Texture::getRotationCenter()
 		rotationCenter.y = tDest.y + yOffset;
 		break;
 
-	case TEXTURE_ZERO_CORNER:
+	case TEXTURE_CENTER:
 		rotationCenter.x = tDest.x;
 		rotationCenter.y = tDest.y;
 		break;
@@ -197,7 +197,7 @@ void CRE_Texture::getRotationCenter(int center[2])
 		center[1] = tDest.y + yOffset;
 		break;
 
-	case TEXTURE_ZERO_CORNER:
+	case TEXTURE_CENTER:
 		center[0] = tDest.x;
 		center[1] = tDest.y;
 		break;

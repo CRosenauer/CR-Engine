@@ -58,7 +58,7 @@ std::string renderingFlagToString(const CRE_RenderingFlag& flag);
 enum CRE_RotationFlag
 {
 	ENTITY_CENTER,			//rotation point as the center point of the entity which owns this texture
-	TEXTURE_ZERO_CORNER,	//rotation point as the top-left corner of the texture
+	TEXTURE_CENTER,	//rotation point as the top-left corner of the texture
 	CUSTOM					//rotation point set relative to the entity which owns this texture
 };
 

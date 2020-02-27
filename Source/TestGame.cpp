@@ -21,7 +21,6 @@ enum GAME_SCREEN
 };
 
 CRE_Entity* Player;
-int cameraPos[2];
 static GAME_SCREEN gameScreen = NOT_INITIALIZED;
 
 void TestGame()
@@ -34,6 +33,7 @@ void TestGame()
 	__int8 userInputs[INPUTWIDTH];
 	bool repeatedInputs[INPUTWIDTH];
 	int tempPos[3] = {0, 0, 0};
+	int cameraPos[2] = {0, 0};
 
 	switch (gameScreen)
 	{
@@ -45,6 +45,7 @@ void TestGame()
 		CREScriptHandler.loadScript(testScript00, Player->getEntityID());
 
 		Player->setPosition(200, 200, 0);
+		Player->setRenderingFlag(RENDERINGFLAG_FOREGROUND);
 
 
 		gameScreen = INITIALIZED;

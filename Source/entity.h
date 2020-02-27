@@ -33,6 +33,8 @@ class CRE_Entity
 public:
 	CRE_Entity();
 
+	~CRE_Entity();
+
 	//sets texture data based on passed data
 	//loads texture of .png image of path
 	//loads source to draw from source

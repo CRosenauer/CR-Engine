@@ -75,73 +75,54 @@ void CRE_Video::render()
 
 	//union and vectors to allow for entities and grounds to be interlaced in forebround and background
 	//layers. Allows for interlaced depth-based rendering.
-	union entityGround
-	{
-		CRE_Entity* e;
-		CRE_Ground* g;
-	};
-
-	vector<entityGround> backgroundUnion;
-	vector<entityGround> foregroundUnion;
-
 
 	/***  Queue backgrounds and foregrounds to render queues based on depth  ***/
 
 	unsigned int maxDepth = 0;
 	unsigned int currentDepth = 0;
 
-	entityGround tempUnion;
 
+
+	//find the maximum depth of the backgrounds
 	for (unsigned int i = 0; i < background.size(); i++)
 	{
-		tempUnion.g = background[i];
-		backgroundUnion.push_back(tempUnion);
-	}
+		unsigned int finderDepth;
+		finderDepth = background[i]->getDepth();
 
-	for (unsigned int i = 0; i < foreground.size(); i++)
-	{
-		tempUnion.g = foreground[i];
-		foregroundUnion.push_back(tempUnion);
+		if (finderDepth > maxDepth)
+			maxDepth = finderDepth;
 	}
 
 	for (unsigned int i = 0; i < entityBlock.size(); i++)
 	{
-		tempUnion.e = entityBlock[i];
-		switch (tempUnion.e->getRenderingFlag())
-		{
-		case RENDERINGFLAG_STATIC_BACKGROUND:
-		case RENDERINGFLAG_BACKGROUND:
-			backgroundUnion.push_back(tempUnion);
-			break;
-		case RENDERINGFLAG_FOREGROUND:
-		case RENDERINGFLAG_STATIC_FOREGROUND:
-			foregroundUnion.push_back(tempUnion);
-			break;
-		default:
-			break;
-		}
-	}
+		unsigned int finderDepth = entityBlock[i]->getDepth();
 
-	//find the maximum depth of the backgrounds
-	for (unsigned int i = 0; i < backgroundUnion.size(); i++)
-	{
-		unsigned int finderDepth;
-		finderDepth = backgroundUnion[i].g->getDepth();
+		if (finderDepth > maxDepth && 
+			( entityBlock[i]->getRenderingFlag() == RENDERINGFLAG_BACKGROUND ||
+			entityBlock[i]->getRenderingFlag() == RENDERINGFLAG_STATIC_BACKGROUND ))
 
-		if (finderDepth > maxDepth)
 			maxDepth = finderDepth;
 	}
 
 	//push backgrounds to background rendering queue based on depth
 	for (currentDepth = 0; currentDepth <= maxDepth; currentDepth++)
 	{
-		for (unsigned int i = 0; i < backgroundUnion.size(); i++)
+		for (unsigned int i = 0; i < background.size() || i < entityBlock.size(); i++)
 		{
-			if (backgroundUnion[i].g->getDepth() == currentDepth)
-			{
-				backgroundQueue.push(backgroundUnion[i].g->getTexture());
-				backgroundUnion[i].g->updateAnimation();
-			}
+			if(i < background.size())
+				if (background[i]->getDepth() == currentDepth)
+				{
+					backgroundQueue.push(background[i]->getTexture());
+				}
+
+			if( i < entityBlock.size())
+				if (entityBlock[i]->getDepth() == currentDepth && (
+					entityBlock[i]->getRenderingFlag() == RENDERINGFLAG_BACKGROUND ||
+					entityBlock[i]->getRenderingFlag() == RENDERINGFLAG_STATIC_BACKGROUND))
+				{
+					backgroundQueue.push(entityBlock[i]->getTexture());
+					entityBlock[i]->updateAnimation();
+				}
 		}
 	}
 
@@ -149,26 +130,46 @@ void CRE_Video::render()
 	maxDepth = 0;
 	currentDepth = 0;
 
-	//find the maximum depth of the backgrounds
-	for (unsigned int i = 0; i < foregroundUnion.size(); i++)
+	//find the maximum depth of the foregrounds
+	for (unsigned int i = 0; i < foreground.size(); i++)
 	{
 		unsigned int finderDepth;
-		finderDepth = foregroundUnion[i].g->getDepth();
+		finderDepth = foreground[i]->getDepth();
 
 		if (finderDepth > maxDepth)
 			maxDepth = finderDepth;
 	}
 
-	//push backgrounds to background rendering queue based on depth
+	for (unsigned int i = 0; i < entityBlock.size(); i++)
+	{
+		unsigned int finderDepth = entityBlock[i]->getDepth();
+
+		if (finderDepth > maxDepth &&
+			(entityBlock[i]->getRenderingFlag() == RENDERINGFLAG_FOREGROUND ||
+			entityBlock[i]->getRenderingFlag() == RENDERINGFLAG_STATIC_FOREGROUND))
+
+			maxDepth = finderDepth;
+	}
+
+	//push foreground textures to foreground rendering queue
 	for (currentDepth = 0; currentDepth <= maxDepth; currentDepth++)
 	{
-		for (unsigned int i = 0; i < foregroundUnion.size(); i++)
+		for (unsigned int i = 0; i < foreground.size() || i < entityBlock.size(); i++)
 		{
-			if (foregroundUnion[i].g->getDepth() == currentDepth)
-			{
-				foregroundQueue.push(foregroundUnion[i].g->getTexture());
-				foregroundUnion[i].g->updateAnimation();
-			}
+			if (i < foreground.size())
+				if (foreground[i]->getDepth() == currentDepth)
+				{
+					foregroundQueue.push(foreground[i]->getTexture());
+				}
+
+			if (i < entityBlock.size())
+				if (entityBlock[i]->getDepth() == currentDepth &&
+					(entityBlock[i]->getRenderingFlag() == RENDERINGFLAG_FOREGROUND ||
+					entityBlock[i]->getRenderingFlag() == RENDERINGFLAG_STATIC_FOREGROUND))
+				{
+					foregroundQueue.push(entityBlock[i]->getTexture());
+					entityBlock[i]->updateAnimation();
+				}
 		}
 	}
 
@@ -183,7 +184,7 @@ void CRE_Video::render()
 	{
 		unsigned int finderDepth = entityBlock[i]->getDepth();
 
-		if (finderDepth > maxDepth)
+		if (finderDepth > maxDepth && entityBlock[i]->getRenderingFlag() == RENDERINGFLAG_SPRITE)
 			maxDepth = finderDepth;
 	}
 

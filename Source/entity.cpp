@@ -21,6 +21,11 @@ CRE_Entity::CRE_Entity()
 	entityID = ++IDCounter;
 }
 
+CRE_Entity::~CRE_Entity()
+{
+	eTexture.~CRE_Texture();
+}
+
 void CRE_Entity::setTexture(const CRE_TextureData& text)
 {
 	SDL_Rect dest = text.source;
