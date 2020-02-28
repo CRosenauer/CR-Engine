@@ -25,6 +25,8 @@ static GAME_SCREEN gameScreen = NOT_INITIALIZED;
 
 void TestGame()
 {	
+	static Uint8 alpha = 255;
+
 	SDL_Rect tempSource;
 	tempSource.x = 0;
 	tempSource.y = 0;
@@ -45,7 +47,6 @@ void TestGame()
 		CREScriptHandler.loadScript(testScript00, Player->getEntityID());
 
 		Player->setPosition(200, 200, 0);
-		Player->setRenderingFlag(RENDERINGFLAG_FOREGROUND);
 
 
 		gameScreen = INITIALIZED;
@@ -71,10 +72,16 @@ void TestGame()
 			tempPos[1]--;
 		
 		//z co-ord inputs (Q/E)
-		if (userInputs[INPUT_Z] > 0 && !repeatedInputs[INPUT_Z])
-			tempPos[2]++;
-		else if(userInputs[INPUT_Z] < 0 && !repeatedInputs[INPUT_Z])
-			tempPos[2]--;
+		if (userInputs[INPUT_Z] > 0)
+		{
+			alpha -= 5;
+			Player->setAlpha(alpha);
+		}
+		else if (userInputs[INPUT_Z] < 0)
+		{
+			alpha += 5;
+			Player->setAlpha(alpha);
+		}
 
 		//quit inputs (enter)
 		if (userInputs[INPUT_QUIT] == 1)
@@ -83,7 +90,6 @@ void TestGame()
 		}
 
 		Player->setPosition(tempPos[0], tempPos[1], tempPos[2]);
-		
 		
 		CREVideo.getCameraPos(cameraPos);
 

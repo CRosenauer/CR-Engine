@@ -86,6 +86,23 @@ public:
 	//should be called in update.
 	void updateAnimation();
 
+	float getXScale() { return eTexture.getXScale(); }
+	float getYScale() { return eTexture.getYScale(); }
+
+	double getRotationDegree() { return eTexture.getRotationDegree(); }
+	SDL_RendererFlip getFlipFlag() { return eTexture.getFlipFlag(); }
+
+	void  setAlpha(const Uint8& a) { eTexture.setAlpha(a); }
+	Uint8 getAlpha() { return eTexture.getAlpha(); }
+
+	void setXScale(const float& xS) { eTexture.setXScale(xS); }
+	void setYScale(const float& yS) { eTexture.setYScale(yS); }
+
+	void setRotationDegree(const double& angle) { eTexture.setRotationDegree(angle); }
+	void addRotationDegree(const double& angle) { eTexture.addRotationDegree(angle); }
+
+	void setFlipFlag(const SDL_RendererFlip& flag) { eTexture.setFlipFlag(flag); }
+
 private:
 	//kinematic variables of the entity
 	//pos, vel, and acc stand for position, velocity, and acceleration respectively.

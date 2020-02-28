@@ -276,7 +276,6 @@ void CRE_Video::render()
 		
 	}
 
-
 	/***  Render queued sprites  ***/
 	while (!spriteQueue.empty())
 	{
@@ -290,26 +289,37 @@ void CRE_Video::render()
 		SDL_Rect viewportRect = { cameraPosX, cameraPosY, screenWidth, screenHeight }; //rect to represent viewport
 
 		//render set up entity texture for renderering.
-		if (SDL_IntersectRect(&baseDestTempRect, &viewportRect, &onScreenDestRect))
+		if(abs(tempTexture.getRotationDegree()) < 0.01)
+		{ 
+			if (SDL_IntersectRect(&baseDestTempRect, &viewportRect, &onScreenDestRect))
+			{
+				//math to determine which part of the source image will be rendered
+				//used to save performance with drawing
+				SDL_Rect cutSource;
+				//destTempRect; //rect for what part of the source will be drawn
+
+				//int dx = cutSource.x - baseDestTempRect.x;
+				//int dy = cutSource.y - baseDestTempRect.y;
+
+				cutSource.x = onScreenDestRect.x - baseDestTempRect.x;
+				cutSource.y = onScreenDestRect.y - baseDestTempRect.y;
+				cutSource.w = onScreenDestRect.w;
+				cutSource.h = onScreenDestRect.h;
+
+				// math to render relative to viewport position
+				onScreenDestRect.x = onScreenDestRect.x - cameraPosX;  //convert the position relative to the viewport
+				onScreenDestRect.y = onScreenDestRect.y - cameraPosY;
+
+				SDL_RenderCopy(CRERenderer, tempTexture.getTexture(), &cutSource, &onScreenDestRect); //render to screen
+			}
+		}
+		else
 		{
-			//math to determine which part of the source image will be rendered
-			//used to save performance with drawing
-			SDL_Rect cutSource;
-			//destTempRect; //rect for what part of the source will be drawn
+			baseDestTempRect.x = baseDestTempRect.x - cameraPosX;
+			baseDestTempRect.y = baseDestTempRect.y - cameraPosY;
 
-			//int dx = cutSource.x - baseDestTempRect.x;
-			//int dy = cutSource.y - baseDestTempRect.y;
-
-			cutSource.x = onScreenDestRect.x - baseDestTempRect.x;
-			cutSource.y = onScreenDestRect.y - baseDestTempRect.y;
-			cutSource.w = onScreenDestRect.w;
-			cutSource.h = onScreenDestRect.h;
-
-			// math to render relative to viewport position
-			onScreenDestRect.x = onScreenDestRect.x - cameraPosX;  //convert the position relative to the viewport
-			onScreenDestRect.y = onScreenDestRect.y - cameraPosY;
-
-			SDL_RenderCopy(CRERenderer, tempTexture.getTexture(), &cutSource, &onScreenDestRect); //render to screen
+			SDL_RenderCopyEx(CRERenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), &baseDestTempRect,
+				tempTexture.getRotationDegree(), NULL, tempTexture.getFlipFlag());
 		}
 	}
 
@@ -344,7 +354,7 @@ void CRE_Video::render()
 
 			//render set up entity texture for renderering.
 
-			//
+			//math to only render portion of the background that is onscreen.
 			if (SDL_IntersectRect(&baseDestTempRect, &viewportRect, &onScreenDestRect))
 			{
 				//math to determine which part of the source image will be rendered

@@ -1,6 +1,8 @@
 #ifndef FOREBACKGROUNDHANDLER_H
 #define FOREBACKGROUNDHANDLER_H
 
+#include <SDL_rect.h>
+
 #include <vector>
 
 #include "texture.h"
@@ -83,6 +85,12 @@ public:
 	CRE_Texture* getTexture() { return &gTexture; }
 	void getPosition(int pos[3]) { pos[0] = posX; pos[1] = posY; pos[2] = posZ; }
 	void setPosition(int pos[3]) { posX = pos[0]; posY = pos[2]; posZ = pos[3]; }
+
+	void  setAlpha(const Uint32 a) { gTexture.setAlpha(a); }
+	Uint8 getAlpha() { return gTexture.getAlpha(); }
+
+	void setScale(const float& x, const float& y);
+	void getScale(float scale[2]);
 
 	unsigned int getDepth() { return posZ; }
 

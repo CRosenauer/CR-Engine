@@ -43,7 +43,6 @@ CRE_Texture::CRE_Texture()
 	rotationCenterY = 0;
 	rotationAngle = 0.0;
 	flipFlag = SDL_FLIP_NONE;
-	rotationFlag = ENTITY_CENTER;
 	alpha = 255;
 	renderingFlag = RENDERINGFLAG_SPRITE;
 }
@@ -68,7 +67,6 @@ CRE_Texture::CRE_Texture(const CRE_Texture& t)
 	rotationCenterY = t.rotationCenterY;
 	rotationAngle = t.rotationAngle;
 	flipFlag = t.flipFlag;
-	rotationFlag = t.rotationFlag;
 	alpha = t.alpha;
 
 	renderingFlag = t.renderingFlag;
@@ -94,7 +92,6 @@ void CRE_Texture::operator = (const CRE_Texture& t)
 	rotationCenterY = t.rotationCenterY;
 	rotationAngle = t.rotationAngle;
 	flipFlag = t.flipFlag;
-	rotationFlag = t.rotationFlag;
 
 	renderingFlag = t.renderingFlag;
 
@@ -126,8 +123,10 @@ void CRE_Texture::loadTexture(const CRE_TextureData& text, const SDL_Rect& dest)
 		if (tTexture == NULL)
 		{
 			printf("Texture of path: %s cannot be created.\nError: %s", tempString.c_str(), SDL_GetError());
-			//exit(-1);
 		}
+
+		SDL_SetTextureBlendMode(tTexture, SDL_BLENDMODE_BLEND);	
+		SDL_SetTextureAlphaMod(tTexture, alpha);
 	}
 
 	SDL_FreeSurface(tempSurface);
@@ -161,58 +160,17 @@ void CRE_Texture::setRect(SDL_Rect source, SDL_Rect dest)
 	tDest   = dest;
 }
 
-SDL_Point CRE_Texture::getRotationCenter()
+void CRE_Texture::setAlpha(const Uint8& a)
 {
-	SDL_Point rotationCenter;
-	switch (rotationFlag)
+	alpha = a;
+	if (SDL_SetTextureAlphaMod(tTexture, alpha) != 0)
 	{
-	default:
-	case ENTITY_CENTER:
-		rotationCenter.x = tDest.x + xOffset;
-		rotationCenter.y = tDest.y + yOffset;
-		break;
-
-	case TEXTURE_CENTER:
-		rotationCenter.x = tDest.x;
-		rotationCenter.y = tDest.y;
-		break;
-
-	case CUSTOM:
-		rotationCenter.x = rotationCenterX;
-		rotationCenter.y = rotationCenterY;
-		break;
+		printf("Failed to apply alpha to texture.\nSDL Error:%s\n", SDL_GetError());
 	}
-
-	return rotationCenter;
+	printf("Alpha: %i\n", alpha);
 }
 
-void CRE_Texture::getRotationCenter(int center[2])
+Uint8 CRE_Texture::getAlpha()
 {
-	//switch for cases depending on rotation center mode.
-	switch (rotationFlag)
-	{
-	default:
-	case ENTITY_CENTER:
-		center[0] = tDest.x + xOffset;
-		center[1] = tDest.y + yOffset;
-		break;
-
-	case TEXTURE_CENTER:
-		center[0] = tDest.x;
-		center[1] = tDest.y;
-		break;
-
-	case CUSTOM:
-		center[0] = rotationCenterX;
-		center[1] = rotationCenterY;
-		break;
-	}
-}
-
-void CRE_Texture::setRotationCenter(const int& x, const int& y)
-{
-	rotationFlag = CUSTOM;
-
-	rotationCenterX = x;
-	rotationCenterY = y;
+	return alpha;
 }

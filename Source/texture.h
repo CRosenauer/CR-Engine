@@ -55,19 +55,20 @@ enum CRE_RenderingFlag
 
 std::string renderingFlagToString(const CRE_RenderingFlag& flag);
 
-enum CRE_RotationFlag
-{
-	ENTITY_CENTER,			//rotation point as the center point of the entity which owns this texture
-	TEXTURE_CENTER,	//rotation point as the top-left corner of the texture
-	CUSTOM					//rotation point set relative to the entity which owns this texture
-};
-
 struct CRE_TextureData
 {
 	std::string path;	//file name of the image to load ex.) "image.png"
 	SDL_Rect source;	//rectangle in the image which the video system will use to draw from
 	int xOffset;		//offsets to have the 0 point of the texture not on the origin of the entity.
 	int yOffset;
+
+	Uint8 alpha;		//transparency of the texture
+
+	double xScale;		//values for texture stretching
+	double yScale;		
+	int xScaleOffset;	//values to determine which point the texture will rotate around 
+	int yScaleOffset;	//relative to entity cetner
+						//only use if rotationFlag = CUSTOM
 };
 
 class CRE_Texture
@@ -105,12 +106,9 @@ public:
 	
 	double getRotationDegree() { return rotationAngle; }
 	SDL_RendererFlip getFlipFlag() { return flipFlag; }
-	CRE_RotationFlag getRotationFlag() { return rotationFlag; }
-	void setRotationCenter(const int& x, const int& y);
-	Uint8 getAlpha() { return alpha; }
 
-	SDL_Point getRotationCenter();
-	void getRotationCenter(int center[2]);
+	void  setAlpha(const Uint8& a);
+	Uint8 getAlpha();
 
 	void setXScale(const float& xS) { xScale = abs(xS); }
 	void setYScale(const float& yS) { yScale = abs(yS); }
@@ -119,7 +117,9 @@ public:
 	void addRotationDegree(const double& angle) { rotationAngle += angle; }
 
 	void setFlipFlag(const SDL_RendererFlip& flag) { flipFlag = flag; }
-	void setRotationFlag(const CRE_RotationFlag& flag) { rotationFlag = flag; }
+
+	int getXOffset() { return xOffset; }
+	int getYOffset() { return yOffset; }
 
 private:
 	SDL_Texture* tTexture = NULL;
@@ -143,8 +143,6 @@ private:
 
 	//flag for which way to flip the texture (if the texture is flipped)
 	SDL_RendererFlip flipFlag;
-
-	CRE_RotationFlag rotationFlag;
 
 	CRE_RenderingFlag renderingFlag;
 

@@ -164,6 +164,18 @@ void CRE_Ground::updateAnimation()
 	}
 }
 
+void CRE_Ground::setScale(const float& x, const float& y)
+{
+	gTexture.setXScale(x);
+	gTexture.setYScale(y);
+}
+
+void CRE_Ground::getScale(float scale[2])
+{
+	scale[0] = gTexture.getXScale();
+	scale[1] = gTexture.getYScale();
+}
+
 void setGround(const CRE_GroundData& groundDat)
 {
 	resetGround();
