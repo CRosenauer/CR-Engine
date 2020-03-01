@@ -62,13 +62,10 @@ struct CRE_TextureData
 	int xOffset;		//offsets to have the 0 point of the texture not on the origin of the entity.
 	int yOffset;
 
-	Uint8 alpha;		//transparency of the texture
+	Uint8 alpha;		//transparency of the texture. 0 is completely transparent, 255 is completely opaque.
 
 	double xScale;		//values for texture stretching
-	double yScale;		
-	int xScaleOffset;	//values to determine which point the texture will rotate around 
-	int yScaleOffset;	//relative to entity cetner
-						//only use if rotationFlag = CUSTOM
+	double yScale;
 };
 
 class CRE_Texture

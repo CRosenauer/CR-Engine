@@ -1,7 +1,7 @@
 #include "CREngine.h"
 
-const std::string TITLE = "Test Game";
-//as the title suggests, game title.
+//main renderer for drawing images
+SDL_Renderer* CREInternalRenderer = NULL;
 
 int screenWidth = 640;
 int screenHeight = 480;
@@ -11,9 +11,6 @@ int screenHeight = 480;
 Uint32 windowFlag = SDL_WINDOW_SHOWN;
 //window flag, used to determine fullscreen etc.
 //should be able to be changed in the menu
-
-SDL_Renderer *CRERenderer = NULL;
-//main renderer for drawing to screen
 
 extern vector<CRE_Entity*> entityBlock;
 
@@ -30,23 +27,23 @@ void CREInit()
 	/*** Engine Component Initialization Block ***/
 
 	//video window associated with current title, screen size, widescreen support, etc.
-	CREVideo = CRE_Video(TITLE, screenWidth, screenHeight, windowFlag);
+	CREVideo = CRE_Video(screenWidth, screenHeight, windowFlag);
 
 	const int IMG_FLAGS = IMG_INIT_PNG;
 
 	//initialize IMG and Audio.
 	if (!(IMG_Init(IMG_FLAGS) & IMG_FLAGS))
 	{
-		printf("CREngine init error. Failed to initialized SDL_Image.\nSDL Error: %s", IMG_GetError());
-		exit(1);
+		printf("CREngine init error. Failed to initialize SDL_Image.\nSDL Error: %s\n", IMG_GetError());
+		//exit(1);
 	}
 
 	const int AUDIO_FLAGS = MIX_INIT_MP3;
 
 	if ((Mix_Init(AUDIO_FLAGS) & AUDIO_FLAGS) != AUDIO_FLAGS)
 	{
-		printf("CREngine init erorr Failed to initalize SDL_Mixer.\nSDL Error: %s", Mix_GetError());
-		exit(1);
+		printf("CREngine init erorr Failed to initalize SDL_Mixer.\nSDL Error: %s\n", Mix_GetError());
+		//exit(1);
 	}
 
 	const int SDL_FLAGS =

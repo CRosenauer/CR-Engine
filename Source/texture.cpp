@@ -1,6 +1,6 @@
 #include "texture.h"
 
-extern SDL_Renderer* CRERenderer;
+extern SDL_Renderer* CREInternalRenderer;
 
 std::string renderingFlagToString(const CRE_RenderingFlag& flag)
 {
@@ -118,15 +118,17 @@ void CRE_Texture::loadTexture(const CRE_TextureData& text, const SDL_Rect& dest)
 			tTexture = NULL;
 		}
 
-		tTexture = SDL_CreateTextureFromSurface(CRERenderer, tempSurface);
+		tTexture = SDL_CreateTextureFromSurface(CREInternalRenderer, tempSurface);
 
 		if (tTexture == NULL)
 		{
 			printf("Texture of path: %s cannot be created.\nError: %s", tempString.c_str(), SDL_GetError());
 		}
 
-		SDL_SetTextureBlendMode(tTexture, SDL_BLENDMODE_BLEND);	
-		SDL_SetTextureAlphaMod(tTexture, alpha);
+		if (SDL_SetTextureBlendMode(tTexture, SDL_BLENDMODE_BLEND) != 0)
+		{
+			printf("Texture blend mode not set.\nSDL Error: %s\n", SDL_GetError());
+		}
 	}
 
 	SDL_FreeSurface(tempSurface);
@@ -167,7 +169,11 @@ void CRE_Texture::setAlpha(const Uint8& a)
 	{
 		printf("Failed to apply alpha to texture.\nSDL Error:%s\n", SDL_GetError());
 	}
-	printf("Alpha: %i\n", alpha);
+
+	Uint8 temp;
+	SDL_GetTextureAlphaMod(tTexture, &temp);
+
+	printf("Alpha: %i\n", temp);
 }
 
 Uint8 CRE_Texture::getAlpha()

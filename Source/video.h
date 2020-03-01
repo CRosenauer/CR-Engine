@@ -29,8 +29,8 @@ class CRE_Video
 public:
 	//Constructor Block
 	CRE_Video();
-	CRE_Video(const std::string& TITLE, const int& SCREENWIDTH, const int& SCREENHEIGHT, const Uint32& WINDOWFLAG);
 	//initialized the rendering window and sets all over internal variables to NULL
+	CRE_Video(const int& SCREENWIDTH, const int& SCREENHEIGHT, const Uint32& WINDOWFLAG);
 
 	//Graphics Queue Loading
 	//loads an entity, background, or foreground to rendering queues
@@ -81,10 +81,14 @@ private:
 	int cameraPosX, cameraPosY;
 
 	Uint32 windowFlag;
-
+	
 	SDL_Window*   CREVWindow;
 	SDL_Surface*  CREVSurface;
-
+	
+	//main renderer for displaying to windows
+	SDL_Window* CREDisplayWindow;
+	SDL_Surface* CREDisplaySurface;
+	SDL_Renderer* CREDisplayRenderer = NULL;
 
 #ifdef FRAMERATE_COUNTER
 	float frameRate = 0;

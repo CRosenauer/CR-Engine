@@ -1,6 +1,6 @@
 #include "video.h"
 
-extern SDL_Renderer* CRERenderer;
+extern SDL_Renderer* CREInternalRenderer;
 extern vector<CRE_Entity*> entityBlock;
 extern vector<CRE_Ground*> background;
 extern vector<CRE_Ground*> foreground;
@@ -18,9 +18,8 @@ CRE_Video::CRE_Video()
 	CREVSurface = NULL;
 }
 
-CRE_Video::CRE_Video(const std::string& TITLE , const int& SCREENWIDTH, const int& SCREENHEIGHT, const Uint32& WINDOWFLAG)
+CRE_Video::CRE_Video(const int& SCREENWIDTH, const int& SCREENHEIGHT, const Uint32& WINDOWFLAG)
 {
-	title = TITLE;
 	screenWidth = SCREENWIDTH;
 	screenHeight = SCREENHEIGHT;
 	cameraPosX = 0;
@@ -33,7 +32,7 @@ CRE_Video::CRE_Video(const std::string& TITLE , const int& SCREENWIDTH, const in
 
 void CRE_Video::init()
 {
-	CREVWindow = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight, windowFlag);
+	CREVWindow = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight, windowFlag);
 	if (CREVWindow == NULL)
 	{
 		printf("Window cannot be created.\nError: %s", SDL_GetError());
@@ -48,12 +47,14 @@ void CRE_Video::init()
 		exit(-1);
 	}
 
-	CRERenderer = SDL_CreateRenderer(CREVWindow, -1, SDL_RENDERER_ACCELERATED);
-	if (CRERenderer == NULL)
+	CREInternalRenderer = SDL_CreateRenderer(CREVWindow, -1, SDL_RENDERER_ACCELERATED);
+	if (CREInternalRenderer == NULL)
 	{
 		printf("Renderer cannot be established. Error: %s", SDL_GetError());
-		exit(-1);
+		//exit(-1);
 	}
+
+	SDL_SetRenderDrawBlendMode(CREInternalRenderer, SDL_BLENDMODE_BLEND);
 
 	setFrameRate(DEAFULT_FRAME_RATE);
 	setFrameTimer();
@@ -62,7 +63,7 @@ void CRE_Video::init()
 void CRE_Video::render()
 {
 	//clear the frame to blank for renderering
-	SDL_RenderClear(CRERenderer);
+	SDL_RenderClear(CREInternalRenderer);
 	
 	//loops through defined entities
 	//addes defined entities to rendering queues depending on internal
@@ -253,7 +254,7 @@ void CRE_Video::render()
 				onScreenDestRect.x = onScreenDestRect.x - cameraPosX;  //convert the position relative to the viewport
 				onScreenDestRect.y = onScreenDestRect.y - cameraPosY;
 
-				SDL_RenderCopy(CRERenderer, tempTexture.getTexture(), &cutSource, &onScreenDestRect); //render to screen
+				SDL_RenderCopy(CREInternalRenderer, tempTexture.getTexture(), &cutSource, &onScreenDestRect); //render to screen
 			}
 
 			break;
@@ -263,12 +264,12 @@ void CRE_Video::render()
 			if (baseDestTempRect.w <= 0 || baseDestTempRect.h <= 0)
 			{
 				//case destination rect is invalid. Assume fill screen
-				SDL_RenderCopy(CRERenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), NULL);
+				SDL_RenderCopy(CREInternalRenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), NULL);
 			}
 			else
 			{
 				//case destination rect is valid. Draws to texture's destination rect
-				SDL_RenderCopy(CRERenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), &baseDestTempRect);
+				SDL_RenderCopy(CREInternalRenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), &baseDestTempRect);
 			}
 			break;
 		}
@@ -310,7 +311,7 @@ void CRE_Video::render()
 				onScreenDestRect.x = onScreenDestRect.x - cameraPosX;  //convert the position relative to the viewport
 				onScreenDestRect.y = onScreenDestRect.y - cameraPosY;
 
-				SDL_RenderCopy(CRERenderer, tempTexture.getTexture(), &cutSource, &onScreenDestRect); //render to screen
+				SDL_RenderCopy(CREInternalRenderer, tempTexture.getTexture(), &cutSource, &onScreenDestRect); //render to screen
 			}
 		}
 		else
@@ -318,7 +319,7 @@ void CRE_Video::render()
 			baseDestTempRect.x = baseDestTempRect.x - cameraPosX;
 			baseDestTempRect.y = baseDestTempRect.y - cameraPosY;
 
-			SDL_RenderCopyEx(CRERenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), &baseDestTempRect,
+			SDL_RenderCopyEx(CREInternalRenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), &baseDestTempRect,
 				tempTexture.getRotationDegree(), NULL, tempTexture.getFlipFlag());
 		}
 	}
@@ -372,7 +373,7 @@ void CRE_Video::render()
 				onScreenDestRect.x = onScreenDestRect.x - cameraPosX;  //convert the position relative to the viewport
 				onScreenDestRect.y = onScreenDestRect.y - cameraPosY;
 
-				SDL_RenderCopy(CRERenderer, tempTexture.getTexture(), &cutSource, &onScreenDestRect); //render to screen
+				SDL_RenderCopy(CREInternalRenderer, tempTexture.getTexture(), &cutSource, &onScreenDestRect); //render to screen
 			}
 
 			break;
@@ -383,12 +384,12 @@ void CRE_Video::render()
 			if (baseDestTempRect.w <= 0 || baseDestTempRect.h <= 0)
 			{
 				//case destination rect is invalid. Assume fill screen
-				SDL_RenderCopy(CRERenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), NULL);
+				SDL_RenderCopy(CREInternalRenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), NULL);
 			}
 			else
 			{
 				//case destination rect is valid. Draws to texture's destination rect
-				SDL_RenderCopy(CRERenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), &baseDestTempRect);
+				SDL_RenderCopy(CREInternalRenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), &baseDestTempRect);
 			}
 
 			break;
@@ -433,7 +434,7 @@ void CRE_Video::render()
 
 
 	//render frame to screen.
-	SDL_RenderPresent(CRERenderer);
+	SDL_RenderPresent(CREInternalRenderer);
 
 #ifdef FRAMECAP
 	pollFrameTimer();

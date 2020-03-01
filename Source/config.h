@@ -7,6 +7,9 @@
 
 */
 
+/* General Definitions */
+#define TITLE "Test Game"
+
 /*  Video Flags	 */
 
 //resolution which the game will render in
