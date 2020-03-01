@@ -285,42 +285,103 @@ void CRE_Video::render()
 		spriteQueue.pop();
 
 		//variables for later use
-		SDL_Rect baseDestTempRect = tempTexture.getDestRect(); //destination rect of the entire image to draw
-		SDL_Rect onScreenDestRect;							       //destination rect of the image that will be rendered
+
+		//destination rect of the entire image to draw
+		SDL_Rect baseDest = tempTexture.getDestRect();
+
+		//destination rect of the image that will be rendered
+		SDL_Rect onScreenDestRect;							       
 		SDL_Rect viewportRect = { cameraPosX, cameraPosY, screenWidth, screenHeight }; //rect to represent viewport
 
+		float xScale = tempTexture.getXScale();
+		float yScale = tempTexture.getYScale();
+
 		//render set up entity texture for renderering.
-		if(abs(tempTexture.getRotationDegree()) < 0.01)
+		if(abs(tempTexture.getRotationDegree()) < 0.05)
 		{ 
-			if (SDL_IntersectRect(&baseDestTempRect, &viewportRect, &onScreenDestRect))
+			//check if texture is scaled.
+			if (!((xScale > 0.99 && xScale < 1.01) || (yScale > 0.99 && yScale < 1.01)))
 			{
-				//math to determine which part of the source image will be rendered
-				//used to save performance with drawing
-				SDL_Rect cutSource;
-				//destTempRect; //rect for what part of the source will be drawn
+				//texture is scaled
 
-				//int dx = cutSource.x - baseDestTempRect.x;
-				//int dy = cutSource.y - baseDestTempRect.y;
+				//math to scale texture
+				baseDest.x += (1.0 - xScale) * baseDest.w / 2;
+				baseDest.y += (1.0 - yScale) * baseDest.h / 2;
+				baseDest.w *= xScale;
+				baseDest.h *= yScale;
 
-				cutSource.x = onScreenDestRect.x - baseDestTempRect.x;
-				cutSource.y = onScreenDestRect.y - baseDestTempRect.y;
-				cutSource.w = onScreenDestRect.w;
-				cutSource.h = onScreenDestRect.h;
+				if (SDL_IntersectRect(&baseDest, &viewportRect, &onScreenDestRect))
+				{
+					//math to determine which part of the source image will be rendered
+					//used to save performance with drawing
+					
+					//destTempRect; //rect for what part of the source will be drawn
 
-				// math to render relative to viewport position
-				onScreenDestRect.x = onScreenDestRect.x - cameraPosX;  //convert the position relative to the viewport
-				onScreenDestRect.y = onScreenDestRect.y - cameraPosY;
+					//int dx = cutSource.x - baseDestTempRect.x;
+					//int dy = cutSource.y - baseDestTempRect.y;
 
-				SDL_RenderCopy(CREInternalRenderer, tempTexture.getTexture(), &cutSource, &onScreenDestRect); //render to screen
+					//cutSource.w = ceil(onScreenDestRect.w / xScale);
+					//cutSource.h = ceil(onScreenDestRect.h / yScale);
+					//cutSource.x = ceil((onScreenDestRect.x - baseDestTempRect.x) / xScale);
+					//cutSource.y = ceil((onScreenDestRect.y - baseDestTempRect.y) / yScale);
+
+
+					//convert the position relative to the viewport
+					baseDest.x = baseDest.x - cameraPosX;
+					baseDest.y = baseDest.y - cameraPosY;
+
+					SDL_RenderCopy(CREInternalRenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), &baseDest);
+				}
+			}
+			else
+			{
+				//texture is not scaled
+
+				if (SDL_IntersectRect(&baseDest, &viewportRect, &onScreenDestRect))
+				{
+					SDL_Rect cutSource;
+
+					//math to determine which part of the source image will be drawn from
+					cutSource.x = onScreenDestRect.x - baseDest.x;
+					cutSource.y = onScreenDestRect.y - baseDest.y;
+					cutSource.w = onScreenDestRect.w;
+					cutSource.h = onScreenDestRect.h;
+
+					//convert the position relative to the viewport
+					onScreenDestRect.x = onScreenDestRect.x - cameraPosX;
+					onScreenDestRect.y = onScreenDestRect.y - cameraPosY;
+
+					//render to screen
+					SDL_RenderCopy(CREInternalRenderer, tempTexture.getTexture(), &cutSource, &onScreenDestRect); 
+				}
 			}
 		}
 		else
 		{
-			baseDestTempRect.x = baseDestTempRect.x - cameraPosX;
-			baseDestTempRect.y = baseDestTempRect.y - cameraPosY;
+			if (!((xScale > 0.99 && xScale < 1.01) || (yScale > 0.99 && yScale < 1.01)))
+			{
+				//scale texture
+				baseDest.x += (1.0 - xScale) * baseDest.w / 2;
+				baseDest.y += (1.0 - yScale) * baseDest.h / 2;
+				baseDest.w *= xScale;
+				baseDest.h *= yScale;
 
-			SDL_RenderCopyEx(CREInternalRenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), &baseDestTempRect,
-				tempTexture.getRotationDegree(), NULL, tempTexture.getFlipFlag());
+				//covert texture position relative to viewport
+				baseDest.x = baseDest.x - cameraPosX;
+				baseDest.y = baseDest.y - cameraPosY;
+
+				SDL_RenderCopyEx(CREInternalRenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), &baseDest,
+					tempTexture.getRotationDegree(), NULL, tempTexture.getFlipFlag());
+			}
+			else
+			{
+				//convert texture pos relative to viewport
+				baseDest.x = baseDest.x - cameraPosX;
+				baseDest.y = baseDest.y - cameraPosY;
+
+				SDL_RenderCopyEx(CREInternalRenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), &baseDest,
+					tempTexture.getRotationDegree(), NULL, tempTexture.getFlipFlag());
+			}
 		}
 	}
 
@@ -350,8 +411,6 @@ void CRE_Video::render()
 		default:
 		case RENDERINGFLAG_FOREGROUND:
 			//load background layer from queue for renderering
-
-			
 
 			//render set up entity texture for renderering.
 

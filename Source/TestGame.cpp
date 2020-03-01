@@ -35,7 +35,9 @@ void TestGame()
 	__int8 userInputs[INPUTWIDTH];
 	bool repeatedInputs[INPUTWIDTH];
 	int tempPos[3] = {0, 0, 0};
-	int cameraPos[2] = {0, 0};
+	int cameraPos[2] = {32, 32};
+	static float xScale = 1;
+	static float yScale = 1;
 
 	switch (gameScreen)
 	{
@@ -46,14 +48,16 @@ void TestGame()
 
 		CREScriptHandler.loadScript(testScript00, Player->getEntityID());
 
-		Player->setPosition(200, 200, 0);
+		Player->setPosition(31, 31, 0);
+
+		CREVideo.setCameraPos(cameraPos);
 
 
 		gameScreen = INITIALIZED;
 		break;
 		
 	case INITIALIZED:
-			if(Player != NULL)
+		if(Player != NULL)
 			Player->getPosition(tempPos);
 
 		CREInput.getUserInputs(userInputs);
@@ -74,13 +78,27 @@ void TestGame()
 		//z co-ord inputs (Q/E)
 		if (userInputs[INPUT_Z] > 0)
 		{
-			alpha -= 5;
-			Player->setAlpha(alpha);
+			if (xScale > 0.25)
+			{
+				xScale -= 0.125;
+				Player->setXScale(xScale);
+			}
+
+			if (yScale > 0.25)
+			{
+				yScale -= 0.125;
+				Player->setYScale(yScale);
+			}
+			
+			//printf("Scaleing:\nx: %f\ny: %f\n\n", xScale, yScale);
 		}
 		else if (userInputs[INPUT_Z] < 0)
 		{
-			alpha += 5;
-			Player->setAlpha(alpha);
+			xScale += 0.125;
+			yScale += 0.125;
+			Player->setXScale(xScale);
+			Player->setYScale(yScale);
+			//printf("Scaleing:\nx: %f\ny: %f\n\n", xScale, yScale);
 		}
 
 		//quit inputs (enter)
@@ -91,11 +109,14 @@ void TestGame()
 
 		Player->setPosition(tempPos[0], tempPos[1], tempPos[2]);
 		
-		CREVideo.getCameraPos(cameraPos);
+		Player->addRotationDegree(10);
+
+		//CREVideo.getCameraPos(cameraPos);
 
 		//checks for updating camera position
 		
 		//check x position
+		/*
 		if (tempPos[0] - cameraPos[0] < 200 )
 		{
 			cameraPos[0] = tempPos[0] - 200;
@@ -116,8 +137,7 @@ void TestGame()
 		}
 
 		CREVideo.setCameraPos(cameraPos);
-
-		CREVideo.setCameraPos(cameraPos);
+		*/
 
 		break;
 	}
