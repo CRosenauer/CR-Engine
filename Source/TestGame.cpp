@@ -48,7 +48,7 @@ void TestGame()
 
 		CREScriptHandler.loadScript(testScript00, Player->getEntityID());
 
-		Player->setPosition(31, 31, 0);
+		Player->setPosition(64, 64, 0);
 
 		CREVideo.setCameraPos(cameraPos);
 
@@ -111,12 +111,12 @@ void TestGame()
 		
 		Player->addRotationDegree(10);
 
-		//CREVideo.getCameraPos(cameraPos);
+		CREVideo.getCameraPos(cameraPos);
 
 		//checks for updating camera position
 		
 		//check x position
-		/*
+		
 		if (tempPos[0] - cameraPos[0] < 200 )
 		{
 			cameraPos[0] = tempPos[0] - 200;
@@ -137,7 +137,7 @@ void TestGame()
 		}
 
 		CREVideo.setCameraPos(cameraPos);
-		*/
+		
 
 		break;
 	}

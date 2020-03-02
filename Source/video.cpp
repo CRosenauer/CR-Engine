@@ -285,7 +285,6 @@ void CRE_Video::render()
 		spriteQueue.pop();
 
 		//variables for later use
-
 		//destination rect of the entire image to draw
 		SDL_Rect baseDest = tempTexture.getDestRect();
 
@@ -324,7 +323,6 @@ void CRE_Video::render()
 					//cutSource.h = ceil(onScreenDestRect.h / yScale);
 					//cutSource.x = ceil((onScreenDestRect.x - baseDestTempRect.x) / xScale);
 					//cutSource.y = ceil((onScreenDestRect.y - baseDestTempRect.y) / yScale);
-
 
 					//convert the position relative to the viewport
 					baseDest.x = baseDest.x - cameraPosX;
@@ -396,15 +394,12 @@ void CRE_Video::render()
 		
 		//variables for later use
 
-		//rect to represent viewport
-		SDL_Rect viewportRect = { cameraPosX, cameraPosY, screenWidth, screenHeight };
-
 		//destination rect of the entire image to draw
-		SDL_Rect baseDestTempRect = tempTexture.getDestRect();
+		SDL_Rect baseDest = tempTexture.getDestRect();
 
 		//destination rect of the image that will be rendered
-		//altered in the following switch statement
 		SDL_Rect onScreenDestRect;
+		SDL_Rect viewportRect = { cameraPosX, cameraPosY, screenWidth, screenHeight }; //rect to represent viewport
 
 		switch (tempTexture.getRenderingFlag())
 		{
@@ -415,7 +410,12 @@ void CRE_Video::render()
 			//render set up entity texture for renderering.
 
 			//math to only render portion of the background that is onscreen.
-			if (SDL_IntersectRect(&baseDestTempRect, &viewportRect, &onScreenDestRect))
+			//load background layer from queue for renderering
+
+			//render set up entity texture for renderering.
+
+			//
+			if (SDL_IntersectRect(&baseDest, &viewportRect, &onScreenDestRect))
 			{
 				//math to determine which part of the source image will be rendered
 				//used to save performance with drawing
@@ -423,8 +423,8 @@ void CRE_Video::render()
 
 				//math to determine which part of the source rect will appear on screen
 				//only draws from the part of the source rect that would appear on screen.
-				cutSource.x = onScreenDestRect.x - baseDestTempRect.x;
-				cutSource.y = onScreenDestRect.y - baseDestTempRect.y;
+				cutSource.x = onScreenDestRect.x - baseDest.x;
+				cutSource.y = onScreenDestRect.y - baseDest.y;
 				cutSource.w = onScreenDestRect.w;
 				cutSource.h = onScreenDestRect.h;
 
@@ -440,7 +440,7 @@ void CRE_Video::render()
 			//render textures who's position is relative to viewport position
 		case RENDERINGFLAG_STATIC_FOREGROUND:
 			//render set up background layer for renderering.
-			if (baseDestTempRect.w <= 0 || baseDestTempRect.h <= 0)
+			if (baseDest.w <= 0 || baseDest.h <= 0)
 			{
 				//case destination rect is invalid. Assume fill screen
 				SDL_RenderCopy(CREInternalRenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), NULL);
@@ -448,7 +448,7 @@ void CRE_Video::render()
 			else
 			{
 				//case destination rect is valid. Draws to texture's destination rect
-				SDL_RenderCopy(CREInternalRenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), &baseDestTempRect);
+				SDL_RenderCopy(CREInternalRenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), &baseDest);
 			}
 
 			break;

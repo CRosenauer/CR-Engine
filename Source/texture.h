@@ -53,6 +53,16 @@ enum CRE_RenderingFlag
  *
 */
 
+enum CRE_FLIP_FLAG
+{
+	CRE_SetFlipUD,
+	CRE_ResetFlipUD,
+	CRE_ToggleFlipUD,
+	CRE_SetFlipLR,
+	CRE_ResetFlipLR,
+	CRE_ToggleFlipLR
+};
+
 std::string renderingFlagToString(const CRE_RenderingFlag& flag);
 
 struct CRE_TextureData
@@ -63,9 +73,6 @@ struct CRE_TextureData
 	int yOffset;
 
 	Uint8 alpha;		//transparency of the texture. 0 is completely transparent, 255 is completely opaque.
-
-	double xScale;		//values for texture stretching
-	double yScale;
 };
 
 class CRE_Texture
