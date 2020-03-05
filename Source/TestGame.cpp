@@ -22,6 +22,7 @@ enum GAME_SCREEN
 
 CRE_Entity* Player;
 static GAME_SCREEN gameScreen = NOT_INITIALIZED;
+static CRE_FlipFlag flipFlag = CRE_ResetFlip;
 
 void TestGame()
 {	
@@ -39,6 +40,8 @@ void TestGame()
 	static float xScale = 1;
 	static float yScale = 1;
 
+	bool testFlip[2] = {false, false};
+
 	switch (gameScreen)
 	{
 	default:
@@ -52,6 +55,9 @@ void TestGame()
 
 		CREVideo.setCameraPos(cameraPos);
 
+		
+
+		//Player->setRotationDegree(45);
 
 		gameScreen = INITIALIZED;
 		break;
@@ -62,6 +68,7 @@ void TestGame()
 
 		CREInput.getUserInputs(userInputs);
 		CREInput.getRepeatInputs(repeatedInputs);
+		
 
 		//x co-ord inputs (A/D)
 		if (userInputs[INPUT_X] > 0)
@@ -107,9 +114,9 @@ void TestGame()
 			CREEventHandler.passQuitEvent();
 		}
 
-		Player->setPosition(tempPos[0], tempPos[1], tempPos[2]);
+		//Player->setPosition(tempPos[0], tempPos[1], tempPos[2]);
 		
-		Player->addRotationDegree(10);
+		//Player->addRotationDegree(10);
 
 		CREVideo.getCameraPos(cameraPos);
 

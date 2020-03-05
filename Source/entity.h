@@ -101,7 +101,8 @@ public:
 	void setRotationDegree(const double& angle) { eTexture.setRotationDegree(angle); }
 	void addRotationDegree(const double& angle) { eTexture.addRotationDegree(angle); }
 
-	void setFlipFlag(const SDL_RendererFlip& flag) { eTexture.setFlipFlag(flag); }
+	void setFlipFlag(const CRE_FlipFlag& flag) { eTexture.setFlipFlag(flag); }
+	void getFlipFlag(bool flag[2]) { eTexture.getFlipFlag(flag); }
 
 private:
 	//kinematic variables of the entity

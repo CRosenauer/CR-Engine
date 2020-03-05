@@ -53,14 +53,15 @@ enum CRE_RenderingFlag
  *
 */
 
-enum CRE_FLIP_FLAG
+enum CRE_FlipFlag
 {
 	CRE_SetFlipUD,
 	CRE_ResetFlipUD,
 	CRE_ToggleFlipUD,
 	CRE_SetFlipLR,
 	CRE_ResetFlipLR,
-	CRE_ToggleFlipLR
+	CRE_ToggleFlipLR,
+	CRE_ResetFlip
 };
 
 std::string renderingFlagToString(const CRE_RenderingFlag& flag);
@@ -120,7 +121,11 @@ public:
 	void setRotationDegree(const double& angle) { rotationAngle = angle; }
 	void addRotationDegree(const double& angle) { rotationAngle += angle; }
 
-	void setFlipFlag(const SDL_RendererFlip& flag) { flipFlag = flag; }
+	void setFlipFlag(const CRE_FlipFlag& flag);
+
+	//flip[0]: Up-down flip active.
+	//flip[1]: Left-right flip active.
+	void getFlipFlag(bool flip[2]);
 
 	int getXOffset() { return xOffset; }
 	int getYOffset() { return yOffset; }
@@ -146,6 +151,8 @@ private:
 	double rotationAngle;
 
 	//flag for which way to flip the texture (if the texture is flipped)
+	//only used internally for communicating with SDL. For CRE Flip flags see enum
+	//CRE_FlipFlag
 	SDL_RendererFlip flipFlag;
 
 	CRE_RenderingFlag renderingFlag;

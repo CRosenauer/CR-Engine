@@ -180,3 +180,38 @@ Uint8 CRE_Texture::getAlpha()
 {
 	return alpha;
 }
+
+void CRE_Texture::setFlipFlag(const CRE_FlipFlag& flag)
+{
+	switch (flag)
+	{
+	case CRE_SetFlipUD:
+		flipFlag = (SDL_RendererFlip) (flipFlag | SDL_FLIP_VERTICAL);
+		break;
+	case CRE_ResetFlipUD:
+		flipFlag = (SDL_RendererFlip) (flipFlag & ~SDL_FLIP_VERTICAL);
+		break;
+	case CRE_ToggleFlipUD:
+		flipFlag = (SDL_RendererFlip) (flipFlag ^ SDL_FLIP_VERTICAL);
+		break;
+	case CRE_SetFlipLR:
+		flipFlag = (SDL_RendererFlip)(flipFlag | SDL_FLIP_HORIZONTAL);
+		break;
+	case CRE_ResetFlipLR:
+		flipFlag = (SDL_RendererFlip)(flipFlag & ~SDL_FLIP_HORIZONTAL);
+		break;
+	case CRE_ToggleFlipLR:
+		flipFlag = (SDL_RendererFlip)(flipFlag ^ SDL_FLIP_HORIZONTAL); 
+		break;
+	case CRE_ResetFlip:
+		flipFlag = SDL_FLIP_NONE;
+	default:
+		break;
+	}
+}
+
+void CRE_Texture::getFlipFlag(bool flip[2])
+{
+	flip[0] = (flipFlag & SDL_FLIP_VERTICAL) && SDL_FLIP_VERTICAL;
+	flip[1] = (flipFlag & SDL_FLIP_HORIZONTAL) && SDL_FLIP_HORIZONTAL;
+}

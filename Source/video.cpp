@@ -54,8 +54,6 @@ void CRE_Video::init()
 		//exit(-1);
 	}
 
-	SDL_SetRenderDrawBlendMode(CREInternalRenderer, SDL_BLENDMODE_BLEND);
-
 	setFrameRate(DEAFULT_FRAME_RATE);
 	setFrameTimer();
 }
@@ -295,9 +293,15 @@ void CRE_Video::render()
 		float xScale = tempTexture.getXScale();
 		float yScale = tempTexture.getYScale();
 
+		double rotDegree = tempTexture.getRotationDegree();
+		SDL_RendererFlip flipFlag = tempTexture.getFlipFlag();
+		//printf("Flag flag: %i\n", flipFlag);
+
 		//render set up entity texture for renderering.
-		if(abs(tempTexture.getRotationDegree()) < 0.05)
+		if(abs(rotDegree) < 0.05 && flipFlag == SDL_FLIP_NONE)
 		{ 
+			//no rotation and no flipping occurs
+
 			//check if texture is scaled.
 			if (!((xScale > 0.99 && xScale < 1.01) || (yScale > 0.99 && yScale < 1.01)))
 			{
@@ -309,27 +313,12 @@ void CRE_Video::render()
 				baseDest.w *= xScale;
 				baseDest.h *= yScale;
 
-				if (SDL_IntersectRect(&baseDest, &viewportRect, &onScreenDestRect))
-				{
-					//math to determine which part of the source image will be rendered
-					//used to save performance with drawing
-					
-					//destTempRect; //rect for what part of the source will be drawn
+				//convert the position relative to the viewport
+				baseDest.x = baseDest.x - cameraPosX;
+				baseDest.y = baseDest.y - cameraPosY;
 
-					//int dx = cutSource.x - baseDestTempRect.x;
-					//int dy = cutSource.y - baseDestTempRect.y;
+				SDL_RenderCopy(CREInternalRenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), &baseDest);
 
-					//cutSource.w = ceil(onScreenDestRect.w / xScale);
-					//cutSource.h = ceil(onScreenDestRect.h / yScale);
-					//cutSource.x = ceil((onScreenDestRect.x - baseDestTempRect.x) / xScale);
-					//cutSource.y = ceil((onScreenDestRect.y - baseDestTempRect.y) / yScale);
-
-					//convert the position relative to the viewport
-					baseDest.x = baseDest.x - cameraPosX;
-					baseDest.y = baseDest.y - cameraPosY;
-
-					SDL_RenderCopy(CREInternalRenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), &baseDest);
-				}
 			}
 			else
 			{
@@ -356,6 +345,8 @@ void CRE_Video::render()
 		}
 		else
 		{
+			//rotation or flipping occurs
+
 			if (!((xScale > 0.99 && xScale < 1.01) || (yScale > 0.99 && yScale < 1.01)))
 			{
 				//scale texture
@@ -369,7 +360,7 @@ void CRE_Video::render()
 				baseDest.y = baseDest.y - cameraPosY;
 
 				SDL_RenderCopyEx(CREInternalRenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), &baseDest,
-					tempTexture.getRotationDegree(), NULL, tempTexture.getFlipFlag());
+					rotDegree, NULL, flipFlag);
 			}
 			else
 			{
@@ -378,7 +369,7 @@ void CRE_Video::render()
 				baseDest.y = baseDest.y - cameraPosY;
 
 				SDL_RenderCopyEx(CREInternalRenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), &baseDest,
-					tempTexture.getRotationDegree(), NULL, tempTexture.getFlipFlag());
+					rotDegree, NULL, flipFlag);
 			}
 		}
 	}

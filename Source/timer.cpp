@@ -1,5 +1,7 @@
 #include "timer.h"
 
+#include <cmath>
+
 static Uint32 ticks;
 
 //default to 17 ms per frame or about 60fps
@@ -22,7 +24,7 @@ void pollFrameTimer()
 
 void setFrameRate(const unsigned int& frameRate)
 {
-	msPerFrame = (unsigned int) (float) 1000 / (float) frameRate;
+	msPerFrame = round((float) 1000 / (float) frameRate);
 }
 
 static Uint32 msTicks;
