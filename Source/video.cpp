@@ -534,38 +534,95 @@ void CRE_Video::setResolution(const int& width, const int& height)
 	if (width <= 0 || height <= 0)
 		return;
 
-	float w              = width;
-	float h              = height;
-	float internalWidth  = RENDERING_SCREEN_WIDTH;
+	float w = width;
+	float h = height;
+	float internalWidth = RENDERING_SCREEN_WIDTH;
 	float internalHeight = RENDERING_SCREEN_HEIGHT;
 
-	float xScale = w / internalWidth;
-	float yScale = h / internalHeight;
+	windowXScale = w / internalWidth;
+	windowYScale = h / internalHeight;
 
-	SDL_RenderSetScale(CREInternalRenderer, xScale, yScale);
+	SDL_Rect displayRect = {0, 0, 0, 0};
+
+	switch (scaleMode)
+	{
+	case CRE_SCALE_TO_FIT:
+	default:
+		if (windowXScale > windowYScale)
+		{
+			windowXScale = windowYScale;
+
+			w = windowXScale * RENDERING_SCREEN_WIDTH;
+			h = windowYScale * RENDERING_SCREEN_HEIGHT;
+
+			displayRect.w = w;
+			displayRect.h = h;
+			displayRect.x = (width - w) / 2;
+			displayRect.y = 0;
+		}
+			
+		else
+		{
+			windowYScale = windowXScale;
+
+			w = windowXScale * RENDERING_SCREEN_WIDTH;
+			h = windowYScale * RENDERING_SCREEN_HEIGHT;
+
+			displayRect.w = w;
+			displayRect.h = h;
+			displayRect.y = (height - h) / 2;
+			displayRect.x = 0;
+		}
+
+		break;
+
+	case CRE_STRETCH_TO_FIT:
+		displayRect.w = width;
+		displayRect.h = height;
+		displayRect.x = 0;
+		displayRect.y = 0;
+
+		break;
+	}
+
+	SDL_RenderSetScale(CREInternalRenderer, windowXScale, windowYScale);
 	SDL_SetWindowSize(CREVWindow, width, height);
 	SDL_SetWindowPosition(CREVWindow, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+	SDL_RenderSetClipRect(CREInternalRenderer, &displayRect);
 }
 
-void CRE_Video::setFullscreen(const CRE_Fullscreen_Flag& flag)
+void CRE_Video::setFullscreenMode(const CRE_Fullscreen_Flag& flag)
 {
 	switch (flag)
 	{
 	case CRE_DISPLAY_FULLSCREEN:
 		SDL_SetWindowFullscreen(CREVWindow, SDL_WINDOW_FULLSCREEN);
+		SDL_SetWindowPosition(CREVWindow, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
 		break;
 
 	case CRE_DISPLAY_BOARDERLESS_FULLSCREEN:
 		SDL_SetWindowFullscreen(CREVWindow, SDL_WINDOW_FULLSCREEN_DESKTOP);
+		SDL_SetWindowPosition(CREVWindow, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
 		break;
 
 	case CRE_DISPLAY_WINDOWED:
 		SDL_SetWindowFullscreen(CREVWindow, 0);
+		SDL_SetWindowPosition(CREVWindow, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+
+		//need code here for display mode scale to fit.
 		break;
 
 	default:
 		break;
 	}
+}
+
+void CRE_Video::setScaleMode(const CRE_Scale_Mode& flag)
+{
+	scaleMode = flag;
+
+	//update window display with scale mode
+	setResolution(windowXScale * RENDERING_SCREEN_WIDTH, windowYScale * RENDERING_SCREEN_HEIGHT);
 }
 
 #ifdef FRAMERATE_COUNTER

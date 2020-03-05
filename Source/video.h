@@ -29,6 +29,12 @@ enum CRE_Fullscreen_Flag
 	CRE_DISPLAY_WINDOWED
 };
 
+enum CRE_Scale_Mode
+{
+	CRE_STRETCH_TO_FIT,
+	CRE_SCALE_TO_FIT
+};
+
 using namespace std;
 
 class CRE_Video
@@ -75,7 +81,14 @@ public:
 	//fails on non-positive values.
 	void setResolution(const int& width, const int& height);
 
-	void setFullscreen(const CRE_Fullscreen_Flag& flag);
+	//sets display mode based on the passed flag.
+	void setFullscreenMode(const CRE_Fullscreen_Flag& flag);
+
+	//sets video display framecap to the passed integer in frames per second.
+	void setFrameCap(const int& frameCap);
+
+	//sets display mode to strech to fit or scale to fit.
+	void setScaleMode(const CRE_Scale_Mode& flag);
 
 #ifdef FRAMERATE_COUNTER
 	float getFrameRate();
@@ -98,6 +111,13 @@ private:
 	SDL_Window* CREDisplayWindow;
 	SDL_Surface* CREDisplaySurface;
 	SDL_Renderer* CREDisplayRenderer = NULL;
+
+	CRE_Scale_Mode scaleMode = CRE_SCALE_TO_FIT;
+
+	float windowXScale = 1.0;
+	float windowYScale = 1.0;
+	int windowResolutionX = RENDERING_SCREEN_WIDTH;
+	int windowResolutionY = RENDERING_SCREEN_HEIGHT;
 
 #ifdef FRAMERATE_COUNTER
 	float frameRate = 0;
