@@ -529,10 +529,43 @@ void CRE_Video::setCameraPos(const int pos[2])
 	cameraPosY = pos[1];
 }
 
-void CRE_Video::getResolution(int pos[2])
+void CRE_Video::setResolution(const int& width, const int& height)
 {
-	pos[0] = screenWidth;
-	pos[1] = screenHeight;
+	if (width <= 0 || height <= 0)
+		return;
+
+	float w              = width;
+	float h              = height;
+	float internalWidth  = RENDERING_SCREEN_WIDTH;
+	float internalHeight = RENDERING_SCREEN_HEIGHT;
+
+	float xScale = w / internalWidth;
+	float yScale = h / internalHeight;
+
+	SDL_RenderSetScale(CREInternalRenderer, xScale, yScale);
+	SDL_SetWindowSize(CREVWindow, width, height);
+	SDL_SetWindowPosition(CREVWindow, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+}
+
+void CRE_Video::setFullscreen(const CRE_Fullscreen_Flag& flag)
+{
+	switch (flag)
+	{
+	case CRE_DISPLAY_FULLSCREEN:
+		SDL_SetWindowFullscreen(CREVWindow, SDL_WINDOW_FULLSCREEN);
+		break;
+
+	case CRE_DISPLAY_BOARDERLESS_FULLSCREEN:
+		SDL_SetWindowFullscreen(CREVWindow, SDL_WINDOW_FULLSCREEN_DESKTOP);
+		break;
+
+	case CRE_DISPLAY_WINDOWED:
+		SDL_SetWindowFullscreen(CREVWindow, 0);
+		break;
+
+	default:
+		break;
+	}
 }
 
 #ifdef FRAMERATE_COUNTER

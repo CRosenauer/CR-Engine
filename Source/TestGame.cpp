@@ -55,7 +55,8 @@ void TestGame()
 
 		CREVideo.setCameraPos(cameraPos);
 
-		
+		CREVideo.setResolution(2736, 1824);
+		CREVideo.setFullscreen(CRE_DISPLAY_BOARDERLESS_FULLSCREEN);
 
 		//Player->setRotationDegree(45);
 
@@ -96,8 +97,6 @@ void TestGame()
 				yScale -= 0.125;
 				Player->setYScale(yScale);
 			}
-			
-			//printf("Scaleing:\nx: %f\ny: %f\n\n", xScale, yScale);
 		}
 		else if (userInputs[INPUT_Z] < 0)
 		{
@@ -114,9 +113,8 @@ void TestGame()
 			CREEventHandler.passQuitEvent();
 		}
 
-		//Player->setPosition(tempPos[0], tempPos[1], tempPos[2]);
+		Player->setPosition(tempPos[0], tempPos[1], tempPos[2]);
 		
-		//Player->addRotationDegree(10);
 
 		CREVideo.getCameraPos(cameraPos);
 

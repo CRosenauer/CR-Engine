@@ -22,6 +22,13 @@
  * finally, frame is loaded to window.
 */
 
+enum CRE_Fullscreen_Flag
+{
+	CRE_DISPLAY_FULLSCREEN,
+	CRE_DISPLAY_BOARDERLESS_FULLSCREEN,
+	CRE_DISPLAY_WINDOWED
+};
+
 using namespace std;
 
 class CRE_Video
@@ -64,9 +71,11 @@ public:
 	//cameraPosX = pos[0], cameraPosY = pos[1]
 	void setCameraPos(const int pos[2]);
 
-	//returns current game resolution
-	//pos[0] = width, pos[1] = height
-	void getResolution(int pos[2]);
+	//sets the display resolution to the passed values.
+	//fails on non-positive values.
+	void setResolution(const int& width, const int& height);
+
+	void setFullscreen(const CRE_Fullscreen_Flag& flag);
 
 #ifdef FRAMERATE_COUNTER
 	float getFrameRate();
