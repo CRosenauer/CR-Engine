@@ -108,7 +108,7 @@ void CRE_Texture::loadTexture(const CRE_TextureData& text, const SDL_Rect& dest)
 
 	if (tempSurface == NULL)
 	{
-		printf("Image of path: %s cannot be loaded. SDL_image Error: %s\n", tempString.c_str(), IMG_GetError());
+		//printf("Image of path: %s cannot be loaded. SDL_image Error: %s\n", tempString.c_str(), IMG_GetError());
 	}
 	else
 	{
@@ -122,12 +122,12 @@ void CRE_Texture::loadTexture(const CRE_TextureData& text, const SDL_Rect& dest)
 
 		if (tTexture == NULL)
 		{
-			printf("Texture of path: %s cannot be created.\nError: %s", tempString.c_str(), SDL_GetError());
+			//printf("Texture of path: %s cannot be created.\nError: %s", tempString.c_str(), SDL_GetError());
 		}
 
 		if (SDL_SetTextureBlendMode(tTexture, SDL_BLENDMODE_BLEND) != 0)
 		{
-			printf("Texture blend mode not set.\nSDL Error: %s\n", SDL_GetError());
+			//printf("Texture blend mode not set.\nSDL Error: %s\n", SDL_GetError());
 		}
 	}
 

@@ -534,13 +534,14 @@ void CRE_Video::setResolution(const int& width, const int& height)
 	if (width <= 0 || height <= 0)
 		return;
 
+	windowResolutionX = width;
+	windowResolutionY = height;
+
 	float w = width;
 	float h = height;
-	float internalWidth = RENDERING_SCREEN_WIDTH;
-	float internalHeight = RENDERING_SCREEN_HEIGHT;
 
-	windowXScale = w / internalWidth;
-	windowYScale = h / internalHeight;
+	windowXScale = w / RENDERING_SCREEN_WIDTH;
+	windowYScale = h / RENDERING_SCREEN_HEIGHT;
 
 	SDL_Rect displayRect = {0, 0, 0, 0};
 
@@ -548,47 +549,67 @@ void CRE_Video::setResolution(const int& width, const int& height)
 	{
 	case CRE_SCALE_TO_FIT:
 	default:
-		if (windowXScale > windowYScale)
+
+		//special case for windowed more to prevent black bars on the size of the window.
+		if (fullscreenFlag == CRE_DISPLAY_WINDOWED)
 		{
-			windowXScale = windowYScale;
 
-			w = windowXScale * RENDERING_SCREEN_WIDTH;
-			h = windowYScale * RENDERING_SCREEN_HEIGHT;
+			SDL_RenderSetClipRect(CREInternalRenderer, NULL);
+			SDL_RenderSetLogicalSize(CREInternalRenderer, 0, 0);
 
-			displayRect.w = w;
-			displayRect.h = h;
-			displayRect.x = (width - w) / 2;
-			displayRect.y = 0;
+			if (windowXScale > windowYScale)
+			{
+				SDL_RenderSetScale(CREInternalRenderer, windowYScale, windowYScale);
+				SDL_SetWindowSize(CREVWindow, RENDERING_SCREEN_WIDTH * windowYScale, RENDERING_SCREEN_HEIGHT * windowYScale);
+			}
+			else
+			{
+				SDL_RenderSetScale(CREInternalRenderer, windowXScale, windowXScale);
+				SDL_SetWindowSize(CREVWindow, RENDERING_SCREEN_WIDTH * windowXScale, RENDERING_SCREEN_HEIGHT * windowXScale);
+			}
 		}
-			
 		else
 		{
-			windowYScale = windowXScale;
+			//math to determine which area of the window will have graphics
 
+			//likely wrong
 			w = windowXScale * RENDERING_SCREEN_WIDTH;
 			h = windowYScale * RENDERING_SCREEN_HEIGHT;
 
 			displayRect.w = w;
 			displayRect.h = h;
 			displayRect.y = (height - h) / 2;
-			displayRect.x = 0;
+			displayRect.x = (width - w) / 2;
+
+			//reset scaling
+			int i = SDL_RenderSetScale(CREInternalRenderer, 0, 0);
+
+			SDL_RenderSetLogicalSize(CREInternalRenderer, RENDERING_SCREEN_WIDTH, RENDERING_SCREEN_HEIGHT);
+
+			//ensure graphics are only being displayed within the display window (not on black bars).
+			SDL_RenderSetClipRect(CREInternalRenderer, &displayRect);
+
+			SDL_SetWindowSize(CREVWindow, width, height);
 		}
 
 		break;
 
 	case CRE_STRETCH_TO_FIT:
-		displayRect.w = width;
-		displayRect.h = height;
-		displayRect.x = 0;
-		displayRect.y = 0;
+		//reset logical size
+		SDL_RenderSetLogicalSize(CREInternalRenderer, 0, 0);
 
+		SDL_RenderSetScale(CREInternalRenderer, windowXScale, windowYScale);
+
+		//render everything that appears in the window
+		SDL_RenderSetClipRect(CREInternalRenderer, NULL);
+
+		SDL_SetWindowSize(CREVWindow, width, height);
 		break;
 	}
 
-	SDL_RenderSetScale(CREInternalRenderer, windowXScale, windowYScale);
-	SDL_SetWindowSize(CREVWindow, width, height);
+	//resize window and center it in the screen
+	//SDL_SetWindowSize(CREVWindow, width, height);
 	SDL_SetWindowPosition(CREVWindow, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
-	SDL_RenderSetClipRect(CREInternalRenderer, &displayRect);
 }
 
 void CRE_Video::setFullscreenMode(const CRE_Fullscreen_Flag& flag)
@@ -600,7 +621,7 @@ void CRE_Video::setFullscreenMode(const CRE_Fullscreen_Flag& flag)
 		SDL_SetWindowPosition(CREVWindow, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
 		break;
 
-	case CRE_DISPLAY_BOARDERLESS_FULLSCREEN:
+	case CRE_DISPLAY_BORDERLESS_FULLSCREEN:
 		SDL_SetWindowFullscreen(CREVWindow, SDL_WINDOW_FULLSCREEN_DESKTOP);
 		SDL_SetWindowPosition(CREVWindow, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
 		break;
@@ -615,6 +636,10 @@ void CRE_Video::setFullscreenMode(const CRE_Fullscreen_Flag& flag)
 	default:
 		break;
 	}
+
+	fullscreenFlag = flag;
+
+	setResolution(windowResolutionX, windowResolutionY);
 }
 
 void CRE_Video::setScaleMode(const CRE_Scale_Mode& flag)
@@ -622,7 +647,7 @@ void CRE_Video::setScaleMode(const CRE_Scale_Mode& flag)
 	scaleMode = flag;
 
 	//update window display with scale mode
-	setResolution(windowXScale * RENDERING_SCREEN_WIDTH, windowYScale * RENDERING_SCREEN_HEIGHT);
+	setResolution(windowResolutionX, windowResolutionY);
 }
 
 #ifdef FRAMERATE_COUNTER

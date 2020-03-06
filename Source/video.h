@@ -25,7 +25,7 @@
 enum CRE_Fullscreen_Flag
 {
 	CRE_DISPLAY_FULLSCREEN,
-	CRE_DISPLAY_BOARDERLESS_FULLSCREEN,
+	CRE_DISPLAY_BORDERLESS_FULLSCREEN,
 	CRE_DISPLAY_WINDOWED
 };
 
@@ -113,6 +113,8 @@ private:
 	SDL_Renderer* CREDisplayRenderer = NULL;
 
 	CRE_Scale_Mode scaleMode = CRE_SCALE_TO_FIT;
+	CRE_Fullscreen_Flag fullscreenFlag = CRE_DISPLAY_WINDOWED;
+
 
 	float windowXScale = 1.0;
 	float windowYScale = 1.0;

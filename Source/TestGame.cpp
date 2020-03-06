@@ -55,11 +55,11 @@ void TestGame()
 
 		CREVideo.setCameraPos(cameraPos);
 
-		CREVideo.setResolution(2736, 1824);
-		CREVideo.setScaleMode(CRE_STRETCH_TO_FIT);
-		CREVideo.setFullscreenMode(CRE_DISPLAY_FULLSCREEN);
+		//CREVideo.setResolution(1820, 1080);
+		CREVideo.setResolution(1280, 960);
 
-		//Player->setRotationDegree(45);
+		CREVideo.setScaleMode(CRE_SCALE_TO_FIT);
+		CREVideo.setFullscreenMode(CRE_DISPLAY_WINDOWED);
 
 		gameScreen = INITIALIZED;
 		break;
