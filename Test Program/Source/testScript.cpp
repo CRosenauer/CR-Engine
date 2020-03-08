@@ -1,6 +1,6 @@
 #include "testScript.h"
 
-extern video CREVideo;
+extern CRE_Video CREVideo;
 
 namespace TSF
 {
@@ -9,7 +9,7 @@ namespace TSF
 		printf("%s\n", text);
 	}
 
-	void TE__moveEntity(entity* entity, SDL_Point* pos)
+	void TE__moveEntity(CRE_Entity* entity, SDL_Point* pos)
 	{
 		int tempPos[3];
 
@@ -20,7 +20,7 @@ namespace TSF
 		entity->setPosition(tempPos[0], tempPos[1], tempPos[2]);
 	}
 
-	void TE__validatePos(entity* entity, SDL_Point* pos)
+	void TE__validatePos(CRE_Entity* entity, SDL_Point* pos)
 	{
 		int tempPos[3];
 
@@ -32,9 +32,9 @@ namespace TSF
 			printf("Test failed: entity position incorrect\n");
 	}
 
-	void TE__validateDestRect(entity* entity, SDL_Point* pos)
+	void TE__validateDestRect(CRE_Entity* entity, SDL_Point* pos)
 	{
-		texture tempTexture = *entity->getTexture();
+		CRE_Texture tempTexture = *entity->getTexture();
 
 		SDL_Rect validationRect = tempTexture.getDestRect();
 
@@ -73,12 +73,12 @@ namespace TSF
 		return true;
 	}
 
-	const script* returnTestScript04(void* unused1, void* unused2)
+	const CRE_Script* returnTestScript04(void* unused1, void* unused2)
 	{
 		return &testScript04;
 	}
 
-	const script* returnScriptTest12(void* unused1, void* unused2)
+	const CRE_Script* returnScriptTest12(void* unused1, void* unused2)
 	{
 		return &scriptTest12;
 	}

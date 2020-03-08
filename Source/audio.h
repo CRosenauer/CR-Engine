@@ -9,15 +9,15 @@
 
 #include "file.h"
 
-enum CRE_AUDIO_FLAG
+enum CRE_AudioFlag
 {
 
 };
 
-class audio
+class CRE_Audio
 {
 public:
-	audio();
+	CRE_Audio();
 
 	void loadSFX(const std::string& path);
 	//loads and queues a sound file from path to be played.

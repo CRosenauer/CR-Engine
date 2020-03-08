@@ -13,7 +13,6 @@
 #include "entity.h"
 #include "texture.h"
 #include "timer.h"
-#include "renderingFlags.hpp"
 #include "ground.h"
 
 /* video.h, main class used to write images to the screen
@@ -23,15 +22,28 @@
  * finally, frame is loaded to window.
 */
 
+enum CRE_Fullscreen_Flag
+{
+	CRE_DISPLAY_FULLSCREEN,
+	CRE_DISPLAY_BORDERLESS_FULLSCREEN,
+	CRE_DISPLAY_WINDOWED
+};
+
+enum CRE_Scale_Mode
+{
+	CRE_STRETCH_TO_FIT,
+	CRE_SCALE_TO_FIT
+};
+
 using namespace std;
 
-class video
+class CRE_Video
 {
 public:
 	//Constructor Block
-	video();
-	video(const std::string& TITLE, const int& SCREENWIDTH, const int& SCREENHEIGHT, const Uint32& WINDOWFLAG);
+	CRE_Video();
 	//initialized the rendering window and sets all over internal variables to NULL
+	CRE_Video(const int& SCREENWIDTH, const int& SCREENHEIGHT, const Uint32& WINDOWFLAG);
 
 	//Graphics Queue Loading
 	//loads an entity, background, or foreground to rendering queues
@@ -46,7 +58,7 @@ public:
 	//
 	//Flag information can be found in renderingFlags.hpp
 	//
-	void loadTexture(texture* texture, RENDERING_FLAG flag);
+	void loadTexture(CRE_Texture* texture, CRE_RenderingFlag flag);
 
 	//Render current frame
 	//renders current game screen
@@ -65,9 +77,18 @@ public:
 	//cameraPosX = pos[0], cameraPosY = pos[1]
 	void setCameraPos(const int pos[2]);
 
-	//returns current game resolution
-	//pos[0] = width, pos[1] = height
-	void getResolution(int pos[2]);
+	//sets the display resolution to the passed values.
+	//fails on non-positive values.
+	void setResolution(const int& width, const int& height);
+
+	//sets display mode based on the passed flag.
+	void setFullscreenMode(const CRE_Fullscreen_Flag& flag);
+
+	//sets video display framecap to the passed integer in frames per second.
+	void setFrameCap(const int& frameCap);
+
+	//sets display mode to strech to fit or scale to fit.
+	void setScaleMode(const CRE_Scale_Mode& flag);
 
 #ifdef FRAMERATE_COUNTER
 	float getFrameRate();
@@ -82,10 +103,23 @@ private:
 	int cameraPosX, cameraPosY;
 
 	Uint32 windowFlag;
-
+	
 	SDL_Window*   CREVWindow;
 	SDL_Surface*  CREVSurface;
+	
+	//main renderer for displaying to windows
+	SDL_Window* CREDisplayWindow;
+	SDL_Surface* CREDisplaySurface;
+	SDL_Renderer* CREDisplayRenderer = NULL;
 
+	CRE_Scale_Mode scaleMode = DEFAULT_SCALE_MODE;
+	CRE_Fullscreen_Flag fullscreenFlag = DEFAULT_FULLSCREEN_MODE;
+
+
+	float windowXScale = 1.0;
+	float windowYScale = 1.0;
+	int windowResolutionX = RENDERING_SCREEN_WIDTH;
+	int windowResolutionY = RENDERING_SCREEN_HEIGHT;
 
 #ifdef FRAMERATE_COUNTER
 	float frameRate = 0;
@@ -99,11 +133,9 @@ private:
 	//queues add potential memory fragmentation problems
 	//for future iterations, make vectors with loadsize from file
 	//or have a set vram size in file and manage loading of backgrounds, sprites, and foregrounds
-	queue<texture*> spriteQueue;
-	queue<texture*> backgroundQueue;
-	queue<texture*> foregroundQueue;
-	queue<texture*> staticBackgroundQueue;
-	queue<texture*> staticForegroundQueue;
+	queue<CRE_Texture*> spriteQueue;
+	queue<CRE_Texture*> backgroundQueue;
+	queue<CRE_Texture*> foregroundQueue;
 };
 
 #endif //VIDEO_H

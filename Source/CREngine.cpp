@@ -1,7 +1,7 @@
 #include "CREngine.h"
 
-const std::string TITLE = "Test Game";
-//as the title suggests, game title.
+//main renderer for drawing images
+SDL_Renderer* CREInternalRenderer = NULL;
 
 int screenWidth = 640;
 int screenHeight = 480;
@@ -12,17 +12,14 @@ Uint32 windowFlag = SDL_WINDOW_SHOWN;
 //window flag, used to determine fullscreen etc.
 //should be able to be changed in the menu
 
-SDL_Renderer *CRERenderer = NULL;
-//main renderer for drawing to screen
-
-extern vector<entity*> entityBlock;
+extern vector<CRE_Entity*> entityBlock;
 
 //Handlers for input, video, etc.
-inputHandler  CREInput;
-video         CREVideo;
-audio         CREAudio;
-scriptHandler CREScriptHandler;
-eventHandler  CREEventHandler;
+CRE_InputHandler  CREInput;
+CRE_Video         CREVideo;
+CRE_Audio         CREAudio;
+CRE_ScriptHandler CREScriptHandler;
+CRE_EventHandler  CREEventHandler;
 
 
 void CREInit()
@@ -30,23 +27,23 @@ void CREInit()
 	/*** Engine Component Initialization Block ***/
 
 	//video window associated with current title, screen size, widescreen support, etc.
-	CREVideo = video(TITLE, screenWidth, screenHeight, windowFlag);
+	CREVideo = CRE_Video(screenWidth, screenHeight, windowFlag);
 
 	const int IMG_FLAGS = IMG_INIT_PNG;
 
 	//initialize IMG and Audio.
 	if (!(IMG_Init(IMG_FLAGS) & IMG_FLAGS))
 	{
-		printf("CREngine init error. Failed to initialized SDL_Image.\nSDL Error: %s", IMG_GetError());
-		exit(1);
+		printf("CREngine init error. Failed to initialize SDL_Image.\nSDL Error: %s\n", IMG_GetError());
+		//exit(1);
 	}
 
 	const int AUDIO_FLAGS = MIX_INIT_MP3;
 
 	if ((Mix_Init(AUDIO_FLAGS) & AUDIO_FLAGS) != AUDIO_FLAGS)
 	{
-		printf("CREngine init erorr Failed to initalize SDL_Mixer.\nSDL Error: %s", Mix_GetError());
-		exit(1);
+		printf("CREngine init erorr Failed to initalize SDL_Mixer.\nSDL Error: %s\n", Mix_GetError());
+		//exit(1);
 	}
 
 	const int SDL_FLAGS =
@@ -107,69 +104,24 @@ void CRELoop()
 {
 	while( true )
 	{
-#ifdef PRINT_FRAMECOUNT
-		printf("Frame: %i\n", frameCount++);
-#endif // PRINT_FRAMECOUNT
-
-#ifdef COMPONENT_MS_TIMER
-		pollMSTimer();
-#endif COMPONENT_MS_TIMER
 		//read inputs
 		CREInput.pollInputs();
-
-#ifdef COMPONENT_MS_TIMER
-		printf("Input runtime: %i\n", getMSTimer());
 		
-		pollMSTimer();
-#endif COMPONENT_MS_TIMER
-		
-		//game logic function
-		TestGame();
-
-#ifdef COMPONENT_MS_TIMER
-		printf("Game logic runtime: %i\n", getMSTimer());
-		
-		pollMSTimer();
-#endif COMPONENT_MS_TIMER
+		//game logic function goes here
+		//TestGame();
 
 		//process currently loaded scripts
 		CREScriptHandler.processScripts();
-
-#ifdef COMPONENT_MS_TIMER
-		printf("Script handler runtime: %i\n", getMSTimer());
-		
-		pollMSTimer();
-#endif COMPONENT_MS_TIMER
 
 		//updates game based on queued events
 		if (!CREEventHandler.processEvents())
 			break;
 
-#ifdef COMPONENT_MS_TIMER
-		printf("Event handler runtime: %i\n", getMSTimer());
-		
-		pollMSTimer();
-#endif COMPONENT_MS_TIMER
-
 		//play user feedback
 		CREAudio.playAudio();
-
-#ifdef COMPONENT_MS_TIMER
-		printf("Audio runtime: %i\n", getMSTimer());
 		
-		pollMSTimer();
-#endif COMPONENT_MS_TIMER
-
 		//draw queues textures to be rendered and draws images to the screen
 		CREVideo.render();
-
-#ifdef COMPONENT_MS_TIMER
-		printf("Video runtime: %i\n\n", getMSTimer());
-#endif COMPONENT_MS_TIMER
-
-#ifdef MANUAL_ADVANCE_FRAME
-		system("PAUSE");
-#endif MANUAL_ADVANCE_FRAME
 	}
 }
 

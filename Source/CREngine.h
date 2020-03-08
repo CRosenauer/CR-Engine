@@ -1,10 +1,6 @@
 #ifndef CRENGINE_H
 #define CRENGINE_H
 
-//#define COMPONENT_MS_TIMER
-//#define MANUAL_ADVANCE_FRAME
-//#define PRINT_FRAMECOUNT
-
 #include <cstdio>
 #include <new>
 #include <vector>
@@ -13,7 +9,8 @@
 #include <SDL_mixer.h>
 #include <string>
 
-#include "TestGame.h"
+//file which contains game logic function goes here.
+//#include "TestGame.h"
 
 #include "entity.h"
 #include "input.h"

@@ -1,11 +1,11 @@
 #include "video.h"
 
-extern SDL_Renderer* CRERenderer;
-extern vector<entity*> entityBlock;
-extern vector<ground*> background;
-extern vector<ground*> foreground;
+extern SDL_Renderer* CREInternalRenderer;
+extern vector<CRE_Entity*> entityBlock;
+extern vector<CRE_Ground*> background;
+extern vector<CRE_Ground*> foreground;
 
-video::video()
+CRE_Video::CRE_Video()
 {
 	title =  "Test Game";
 	screenWidth = RENDERING_SCREEN_WIDTH;
@@ -18,9 +18,8 @@ video::video()
 	CREVSurface = NULL;
 }
 
-video::video(const std::string& TITLE , const int& SCREENWIDTH, const int& SCREENHEIGHT, const Uint32& WINDOWFLAG)
+CRE_Video::CRE_Video(const int& SCREENWIDTH, const int& SCREENHEIGHT, const Uint32& WINDOWFLAG)
 {
-	title = TITLE;
 	screenWidth = SCREENWIDTH;
 	screenHeight = SCREENHEIGHT;
 	cameraPosX = 0;
@@ -31,9 +30,9 @@ video::video(const std::string& TITLE , const int& SCREENWIDTH, const int& SCREE
 	CREVSurface = NULL;
 }
 
-void video::init()
+void CRE_Video::init()
 {
-	CREVWindow = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight, windowFlag);
+	CREVWindow = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight, windowFlag);
 	if (CREVWindow == NULL)
 	{
 		printf("Window cannot be created.\nError: %s", SDL_GetError());
@@ -48,159 +47,233 @@ void video::init()
 		exit(-1);
 	}
 
-	CRERenderer = SDL_CreateRenderer(CREVWindow, -1, SDL_RENDERER_ACCELERATED);
-	if (CRERenderer == NULL)
+	CREInternalRenderer = SDL_CreateRenderer(CREVWindow, -1, SDL_RENDERER_ACCELERATED);
+	if (CREInternalRenderer == NULL)
 	{
 		printf("Renderer cannot be established. Error: %s", SDL_GetError());
-		exit(-1);
+		//exit(-1);
 	}
 
-	setFrameRate(60);
+	setFrameRate(DEAFULT_FRAME_RATE);
 	setFrameTimer();
 }
 
-void video::render()
+void CRE_Video::render()
 {
 	//clear the frame to blank for renderering
-	SDL_RenderClear(CRERenderer);
+	SDL_RenderClear(CREInternalRenderer);
 	
 	//loops through defined entities
 	//addes defined entities to rendering queues depending on internal
-	//rendering flags (SPRITE, BACKGROUND, FOREGROUND, etc)
+	//rendering flags
 
 	//temperary texture for renderering
 	//use to place entities from rendering queue and to render to frame
-	texture tempTexture;
+	CRE_Texture tempTexture;
 
-	/***  Queue backgrounds and g=foregrounds to render queues based on depth  ***/
+
+	//union and vectors to allow for entities and grounds to be interlaced in forebround and background
+	//layers. Allows for interlaced depth-based rendering.
+
+	/***  Queue backgrounds and foregrounds to render queues based on depth  ***/
+
+	unsigned int maxDepth = 0;
+	unsigned int currentDepth = 0;
+
+
+
+	//find the maximum depth of the backgrounds
 	for (unsigned int i = 0; i < background.size(); i++)
 	{
-		switch (background[i]->getRenderingFlag())
-		{
-		case RENDERINGFLAG_BACKGROUND: 
-			backgroundQueue.push(background[i]->getTexture());
-			break;
-		case RENDERINGFLAG_STATIC_BACKGROUND:
-			staticBackgroundQueue.push(background[i]->getTexture());
-		default:
-			break;
-		}
+		unsigned int finderDepth;
+		finderDepth = background[i]->getDepth();
+
+		if (finderDepth > maxDepth)
+			maxDepth = finderDepth;
 	}
 
-	for (unsigned int i = 0; i < foreground.size(); i++)
-	{
-		switch (foreground[i]->getRenderingFlag())
-		{
-		case RENDERINGFLAG_FOREGROUND:
-			foregroundQueue.push(foreground[i]->getTexture());
-			break;
-		case RENDERINGFLAG_STATIC_FOREGROUND:
-			staticForegroundQueue.push(foreground[i]->getTexture());
-		default:
-			break;
-		}
-	}
-
-
-	//vars for holding information related to 
-	int maxDepth = 0;
-	int currentDepth = 0;
-
-	/***  Queue sprites to render based on depth ***/
 	for (unsigned int i = 0; i < entityBlock.size(); i++)
 	{
-		int tempPos[3];
-		entityBlock[i]->getPosition(tempPos);
+		unsigned int finderDepth = entityBlock[i]->getDepth();
 
-		if (tempPos[2] > maxDepth)
-			maxDepth = tempPos[2];
+		if (finderDepth > maxDepth && 
+			( entityBlock[i]->getRenderingFlag() == RENDERINGFLAG_BACKGROUND ||
+			entityBlock[i]->getRenderingFlag() == RENDERINGFLAG_STATIC_BACKGROUND ))
+
+			maxDepth = finderDepth;
 	}
 
+	//push backgrounds to background rendering queue based on depth
+	for (currentDepth = 0; currentDepth <= maxDepth; currentDepth++)
+	{
+		for (unsigned int i = 0; i < background.size() || i < entityBlock.size(); i++)
+		{
+			if(i < background.size())
+				if (background[i]->getDepth() == currentDepth)
+				{
+					backgroundQueue.push(background[i]->getTexture());
+				}
+
+			if( i < entityBlock.size())
+				if (entityBlock[i]->getDepth() == currentDepth && (
+					entityBlock[i]->getRenderingFlag() == RENDERINGFLAG_BACKGROUND ||
+					entityBlock[i]->getRenderingFlag() == RENDERINGFLAG_STATIC_BACKGROUND))
+				{
+					backgroundQueue.push(entityBlock[i]->getTexture());
+					entityBlock[i]->updateAnimation();
+				}
+		}
+	}
+
+
+	maxDepth = 0;
+	currentDepth = 0;
+
+	//find the maximum depth of the foregrounds
+	for (unsigned int i = 0; i < foreground.size(); i++)
+	{
+		unsigned int finderDepth;
+		finderDepth = foreground[i]->getDepth();
+
+		if (finderDepth > maxDepth)
+			maxDepth = finderDepth;
+	}
+
+	for (unsigned int i = 0; i < entityBlock.size(); i++)
+	{
+		unsigned int finderDepth = entityBlock[i]->getDepth();
+
+		if (finderDepth > maxDepth &&
+			(entityBlock[i]->getRenderingFlag() == RENDERINGFLAG_FOREGROUND ||
+			entityBlock[i]->getRenderingFlag() == RENDERINGFLAG_STATIC_FOREGROUND))
+
+			maxDepth = finderDepth;
+	}
+
+	//push foreground textures to foreground rendering queue
+	for (currentDepth = 0; currentDepth <= maxDepth; currentDepth++)
+	{
+		for (unsigned int i = 0; i < foreground.size() || i < entityBlock.size(); i++)
+		{
+			if (i < foreground.size())
+				if (foreground[i]->getDepth() == currentDepth)
+				{
+					foregroundQueue.push(foreground[i]->getTexture());
+				}
+
+			if (i < entityBlock.size())
+				if (entityBlock[i]->getDepth() == currentDepth &&
+					(entityBlock[i]->getRenderingFlag() == RENDERINGFLAG_FOREGROUND ||
+					entityBlock[i]->getRenderingFlag() == RENDERINGFLAG_STATIC_FOREGROUND))
+				{
+					foregroundQueue.push(entityBlock[i]->getTexture());
+					entityBlock[i]->updateAnimation();
+				}
+		}
+	}
+
+
+	maxDepth = 0;
+	currentDepth = 0;
+
+	/***  Queue sprites to render based on depth ***/
+
+	//find max depth of the entity's
+	for (unsigned int i = 0; i < entityBlock.size(); i++)
+	{
+		unsigned int finderDepth = entityBlock[i]->getDepth();
+
+		if (finderDepth > maxDepth && entityBlock[i]->getRenderingFlag() == RENDERINGFLAG_SPRITE)
+			maxDepth = finderDepth;
+	}
+
+	//queue entity's based on depth
 	for(currentDepth = 0; currentDepth <= maxDepth; currentDepth++)
 	{
 		for (unsigned int i = 0; i < entityBlock.size(); i++)
 		{
-			if (entityBlock[i]->getDepth() == currentDepth)
+			if (entityBlock[i]->getDepth() == currentDepth &&
+				entityBlock[i]->getRenderingFlag() == RENDERINGFLAG_SPRITE)
 			{
-				SDL_Rect tempDest = entityBlock[i]->getTextureDest();
-				
-					switch (entityBlock[i]->getRenderingFlag())
-					{
-					case RENDERINGFLAG_STATIC_BACKGROUND:
-						staticBackgroundQueue.push(entityBlock[i]->getTexture());
-						break;
-					case RENDERINGFLAG_BACKGROUND:
-						backgroundQueue.push(entityBlock[i]->getTexture());
-						break;
-					default:
-					case RENDERINGFLAG_SPRITE:
-						spriteQueue.push(entityBlock[i]->getTexture());
-						break;
-					case RENDERINGFLAG_FOREGROUND:
-						foregroundQueue.push(entityBlock[i]->getTexture());
-						break;
-					case RENDERINGFLAG_STATIC_FOREGROUND:
-						staticForegroundQueue.push(entityBlock[i]->getTexture());
-						break;
-					}
-				
+				spriteQueue.push(entityBlock[i]->getTexture());
 				entityBlock[i]->updateAnimation();
 			}
 		}
 	}
 
+
+
 	/***  Render all queued textures  ***/
 
-
 	/***  Render queued backgrounds  ***/
-
-	//Static backgrounds queued to allow paralax b.g.
-	while (!staticBackgroundQueue.empty())
-	{
-		//load background layer from queue for renderering
-		tempTexture = *staticBackgroundQueue.front();
-		staticBackgroundQueue.pop();
-
-		//render set up background layer for renderering.
-		SDL_RenderCopy(CRERenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), NULL);
-	}
 
 	//Backgrounds queued to allow paralax b.g.
 	while (!backgroundQueue.empty())
 	{
 		tempTexture = *backgroundQueue.front();
 		backgroundQueue.pop();
-		//load background layer from queue for renderering
+
 
 		//variables for later use
-		SDL_Rect baseDestTempRect = tempTexture.getDestRect(); //destination rect of the entire image to draw
-		SDL_Rect onScreenDestRect;							       //destination rect of the image that will be rendered
+
+		//destination rect of the entire image to draw
+		SDL_Rect baseDestTempRect = tempTexture.getDestRect(); 
+
+		//destination rect of the image that will be rendered
+		//altered in the following switch statement
+		SDL_Rect onScreenDestRect;
+
+		//rectangle which contains the viewport.
 		SDL_Rect viewportRect = { cameraPosX, cameraPosY, screenWidth, screenHeight }; //rect to represent viewport
 
-		//render set up entity texture for renderering.
-		if (SDL_IntersectRect(&baseDestTempRect, &viewportRect, &onScreenDestRect))
+		switch (tempTexture.getRenderingFlag())
 		{
-			//math to determine which part of the source image will be rendered
-			//used to save performance with drawing
-			SDL_Rect cutSource;
-			//destTempRect; //rect for what part of the source will be drawn
 
-			//int dx = cutSource.x - baseDestTempRect.x;
-			//int dy = cutSource.y - baseDestTempRect.y;
+		default:
+		case RENDERINGFLAG_BACKGROUND:
+			//load background layer from queue for renderering
 
-			cutSource.x = onScreenDestRect.x - baseDestTempRect.x;
-			cutSource.y = onScreenDestRect.y - baseDestTempRect.y;
-			cutSource.w = onScreenDestRect.w;
-			cutSource.h = onScreenDestRect.h;
+			//render set up entity texture for renderering.
 
-			// math to render relative to viewport position
-			onScreenDestRect.x = onScreenDestRect.x - cameraPosX;  //convert the position relative to the viewport
-			onScreenDestRect.y = onScreenDestRect.y - cameraPosY;
+			if (SDL_IntersectRect(&baseDestTempRect, &viewportRect, &onScreenDestRect))
+			{
+				//math to determine which part of the source image will be rendered
+				//used to save performance with drawing
+				SDL_Rect cutSource;
 
-			SDL_RenderCopy(CRERenderer, tempTexture.getTexture(), &cutSource, &onScreenDestRect); //render to screen
+				//math to determine which part of the source rect will appear on screen
+				//only draws from the part of the source rect that would appear on screen.
+				cutSource.x = onScreenDestRect.x - baseDestTempRect.x;
+				cutSource.y = onScreenDestRect.y - baseDestTempRect.y;
+				cutSource.w = onScreenDestRect.w;
+				cutSource.h = onScreenDestRect.h;
+
+				//math to render relative to viewport position
+				onScreenDestRect.x = onScreenDestRect.x - cameraPosX;  //convert the position relative to the viewport
+				onScreenDestRect.y = onScreenDestRect.y - cameraPosY;
+
+				SDL_RenderCopy(CREInternalRenderer, tempTexture.getTexture(), &cutSource, &onScreenDestRect); //render to screen
+			}
+
+			break;
+		//render textures who's position is relative to viewport position
+		case RENDERINGFLAG_STATIC_BACKGROUND:
+			//render set up background layer for renderering.
+			if (baseDestTempRect.w <= 0 || baseDestTempRect.h <= 0)
+			{
+				//case destination rect is invalid. Assume fill screen
+				SDL_RenderCopy(CREInternalRenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), NULL);
+			}
+			else
+			{
+				//case destination rect is valid. Draws to texture's destination rect
+				SDL_RenderCopy(CREInternalRenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), &baseDestTempRect);
+			}
+			break;
 		}
+		
+		
 	}
-
 
 	/***  Render queued sprites  ***/
 	while (!spriteQueue.empty())
@@ -210,31 +283,94 @@ void video::render()
 		spriteQueue.pop();
 
 		//variables for later use
-		SDL_Rect baseDestTempRect = tempTexture.getDestRect(); //destination rect of the entire image to draw
-		SDL_Rect onScreenDestRect;							       //destination rect of the image that will be rendered
+		//destination rect of the entire image to draw
+		SDL_Rect baseDest = tempTexture.getDestRect();
+
+		//destination rect of the image that will be rendered
+		SDL_Rect onScreenDestRect;							       
 		SDL_Rect viewportRect = { cameraPosX, cameraPosY, screenWidth, screenHeight }; //rect to represent viewport
 
+		float xScale = tempTexture.getXScale();
+		float yScale = tempTexture.getYScale();
+
+		double rotDegree = tempTexture.getRotationDegree();
+		SDL_RendererFlip flipFlag = tempTexture.getFlipFlag();
+		//printf("Flag flag: %i\n", flipFlag);
+
 		//render set up entity texture for renderering.
-		if (SDL_IntersectRect(&baseDestTempRect, &viewportRect, &onScreenDestRect))
+		if(abs(rotDegree) < 0.05 && flipFlag == SDL_FLIP_NONE)
+		{ 
+			//no rotation and no flipping occurs
+
+			//check if texture is scaled.
+			if (!((xScale > 0.99 && xScale < 1.01) || (yScale > 0.99 && yScale < 1.01)))
+			{
+				//texture is scaled
+
+				//math to scale texture
+				baseDest.x += (1.0 - xScale) * baseDest.w / 2;
+				baseDest.y += (1.0 - yScale) * baseDest.h / 2;
+				baseDest.w *= xScale;
+				baseDest.h *= yScale;
+
+				//convert the position relative to the viewport
+				baseDest.x = baseDest.x - cameraPosX;
+				baseDest.y = baseDest.y - cameraPosY;
+
+				SDL_RenderCopy(CREInternalRenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), &baseDest);
+
+			}
+			else
+			{
+				//texture is not scaled
+
+				if (SDL_IntersectRect(&baseDest, &viewportRect, &onScreenDestRect))
+				{
+					SDL_Rect cutSource;
+
+					//math to determine which part of the source image will be drawn from
+					cutSource.x = onScreenDestRect.x - baseDest.x;
+					cutSource.y = onScreenDestRect.y - baseDest.y;
+					cutSource.w = onScreenDestRect.w;
+					cutSource.h = onScreenDestRect.h;
+
+					//convert the position relative to the viewport
+					onScreenDestRect.x = onScreenDestRect.x - cameraPosX;
+					onScreenDestRect.y = onScreenDestRect.y - cameraPosY;
+
+					//render to screen
+					SDL_RenderCopy(CREInternalRenderer, tempTexture.getTexture(), &cutSource, &onScreenDestRect); 
+				}
+			}
+		}
+		else
 		{
-			//math to determine which part of the source image will be rendered
-			//used to save performance with drawing
-			SDL_Rect cutSource;
-			//destTempRect; //rect for what part of the source will be drawn
+			//rotation or flipping occurs
 
-			//int dx = cutSource.x - baseDestTempRect.x;
-			//int dy = cutSource.y - baseDestTempRect.y;
+			if (!((xScale > 0.99 && xScale < 1.01) || (yScale > 0.99 && yScale < 1.01)))
+			{
+				//scale texture
+				baseDest.x += (1.0 - xScale) * baseDest.w / 2;
+				baseDest.y += (1.0 - yScale) * baseDest.h / 2;
+				baseDest.w *= xScale;
+				baseDest.h *= yScale;
 
-			cutSource.x = onScreenDestRect.x - baseDestTempRect.x;
-			cutSource.y = onScreenDestRect.y - baseDestTempRect.y;
-			cutSource.w = onScreenDestRect.w;
-			cutSource.h = onScreenDestRect.h;
+				//covert texture position relative to viewport
+				baseDest.x = baseDest.x - cameraPosX;
+				baseDest.y = baseDest.y - cameraPosY;
 
-			// math to render relative to viewport position
-			onScreenDestRect.x = onScreenDestRect.x - cameraPosX;  //convert the position relative to the viewport
-			onScreenDestRect.y = onScreenDestRect.y - cameraPosY;
+				SDL_RenderCopyEx(CREInternalRenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), &baseDest,
+					rotDegree, NULL, flipFlag);
+			}
+			else
+			{
+				//convert texture pos relative to viewport
+				baseDest.x = baseDest.x - cameraPosX;
+				baseDest.y = baseDest.y - cameraPosY;
 
-			SDL_RenderCopy(CRERenderer, tempTexture.getTexture(), &cutSource, &onScreenDestRect); //render to screen
+				SDL_RenderCopyEx(CREInternalRenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), &baseDest,
+					rotDegree, NULL, flipFlag);
+			}
 		}
 	}
 
@@ -248,6 +384,72 @@ void video::render()
 		foregroundQueue.pop();
 		
 		//variables for later use
+
+		//destination rect of the entire image to draw
+		SDL_Rect baseDest = tempTexture.getDestRect();
+
+		//destination rect of the image that will be rendered
+		SDL_Rect onScreenDestRect;
+		SDL_Rect viewportRect = { cameraPosX, cameraPosY, screenWidth, screenHeight }; //rect to represent viewport
+
+		switch (tempTexture.getRenderingFlag())
+		{
+		default:
+		case RENDERINGFLAG_FOREGROUND:
+			//load background layer from queue for renderering
+
+			//render set up entity texture for renderering.
+
+			//math to only render portion of the background that is onscreen.
+			//load background layer from queue for renderering
+
+			//render set up entity texture for renderering.
+
+			//
+			if (SDL_IntersectRect(&baseDest, &viewportRect, &onScreenDestRect))
+			{
+				//math to determine which part of the source image will be rendered
+				//used to save performance with drawing
+				SDL_Rect cutSource;
+
+				//math to determine which part of the source rect will appear on screen
+				//only draws from the part of the source rect that would appear on screen.
+				cutSource.x = onScreenDestRect.x - baseDest.x;
+				cutSource.y = onScreenDestRect.y - baseDest.y;
+				cutSource.w = onScreenDestRect.w;
+				cutSource.h = onScreenDestRect.h;
+
+				//math to render relative to viewport position
+				onScreenDestRect.x = onScreenDestRect.x - cameraPosX;  //convert the position relative to the viewport
+				onScreenDestRect.y = onScreenDestRect.y - cameraPosY;
+
+				SDL_RenderCopy(CREInternalRenderer, tempTexture.getTexture(), &cutSource, &onScreenDestRect); //render to screen
+			}
+
+			break;
+
+			//render textures who's position is relative to viewport position
+		case RENDERINGFLAG_STATIC_FOREGROUND:
+			//render set up background layer for renderering.
+			if (baseDest.w <= 0 || baseDest.h <= 0)
+			{
+				//case destination rect is invalid. Assume fill screen
+				SDL_RenderCopy(CREInternalRenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), NULL);
+			}
+			else
+			{
+				//case destination rect is valid. Draws to texture's destination rect
+				SDL_RenderCopy(CREInternalRenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), &baseDest);
+			}
+
+			break;
+		}
+
+
+		//old code. kept incase i mess something up.
+
+		/*
+		//variables for later use
 		SDL_Rect baseDestTempRect = tempTexture.getDestRect(); //destination rect of the entire image to draw
 		SDL_Rect onScreenDestRect;							       //destination rect of the image that will be rendered
 		SDL_Rect viewportRect = { cameraPosX, cameraPosY, screenWidth, screenHeight }; //rect to represent viewport
@@ -273,18 +475,7 @@ void video::render()
 			onScreenDestRect.y = onScreenDestRect.y - cameraPosY;
 
 			SDL_RenderCopy(CRERenderer, tempTexture.getTexture(), &cutSource, &onScreenDestRect); //render to screen
-		}
-	}
-
-	//Static backgrounds queued to allow paralax b.g.
-	while (!staticForegroundQueue.empty())
-	{
-		//load background layer from queue for renderering
-		tempTexture = *staticForegroundQueue.front();
-		staticForegroundQueue.pop();
-
-		SDL_RenderCopy(CRERenderer, tempTexture.getTexture(), &tempTexture.getSourceRect(), NULL);
-		//render set up background layer for renderering.
+		}*/
 	}
 
 	//update animations
@@ -293,7 +484,7 @@ void video::render()
 
 
 	//render frame to screen.
-	SDL_RenderPresent(CRERenderer);
+	SDL_RenderPresent(CREInternalRenderer);
 
 #ifdef FRAMECAP
 	pollFrameTimer();
@@ -301,7 +492,7 @@ void video::render()
 #endif
 }
 
-void video::loadTexture(texture* texture, RENDERING_FLAG flag)
+void CRE_Video::loadTexture(CRE_Texture* texture, CRE_RenderingFlag flag)
 {
 	switch (flag)
 	{
@@ -326,22 +517,137 @@ void video::loadTexture(texture* texture, RENDERING_FLAG flag)
 	}
 }
 
-void video::getCameraPos(int pos[2])
+void CRE_Video::getCameraPos(int pos[2])
 {
 	pos[0] = cameraPosX;
 	pos[1] = cameraPosY;
 }
 
-void video::setCameraPos(const int pos[2])
+void CRE_Video::setCameraPos(const int pos[2])
 {
 	cameraPosX = pos[0];
 	cameraPosY = pos[1];
 }
 
-void video::getResolution(int pos[2])
+void CRE_Video::setResolution(const int& width, const int& height)
 {
-	pos[0] = screenWidth;
-	pos[1] = screenHeight;
+	if (width <= 0 || height <= 0)
+		return;
+
+	windowResolutionX = width;
+	windowResolutionY = height;
+
+	float w = width;
+	float h = height;
+
+	windowXScale = w / RENDERING_SCREEN_WIDTH;
+	windowYScale = h / RENDERING_SCREEN_HEIGHT;
+
+	SDL_Rect displayRect = {0, 0, 0, 0};
+
+	switch (scaleMode)
+	{
+	case CRE_SCALE_TO_FIT:
+	default:
+
+		//special case for windowed more to prevent black bars on the size of the window.
+		if (fullscreenFlag == CRE_DISPLAY_WINDOWED)
+		{
+
+			SDL_RenderSetClipRect(CREInternalRenderer, NULL);
+			SDL_RenderSetLogicalSize(CREInternalRenderer, 0, 0);
+
+			if (windowXScale > windowYScale)
+			{
+				SDL_RenderSetScale(CREInternalRenderer, windowYScale, windowYScale);
+				SDL_SetWindowSize(CREVWindow, RENDERING_SCREEN_WIDTH * windowYScale, RENDERING_SCREEN_HEIGHT * windowYScale);
+			}
+			else
+			{
+				SDL_RenderSetScale(CREInternalRenderer, windowXScale, windowXScale);
+				SDL_SetWindowSize(CREVWindow, RENDERING_SCREEN_WIDTH * windowXScale, RENDERING_SCREEN_HEIGHT * windowXScale);
+			}
+		}
+		else
+		{
+			//math to determine which area of the window will have graphics
+
+			//likely wrong
+			w = windowXScale * RENDERING_SCREEN_WIDTH;
+			h = windowYScale * RENDERING_SCREEN_HEIGHT;
+
+			displayRect.w = w;
+			displayRect.h = h;
+			displayRect.y = (height - h) / 2;
+			displayRect.x = (width - w) / 2;
+
+			//reset scaling
+			int i = SDL_RenderSetScale(CREInternalRenderer, 0, 0);
+
+			SDL_RenderSetLogicalSize(CREInternalRenderer, RENDERING_SCREEN_WIDTH, RENDERING_SCREEN_HEIGHT);
+
+			//ensure graphics are only being displayed within the display window (not on black bars).
+			SDL_RenderSetClipRect(CREInternalRenderer, &displayRect);
+
+			SDL_SetWindowSize(CREVWindow, width, height);
+		}
+
+		break;
+
+	case CRE_STRETCH_TO_FIT:
+		//reset logical size
+		SDL_RenderSetLogicalSize(CREInternalRenderer, 0, 0);
+
+		SDL_RenderSetScale(CREInternalRenderer, windowXScale, windowYScale);
+
+		//render everything that appears in the window
+		SDL_RenderSetClipRect(CREInternalRenderer, NULL);
+
+		SDL_SetWindowSize(CREVWindow, width, height);
+		break;
+	}
+
+	//resize window and center it in the screen
+	//SDL_SetWindowSize(CREVWindow, width, height);
+	SDL_SetWindowPosition(CREVWindow, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+}
+
+void CRE_Video::setFullscreenMode(const CRE_Fullscreen_Flag& flag)
+{
+	switch (flag)
+	{
+	case CRE_DISPLAY_FULLSCREEN:
+		SDL_SetWindowFullscreen(CREVWindow, SDL_WINDOW_FULLSCREEN);
+		SDL_SetWindowPosition(CREVWindow, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+		break;
+
+	case CRE_DISPLAY_BORDERLESS_FULLSCREEN:
+		SDL_SetWindowFullscreen(CREVWindow, SDL_WINDOW_FULLSCREEN_DESKTOP);
+		SDL_SetWindowPosition(CREVWindow, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+		break;
+
+	case CRE_DISPLAY_WINDOWED:
+		SDL_SetWindowFullscreen(CREVWindow, 0);
+		SDL_SetWindowPosition(CREVWindow, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+
+		//need code here for display mode scale to fit.
+		break;
+
+	default:
+		break;
+	}
+
+	fullscreenFlag = flag;
+
+	setResolution(windowResolutionX, windowResolutionY);
+}
+
+void CRE_Video::setScaleMode(const CRE_Scale_Mode& flag)
+{
+	scaleMode = flag;
+
+	//update window display with scale mode
+	setResolution(windowResolutionX, windowResolutionY);
 }
 
 #ifdef FRAMERATE_COUNTER

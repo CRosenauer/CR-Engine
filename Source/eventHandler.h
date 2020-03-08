@@ -17,7 +17,7 @@
 #include "ground.h"
 
 
-class eventHandler
+class CRE_EventHandler
 {
 public:
 	//queues event with the given target entity ID

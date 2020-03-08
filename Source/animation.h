@@ -6,24 +6,24 @@
 
 #include "texture.h"
 
-enum ANIMATION_FLAG
+enum CRE_AnimationFlag
 {
 	ANIMATION_NOLOOP,
 	ANIMATION_LOOP
 };
 
-struct animation
+struct CRE_Animation
 {
-	const textureData* textureData;
+	const CRE_TextureData* textureData;
 
 	const unsigned int frameCount;
 	//number of frames this texture is used.
 	//CREngine runs at 60 Hz, use this as a baseline.
 
-	const animation* nextFrame;
+	const CRE_Animation* nextFrame;
 	//pointer to the next frame of animation
 };
 
-typedef animation* animationPtr;
+typedef CRE_Animation* CRE_AnimationPtr;
 
 #endif //ANIMATION_H

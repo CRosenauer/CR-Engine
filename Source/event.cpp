@@ -4,7 +4,7 @@
 //allows eventHandler and scriptHandler to communicate without circular dependancies
 queue<CRE_Event> primitiveEventQueue;
 
-string eventCodeToString(const CREEventCode& code)
+string eventCodeToString(const CRE_EventCode& code)
 {
 	string s;
 

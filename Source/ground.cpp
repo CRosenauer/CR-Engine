@@ -1,9 +1,9 @@
 #include "ground.h"
 
-vector<ground*> background;
-vector<ground*> foreground;
+vector<CRE_Ground*> background;
+vector<CRE_Ground*> foreground;
 
-ground::ground()
+CRE_Ground::CRE_Ground()
 {
 	posX = 0;
 	posY = 0;
@@ -15,7 +15,7 @@ ground::ground()
 	renderingFlag = RENDERINGFLAG_BACKGROUND;
 }
 
-ground::ground(const groundData& data)
+CRE_Ground::CRE_Ground(const CRE_GroundData& data)
 {
 	posX = 0;
 	posY = 0;
@@ -42,6 +42,7 @@ ground::ground(const groundData& data)
 		
 		//load texture from groundData struct
 		gTexture.loadTexture(*(data.data->text), destRect);
+		gTexture.setRenderingFlag(renderingFlag);
 		break;
 
 	case ANIMATION:
@@ -61,18 +62,19 @@ ground::ground(const groundData& data)
 
 		//load first frame from the animation.
 		gTexture.loadTexture(*(data.data->anim->textureData), destRect);
+		gTexture.setRenderingFlag(renderingFlag);
 		break;
 	}
 }
 
-ground::~ground()
+CRE_Ground::~CRE_Ground()
 {
-	gTexture.~texture();
+	gTexture.~CRE_Texture();
 	gAnimation = NULL;
 	gFirstAnim = NULL;
 }
 
-void ground::loadGround(const groundData& data)
+void CRE_Ground::loadGround(const CRE_GroundData& data)
 {
 	posX = 0;
 	posY = 0;
@@ -99,6 +101,9 @@ void ground::loadGround(const groundData& data)
 
 		//load texture from groundData struct
 		gTexture.loadTexture(*(data.data->text), destRect);
+
+		gTexture.setRenderingFlag(renderingFlag);
+
 		break;
 
 	case ANIMATION:
@@ -118,11 +123,12 @@ void ground::loadGround(const groundData& data)
 
 		//load first frame from the animation.
 		gTexture.loadTexture(*(data.data->anim->textureData), destRect);
+		gTexture.setRenderingFlag(renderingFlag);
 		break;
 	}
 }
 
-void ground::update()
+void CRE_Ground::updateAnimation()
 {
 	if (imageType == ANIMATION)
 	{
@@ -150,6 +156,7 @@ void ground::update()
 				}
 
 				gTexture.loadTexture(*(gAnimation->textureData), destRect);
+				gTexture.setRenderingFlag(renderingFlag);
 			}
 
 			animFrameCount--;
@@ -157,35 +164,27 @@ void ground::update()
 	}
 }
 
-void setGround(const groundData& groundDat)
+void CRE_Ground::setScale(const float& x, const float& y)
 {
-	printf("Stub: setGround in ground.cpp.\nTo be altered and improved upon later.\n");
-	resetGround();
-
-	const groundData* tempData = &groundDat;
-
-	while (tempData != NULL)
-	{
-		switch (tempData->flag)
-		{
-		case RENDERINGFLAG_BACKGROUND:
-		case RENDERINGFLAG_STATIC_BACKGROUND:
-			background.push_back(new ground(*tempData));
-			break;
-		case RENDERINGFLAG_FOREGROUND:
-		case RENDERINGFLAG_STATIC_FOREGROUND:
-			foreground.push_back(new ground(*tempData));
-		default:
-			break;
-		}
-
-		tempData = tempData->next;
-	}
+	gTexture.setXScale(x);
+	gTexture.setYScale(y);
 }
 
-void resetGround(const RENDERING_FLAG& flag)
+void CRE_Ground::getScale(float scale[2])
 {
-	vector<ground*>::iterator itr;
+	scale[0] = gTexture.getXScale();
+	scale[1] = gTexture.getYScale();
+}
+
+void setGround(const CRE_GroundData& groundDat)
+{
+	resetGround();
+	loadGround(groundDat);
+}
+
+void resetGround(const CRE_RenderingFlag& flag)
+{
+	vector<CRE_Ground*>::iterator itr;
 
 	switch (flag)
 	{
@@ -230,12 +229,12 @@ void resetGround()
 {
 	for (unsigned int i = 0; i < foreground.size(); i++)
 	{
-		foreground[i]->~ground();
+		foreground[i]->~CRE_Ground();
 	}
 
 	for (unsigned int i = 0; i < background.size(); i++)
 	{
-		background[i]->~ground();
+		background[i]->~CRE_Ground();
 	}
 
 	foreground.clear();
@@ -246,12 +245,12 @@ void updateGrounds()
 {
 	for (unsigned int i = 0; i < foreground.size(); i++)
 	{
-		foreground[i]->update();
+		foreground[i]->updateAnimation();
 	}
 
 	for (unsigned int i = 0; i < background.size(); i++)
 	{
-		background[i]->update();
+		background[i]->updateAnimation();
 	}
 }
 
@@ -260,7 +259,25 @@ bool groundsEmpty()
 	return foreground.empty() && background.empty();
 }
 
-void loadGround(const groundData& groundDat)
+void loadGround(const CRE_GroundData& groundDat)
 {
+	const CRE_GroundData* tempData = &groundDat;
 
+	while (tempData != NULL)
+	{
+		switch (tempData->flag)
+		{
+		case RENDERINGFLAG_BACKGROUND:
+		case RENDERINGFLAG_STATIC_BACKGROUND:
+			background.push_back(new CRE_Ground(*tempData));
+			break;
+		case RENDERINGFLAG_FOREGROUND:
+		case RENDERINGFLAG_STATIC_FOREGROUND:
+			foreground.push_back(new CRE_Ground(*tempData));
+		default:
+			break;
+		}
+
+		tempData = tempData->next;
+	}
 }

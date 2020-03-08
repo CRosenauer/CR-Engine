@@ -1,15 +1,15 @@
 #include "TestGame.h"
 
 //Buses to hold entities
-extern vector<entity*> entityBlock;
+extern vector<CRE_Entity*> entityBlock;
 
 //handlers for audio, inputs, etc. Most externally defined in CREngine.cpp
-extern video		CREVideo;
-extern audio        CREAudio;
-extern inputHandler CREInput;
+extern CRE_Video		CREVideo;
+extern CRE_Audio        CREAudio;
+extern CRE_InputHandler CREInput;
 
-extern scriptHandler CREScriptHandler;
-extern eventHandler  CREEventHandler;
+extern CRE_ScriptHandler CREScriptHandler;
+extern CRE_EventHandler  CREEventHandler;
 
 
 const SDL_Rect UNDEFINED_RECT = { -1, -1, -1, -1 };
@@ -20,12 +20,14 @@ enum GAME_SCREEN
 	INITIALIZED
 };
 
-entity* Player;
-int cameraPos[2];
+CRE_Entity* Player;
 static GAME_SCREEN gameScreen = NOT_INITIALIZED;
+static CRE_FlipFlag flipFlag = CRE_ResetFlip;
 
 void TestGame()
 {	
+	static Uint8 alpha = 255;
+
 	SDL_Rect tempSource;
 	tempSource.x = 0;
 	tempSource.y = 0;
@@ -34,6 +36,11 @@ void TestGame()
 	__int8 userInputs[INPUTWIDTH];
 	bool repeatedInputs[INPUTWIDTH];
 	int tempPos[3] = {0, 0, 0};
+	int cameraPos[2] = {32, 32};
+	static float xScale = 1;
+	static float yScale = 1;
+
+	bool testFlip[2] = {false, false};
 
 	switch (gameScreen)
 	{
@@ -44,18 +51,26 @@ void TestGame()
 
 		CREScriptHandler.loadScript(testScript00, Player->getEntityID());
 
-		Player->setPosition(200, 200, 0);
+		Player->setPosition(64, 64, 0);
 
+		CREVideo.setCameraPos(cameraPos);
+
+		//CREVideo.setResolution(1820, 1080);
+		CREVideo.setResolution(1280, 960);
+
+		CREVideo.setScaleMode(CRE_SCALE_TO_FIT);
+		CREVideo.setFullscreenMode(CRE_DISPLAY_WINDOWED);
 
 		gameScreen = INITIALIZED;
 		break;
 		
 	case INITIALIZED:
-			if(Player != NULL)
+		if(Player != NULL)
 			Player->getPosition(tempPos);
 
 		CREInput.getUserInputs(userInputs);
 		CREInput.getRepeatInputs(repeatedInputs);
+		
 
 		//x co-ord inputs (A/D)
 		if (userInputs[INPUT_X] > 0)
@@ -70,10 +85,28 @@ void TestGame()
 			tempPos[1]--;
 		
 		//z co-ord inputs (Q/E)
-		if (userInputs[INPUT_Z] > 0 && !repeatedInputs[INPUT_Z])
-			tempPos[2]++;
-		else if(userInputs[INPUT_Z] < 0 && !repeatedInputs[INPUT_Z])
-			tempPos[2]--;
+		if (userInputs[INPUT_Z] > 0)
+		{
+			if (xScale > 0.25)
+			{
+				xScale -= 0.125;
+				Player->setXScale(xScale);
+			}
+
+			if (yScale > 0.25)
+			{
+				yScale -= 0.125;
+				Player->setYScale(yScale);
+			}
+		}
+		else if (userInputs[INPUT_Z] < 0)
+		{
+			xScale += 0.125;
+			yScale += 0.125;
+			Player->setXScale(xScale);
+			Player->setYScale(yScale);
+			//printf("Scaleing:\nx: %f\ny: %f\n\n", xScale, yScale);
+		}
 
 		//quit inputs (enter)
 		if (userInputs[INPUT_QUIT] == 1)
@@ -83,12 +116,13 @@ void TestGame()
 
 		Player->setPosition(tempPos[0], tempPos[1], tempPos[2]);
 		
-		
+
 		CREVideo.getCameraPos(cameraPos);
 
 		//checks for updating camera position
 		
 		//check x position
+		
 		if (tempPos[0] - cameraPos[0] < 200 )
 		{
 			cameraPos[0] = tempPos[0] - 200;
@@ -109,8 +143,7 @@ void TestGame()
 		}
 
 		CREVideo.setCameraPos(cameraPos);
-
-		CREVideo.setCameraPos(cameraPos);
+		
 
 		break;
 	}

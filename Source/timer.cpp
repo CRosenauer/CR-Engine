@@ -1,5 +1,7 @@
 #include "timer.h"
 
+#include <cmath>
+
 static Uint32 ticks;
 
 //default to 17 ms per frame or about 60fps
@@ -12,6 +14,7 @@ void setFrameTimer()
 
 void pollFrameTimer()
 {
+	//delays the program atleast until msPerFrame milliseconds have passed since setFrameTimer was last called.
 	while (true)
 	{
 		if (SDL_GetTicks() - ticks >= msPerFrame)
@@ -21,8 +24,7 @@ void pollFrameTimer()
 
 void setFrameRate(const unsigned int& frameRate)
 {
-	msPerFrame = (unsigned int) (float) 1000 / (float) frameRate;
-	printf("msPerFrame: %i\n", msPerFrame);
+	msPerFrame = round((float) 1000 / (float) frameRate);
 }
 
 static Uint32 msTicks;

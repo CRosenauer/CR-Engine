@@ -11,12 +11,12 @@ void deleteEntity(const unsigned int& entityID);
 
 //pushes a new entity to the entity vector and sets it to defined
 //returns the ID of the entity
-unsigned int allocateEntity(const ENTITY_TYPE& type);
+unsigned int allocateEntity(const CRE_EntityType& type);
 
 //cycles through entityBlock until an entity is found whose internal ID
 //matches the passed ID.
 //function returns the pointer to said entity.
 //if no entity with the passed ID can be found function returns NULL.
-entity* entityFromID(const unsigned int& id);
+CRE_Entity* entityFromID(const unsigned int& id);
 
 #endif //ENTITYHANDLER_H

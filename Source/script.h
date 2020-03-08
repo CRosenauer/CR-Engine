@@ -27,15 +27,15 @@
 // script* nextScript:
 // Finally, nextScript is a pointer to the next event to take place.
 
-struct script
+struct CRE_Script
 {
 	CRE_Event event;
 	int frameCount;
 	unsigned int entityID;
 
-	const script* nextScript;
+	const CRE_Script* nextScript;
 };
 
-typedef script* scriptPtr;
+typedef CRE_Script* CRE_ScriptPtr;
 
 #endif //SCRIPT_H

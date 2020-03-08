@@ -20,7 +20,7 @@ struct animation
 
 	const unsigned int frameCount;
 	//number of frames this texture is used.
-	//CREngine runs at 60 Hz, use this as a baseline.
+	//CREngine runs at 60 Hz (be default), use this as a baseline.
 
 	const animation* nextFrame;
 	//pointer to the next frame of animation
@@ -54,69 +54,69 @@ struct groundData
 };
 */
 
-const textureData test_background_anim_data_00 =
+const CRE_TextureData test_background_anim_data_00 =
 {
 	"test_background_anim_00.png",
 	{0, 0, 640, 480},
 	0,
-	0
+	0,
 };
 
-const textureData test_background_anim_data_01 =
+const CRE_TextureData test_background_anim_data_01 =
 {
 	"test_background_anim_01.png",
 	{0, 0, 640, 480},
 	0,
-	0
+	0,
 };
 
-const textureData test_HUD_data =
+const CRE_TextureData test_HUD_data =
 {
 	"test_HUD.png",
 	{0, 0, 640, 480},
 	0,
-	0
+	0,
 };
 
-const textureData test_scrolling_foreground_data =
+const CRE_TextureData test_scrolling_foreground_data =
 {
 	"test_scrolling_foreground.png",
 	{0, 0, 1280, 960},
 	0,
-	0
+	0,
 };
 
-const animation test_background_anim_01 =
+const CRE_Animation test_background_anim_01 =
 {
 	&test_background_anim_data_01,
 	15,
 	NULL
 };
 
-const animation test_background_anim_00 =
+const CRE_Animation test_background_anim_00 =
 {
 	&test_background_anim_data_00,
 	15,
 	&test_background_anim_01
 };
 
-const union groundImageData test_background_anim = { (textureData*) &test_background_anim_00 };
+const union CRE_GroundImageData test_background_anim = { (CRE_TextureData*) &test_background_anim_00 };
 
-const union groundImageData test_HUD = { &test_HUD_data };
+const union CRE_GroundImageData test_HUD = { &test_HUD_data };
 
-const union groundImageData test_scrolling_foreground = { &test_scrolling_foreground_data };
+const union CRE_GroundImageData test_scrolling_foreground = { &test_scrolling_foreground_data };
 
-const groundData test_ground_02 =
+const CRE_GroundData test_ground_02 =
 {
 	TEXTURE,
 	&test_scrolling_foreground,
 	ANIMATION_NOLOOP,
 	RENDERINGFLAG_FOREGROUND,
-	0,
+	1,
 	NULL
 };
 
-const groundData test_ground_01 =
+const CRE_GroundData test_ground_01 =
 {
 	TEXTURE,
 	&test_HUD,
@@ -126,7 +126,7 @@ const groundData test_ground_01 =
 	&test_ground_02
 };
 
-const groundData test_ground =
+const CRE_GroundData test_ground =
 {
 	ANIMATION,
 	&test_background_anim,
