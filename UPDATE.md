@@ -3,6 +3,49 @@
  updates to the CR-Engine. For a more general overview see
  repository notes.
  
+# March, 7, 2020
+ This has been a fairly sizeale update. In this update the
+ following functionality has been added: sprite rotating,
+ sprite stretching, sprite flipping, alpha textures, and
+ dynamic display. As an additional note, I have also added
+ a configuration file, "config.h" to allow for easy editing
+ of specific engine features and constants.
+ 
+ Starting with sprite rotating, stretching, and flipping;
+ these pieces of functionality can only be used with textures
+ labelled as sprites (enum CRE_RenderingFlag::RENDERINGFLAG_SPRITE
+ in "texture.h").
+ 
+ The entity and texture classes have been given functionality to set
+ rotation angles, stretching scales, and flip flags. See "entity.h"
+ and "texture.h" for more specifics.
+ 
+ Rotation angles are meassured clockwise in degrees. Stretching scales
+ are stored for both X direction scaling and Y direction scaling and
+ can be changed independantly. Sprites cal be flipped by setting
+ flip flags. For flips flags see enum CRE_FlipFlag.
+ 
+ Display resolution, fullscreen mode, and aspect ratio handling
+ can all be set during game runtime through an object of CRE_Video class.
+ 
+ Display resolution can be set to whatever you want it to be. There are
+ currently three fullscreen modes: fullscreen, borderless fullscreen,
+ and windowed. Aspect ratio handling is used when the aspect ratio
+ of the game rendering does not match the display aspect ratio.
+ You can set the engine to scale or stretch the game's rendered image to fit
+ the screen. Stretch to fit works slightly differently in windowed mode to
+ remove black bars on the side of the window.
+ 
+ The default values for all of these can be found in "config.h"
+ 
+ This will likely be the last "major" update to the engine as things
+ are nearing completion and the engine is slowly taking shape.
+ That being said I still want to improve the engine by adding/altering
+ functionality. A few examples are adding controller support, saving
+ and loading keybindings from some ini file, decouping video rendering from
+ game logic, and adding paralax background and foreground scrolling just
+ to name a few.
+ 
 # Feburary, 23, 2020
  In this update the rendering system has been changed slightly
  to (hopefully) optimize rendering and increase frame rates.
@@ -17,7 +60,7 @@
  
  In theory this should speed things up when drawing large textures,
  however it seems that drawing large textures is just really
- inefficient. In the futures I will liekly optimize this further.
+ inefficient. In the future I will liekly optimize this further.
  
  As for the fixes to the script handler class; the interpretScripts
  function in the scriptHandler class was not functioning as intended
