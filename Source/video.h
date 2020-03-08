@@ -112,8 +112,8 @@ private:
 	SDL_Surface* CREDisplaySurface;
 	SDL_Renderer* CREDisplayRenderer = NULL;
 
-	CRE_Scale_Mode scaleMode = CRE_SCALE_TO_FIT;
-	CRE_Fullscreen_Flag fullscreenFlag = CRE_DISPLAY_WINDOWED;
+	CRE_Scale_Mode scaleMode = DEFAULT_SCALE_MODE;
+	CRE_Fullscreen_Flag fullscreenFlag = DEFAULT_FULLSCREEN_MODE;
 
 
 	float windowXScale = 1.0;

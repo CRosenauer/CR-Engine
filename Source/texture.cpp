@@ -101,8 +101,19 @@ void CRE_Texture::operator = (const CRE_Texture& t)
 
 void CRE_Texture::loadTexture(const CRE_TextureData& text, const SDL_Rect& dest)
 {
+	//set and shuffle internal texture-dependant variables
 	textData = text;
 
+	tSource = text.source;
+	tDest = dest;
+
+	xOffset = text.xOffset;
+	yOffset = text.yOffset;
+
+	tDest.x -= xOffset;
+	tDest.y -= yOffset;
+
+	//load texture into memory
 	std::string tempString = getFilePath(text.path, GRAPHICS);
 	SDL_Surface* tempSurface = IMG_Load(tempString.c_str());
 
@@ -133,12 +144,56 @@ void CRE_Texture::loadTexture(const CRE_TextureData& text, const SDL_Rect& dest)
 
 	SDL_FreeSurface(tempSurface);
 	tempSurface = NULL;
-	
-	tSource = text.source;
-	tDest = dest;
+}
+
+void CRE_Texture::loadTexture(const CRE_TextureData& text)
+{
+	//set and shuffle internal texture-dependant variables
+	textData = text;
+	SDL_Rect dest = tDest;
+
+	tDest.x += xOffset;
+	tDest.y += yOffset;
+
+	xOffset = text.xOffset;
+	yOffset = text.yOffset;
 
 	tDest.x -= xOffset;
 	tDest.y -= yOffset;
+
+	tSource = text.source;
+
+	//load texture into memory
+	std::string tempString = getFilePath(text.path, GRAPHICS);
+	SDL_Surface* tempSurface = IMG_Load(tempString.c_str());
+
+	if (tempSurface == NULL)
+	{
+		//printf("Image of path: %s cannot be loaded. SDL_image Error: %s\n", tempString.c_str(), IMG_GetError());
+	}
+	else
+	{
+		if (tTexture != NULL)
+		{
+			SDL_DestroyTexture(tTexture);
+			tTexture = NULL;
+		}
+
+		tTexture = SDL_CreateTextureFromSurface(CREInternalRenderer, tempSurface);
+
+		if (tTexture == NULL)
+		{
+			//printf("Texture of path: %s cannot be created.\nError: %s", tempString.c_str(), SDL_GetError());
+		}
+
+		if (SDL_SetTextureBlendMode(tTexture, SDL_BLENDMODE_BLEND) != 0)
+		{
+			//printf("Texture blend mode not set.\nSDL Error: %s\n", SDL_GetError());
+		}
+	}
+
+	SDL_FreeSurface(tempSurface);
+	tempSurface = NULL;
 }
 
 SDL_Texture* CRE_Texture::getTexture()

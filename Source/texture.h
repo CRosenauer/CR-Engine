@@ -53,6 +53,12 @@ enum CRE_RenderingFlag
  *
 */
 
+//Flips for flipping sprites
+//Set flips the flag
+//Reset removes flip
+//Toggle inverts flip
+//UD flips the texture up-down
+//LR flips the texture left-right
 enum CRE_FlipFlag
 {
 	CRE_SetFlipUD,
@@ -93,6 +99,8 @@ public:
 	void operator = (const CRE_Texture& t);
 
 	void loadTexture(const CRE_TextureData& text, const SDL_Rect& dest);
+
+	void loadTexture(const CRE_TextureData& text);
 
 	SDL_Texture* getTexture();
 

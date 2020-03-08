@@ -20,6 +20,8 @@
 //rendering resolution will be stretched or scaled to fit or stretch this resolution
 #define DEFAULT_DISPLAY_WIDTH   640
 #define DEFAULT_DISPLAY_HEIGHT  480
+#define DEFAULT_SCALE_MODE      CRE_SCALE_TO_FIT
+#define DEFAULT_FULLSCREEN_MODE CRE_DISPLAY_WINDOWED
 
 //flag to determine if the game will be displayed in windowed, fullscreen, or
 //boarderless fullscreen
@@ -34,30 +36,24 @@
 //flag if the game's framerate will be locked
 #define FRAMECAP
 
-//flag for functions to obtain framerates
-#define FRAMECOUNTER
-
-//flags to determine how the engine will fit the internal rendering resolution to
-//the display resolution
-//	****WARNING: DO HAVE BOTH FLAGS ACTIVE AT THE SAME TIME!
-#define STRETCH_TO_FIT
-//#define SCALE_TO_FIT
+//flag for functions to obtain framerates (currently unimplemented)
+//#define FRAMECOUNTER
 
 //flags to enable texture rotating and stretching respectively
 #define TEXTURE_ROTATING
 #define TEXTURE_STRETCHING
 
-//flags to render only textures which would appear on screen
-#define ONSCREEN_RENDER_ONLY
+//flags to render only textures which would appear on screen (currently unimplemented)
+//#define ONSCREEN_RENDER_ONLY
 
 
 /*  Audio Flags  */
-
+//none so far
 
 /*  Input Flags  */
 
 //flag for if usb controllers are ready by the input system
-#define CONTROLLER_SUPPORT
+//#define CONTROLLER_SUPPORT
 
 
 /*  Event Flags  */

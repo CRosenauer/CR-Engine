@@ -104,69 +104,24 @@ void CRELoop()
 {
 	while( true )
 	{
-#ifdef PRINT_FRAMECOUNT
-		printf("Frame: %i\n", frameCount++);
-#endif // PRINT_FRAMECOUNT
-
-#ifdef COMPONENT_MS_TIMER
-		pollMSTimer();
-#endif COMPONENT_MS_TIMER
 		//read inputs
 		CREInput.pollInputs();
-
-#ifdef COMPONENT_MS_TIMER
-		printf("Input runtime: %i\n", getMSTimer());
 		
-		pollMSTimer();
-#endif COMPONENT_MS_TIMER
-		
-		//game logic function
+		//game logic function goes here
 		TestGame();
-
-#ifdef COMPONENT_MS_TIMER
-		printf("Game logic runtime: %i\n", getMSTimer());
-		
-		pollMSTimer();
-#endif COMPONENT_MS_TIMER
 
 		//process currently loaded scripts
 		CREScriptHandler.processScripts();
-
-#ifdef COMPONENT_MS_TIMER
-		printf("Script handler runtime: %i\n", getMSTimer());
-		
-		pollMSTimer();
-#endif COMPONENT_MS_TIMER
 
 		//updates game based on queued events
 		if (!CREEventHandler.processEvents())
 			break;
 
-#ifdef COMPONENT_MS_TIMER
-		printf("Event handler runtime: %i\n", getMSTimer());
-		
-		pollMSTimer();
-#endif COMPONENT_MS_TIMER
-
 		//play user feedback
 		CREAudio.playAudio();
-
-#ifdef COMPONENT_MS_TIMER
-		printf("Audio runtime: %i\n", getMSTimer());
 		
-		pollMSTimer();
-#endif COMPONENT_MS_TIMER
-
 		//draw queues textures to be rendered and draws images to the screen
 		CREVideo.render();
-
-#ifdef COMPONENT_MS_TIMER
-		printf("Video runtime: %i\n\n", getMSTimer());
-#endif COMPONENT_MS_TIMER
-
-#ifdef MANUAL_ADVANCE_FRAME
-		system("PAUSE");
-#endif MANUAL_ADVANCE_FRAME
 	}
 }
 
