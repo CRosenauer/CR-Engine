@@ -108,7 +108,7 @@ void CRELoop()
 		CREInput.pollInputs();
 		
 		//game logic function goes here
-		TestGame();
+		//TestGame();
 
 		//process currently loaded scripts
 		CREScriptHandler.processScripts();
