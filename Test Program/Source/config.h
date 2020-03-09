@@ -8,13 +8,13 @@
 */
 
 /* General Definitions */
-#define TITLE "CR-Engine"
+#define TITLE "Pacman"
 
 /*  Video Flags	 */
 
 //resolution which the game will render in
-#define RENDERING_SCREEN_WIDTH  640
-#define RENDERING_SCREEN_HEIGHT 480
+#define RENDERING_SCREEN_WIDTH  224
+#define RENDERING_SCREEN_HEIGHT 288
 
 //resolution which the game will be displayed in by default
 //rendering resolution will be stretched or scaled to fit or stretch this resolution
@@ -51,6 +51,11 @@
 //none so far
 
 /*  Input Flags  */
+
+//const int to determine how many inputs are read
+//note: x and y inputs on d-pads or control sticks are counted as 1 input
+//ex. for implementing WASD movement you would only need 2 width, one for WS one for AD.
+#define INPUTWIDTH 3
 
 //flag for if usb controllers are ready by the input system
 //#define CONTROLLER_SUPPORT
