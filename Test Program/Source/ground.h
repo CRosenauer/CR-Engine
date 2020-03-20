@@ -98,6 +98,8 @@ public:
 	//don't touch it, just let the engine handle this function.
 	void updateAnimation();
 
+	void render();
+
 private:
 	//internal functions for setting image data.
 	void setRenderingFlag(const CRE_RenderingFlag& flag) { renderingFlag = flag; }

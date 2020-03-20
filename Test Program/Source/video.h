@@ -88,6 +88,8 @@ public:
 	//sets display mode to strech to fit or scale to fit.
 	void setScaleMode(const CRE_Scale_Mode& flag);
 
+	void getViewportRect(SDL_Rect* r);
+
 #ifdef FRAMERATE_COUNTER
 	float getFrameRate();
 #endif

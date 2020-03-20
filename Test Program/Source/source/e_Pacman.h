@@ -3,9 +3,26 @@
 
 #include "../texture.h"
 
+#include "SDL_rect.h"
+
 namespace e_Pacman
 {
 	const unsigned short moveVecocity = 1;
+
+	namespace entityData
+	{
+		struct pacmanData
+		{
+			//x, y offsets for corner of collision box relative to entity position.
+			//w, h size of collision box.
+			SDL_Rect collision;
+		};
+
+		const struct pacmanData pacmanData =
+		{
+			{-4, -4, 8, 8}
+		};
+	}
 
 	namespace imageDat
 	{

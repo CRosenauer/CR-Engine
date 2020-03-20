@@ -1,9 +1,13 @@
 #ifndef S_COLLISION_H
 #define S_COLLISION_H
 
+#include "SDL_rect.h"
+
+#include "s_Tiling.h"
+
 namespace s_Collision
 {
-
+	const SDL_Rect collisionRect = { 0, 0, 8, 8 };
 
 	//enum used for referencing specific colission directions
 	enum S_COLLISION
@@ -28,7 +32,9 @@ namespace s_Collision
 	 * @Param collision: boolean array for the collision of the entity.
 	 *
 	 */
-	void checkCollision(const unsigned int& ID, /*collision data,*/ bool collision[4]);
+	void checkCollision(const unsigned int& ID, const s_Tiling::tileMap& map, bool collision[4]);
+
+	bool validateMove();
 }
 
 #endif //S_COLLISION_H

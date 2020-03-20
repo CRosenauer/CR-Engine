@@ -18,7 +18,8 @@ enum CRE_EntityType
 	GHOST,
 	DOT,
 	SUPER_DOT,
-	TEXT
+	TEXT,
+	TILE
 };
 
 union componentData
@@ -107,6 +108,9 @@ public:
 
 	void setFlipFlag(const CRE_FlipFlag& flag) { eTexture.setFlipFlag(flag); }
 	void getFlipFlag(bool flag[2]) { eTexture.getFlipFlag(flag); }
+
+	//renders entity to screen.
+	void render();
 
 private:
 	//kinematic variables of the entity

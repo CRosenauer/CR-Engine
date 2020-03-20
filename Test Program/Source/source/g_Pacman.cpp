@@ -7,6 +7,7 @@
 #include "s_Collision.h"
 #include "e_Pacman.h"
 #include "s_kinematics.h"
+#include "s_Tiling.h"
 
 extern CRE_InputHandler CREInput;
 extern CRE_Audio        CREAudio;
@@ -27,6 +28,13 @@ namespace
 	static bool   repInputs[INPUTWIDTH] = { false, false, false };
 
 	static bool collision[4] = { false, false, false, false };
+
+	bool initialized = false;
+
+	void init()
+	{
+		pacman->setTexture(e_Pacman::imageDat::pacmanSprite);
+	}
 }
 
 void g_Pacman()
@@ -35,10 +43,17 @@ void g_Pacman()
 	CREInput.getUserInputs(inputs);
 	CREInput.getRepeatInputs(repInputs);
 
+	if (!initialized)
+	{
+		init();
+	}
+
 	switch (gameState)
 	{
 	default:
 	case GAMEPLAY:
+
+		s_Tiling::loadMap();
 
 		if (inputs[INPUT_ENTER] && !repInputs[INPUT_ENTER])
 		{
@@ -48,7 +63,7 @@ void g_Pacman()
 		}
 
 		//interprent inputs and check collision
-		s_Collision::checkCollision(pacman->getEntityID(), collision);
+		s_Collision::checkCollision(pacman->getEntityID(), s_Tiling::gameMap, collision);
 
 		if (inputs[INPUT_Y] < 0)
 		{
@@ -80,6 +95,8 @@ void g_Pacman()
 		break;
 
 	case MENU:
+
+		s_Tiling::unloadMap();
 
 		if (inputs[INPUT_ENTER] && !repInputs[INPUT_ENTER])
 		{

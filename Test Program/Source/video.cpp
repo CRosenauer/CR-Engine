@@ -61,6 +61,7 @@ void CRE_Video::render()
 	//addes defined entities to rendering queues depending on internal
 	//rendering flags
 
+	/*
 	//temperary texture for renderering
 	//use to place entities from rendering queue and to render to frame
 	CRE_Texture tempTexture;
@@ -68,15 +69,17 @@ void CRE_Video::render()
 
 	//union and vectors to allow for entities and grounds to be interlaced in forebround and background
 	//layers. Allows for interlaced depth-based rendering.
-
+	
 	/***  Queue backgrounds and foregrounds to render queues based on depth  ***/
 
+	/*
 	unsigned int maxDepth = 0;
 	unsigned int currentDepth = 0;
 
 
 
 	//find the maximum depth of the backgrounds
+	/*
 	for (unsigned int i = 0; i < background.size(); i++)
 	{
 		unsigned int finderDepth;
@@ -95,7 +98,9 @@ void CRE_Video::render()
 			entityBlock[i]->getRenderingFlag() == RENDERINGFLAG_STATIC_BACKGROUND ))
 
 			maxDepth = finderDepth;
-	}
+	}*/
+	/*
+	Uint32 timer = SDL_GetTicks();
 
 	//push backgrounds to background rendering queue based on depth
 	for (currentDepth = 0; currentDepth <= maxDepth; currentDepth++)
@@ -124,6 +129,7 @@ void CRE_Video::render()
 	currentDepth = 0;
 
 	//find the maximum depth of the foregrounds
+	/*
 	for (unsigned int i = 0; i < foreground.size(); i++)
 	{
 		unsigned int finderDepth;
@@ -142,8 +148,8 @@ void CRE_Video::render()
 			entityBlock[i]->getRenderingFlag() == RENDERINGFLAG_STATIC_FOREGROUND))
 
 			maxDepth = finderDepth;
-	}
-
+	}*/
+	/*
 	//push foreground textures to foreground rendering queue
 	for (currentDepth = 0; currentDepth <= maxDepth; currentDepth++)
 	{
@@ -173,14 +179,15 @@ void CRE_Video::render()
 	/***  Queue sprites to render based on depth ***/
 
 	//find max depth of the entity's
+	/*
 	for (unsigned int i = 0; i < entityBlock.size(); i++)
 	{
 		unsigned int finderDepth = entityBlock[i]->getDepth();
 
 		if (finderDepth > maxDepth && entityBlock[i]->getRenderingFlag() == RENDERINGFLAG_SPRITE)
 			maxDepth = finderDepth;
-	}
-
+	}*/
+	/*
 	//queue entity's based on depth
 	for(currentDepth = 0; currentDepth <= maxDepth; currentDepth++)
 	{
@@ -195,12 +202,14 @@ void CRE_Video::render()
 		}
 	}
 
+	printf("Time for texture queue loading: %i\n", SDL_GetTicks() - timer);
+	timer = SDL_GetTicks();
 
 
 	/***  Render all queued textures  ***/
 
 	/***  Render queued backgrounds  ***/
-
+/*
 	//Backgrounds queued to allow paralax b.g.
 	while (!backgroundQueue.empty())
 	{
@@ -268,8 +277,8 @@ void CRE_Video::render()
 		
 		
 	}
-
-	/***  Render queued sprites  ***/
+	/*
+	/***  Render queued sprites  ***//*
 	while (!spriteQueue.empty())
 	{
 		//load background layer from queue for renderering
@@ -369,7 +378,7 @@ void CRE_Video::render()
 	}
 
 
-	/***  Render queued foregrounds ***/
+	/***  Render queued foregrounds ***//*
 	//Foregrounds queued to allow paralax f.g. or HUD.
 	while (!foregroundQueue.empty())
 	{
@@ -469,11 +478,28 @@ void CRE_Video::render()
 			onScreenDestRect.y = onScreenDestRect.y - cameraPosY;
 
 			SDL_RenderCopy(CRERenderer, tempTexture.getTexture(), &cutSource, &onScreenDestRect); //render to screen
-		}*/
+		}*//*
+	}
+	
+	*/
+	
+	for (int i = 0; i < background.size(); i++)
+	{
+		//background[i]->render();
+	}
+
+	for (int i = 0; i < entityBlock.size(); i++)
+	{
+		entityBlock[i]->render();
+	}
+
+	for (int i = 0; i < foreground.size(); i++)
+	{
+		foreground[i]->render();
 	}
 
 	//update animations
-	updateGrounds();
+	//updateGrounds();
 	//update entityAnim();
 
 
@@ -642,6 +668,11 @@ void CRE_Video::setScaleMode(const CRE_Scale_Mode& flag)
 
 	//update window display with scale mode
 	setResolution(windowResolutionX, windowResolutionY);
+}
+
+void CRE_Video::getViewportRect(SDL_Rect* r)
+{
+	*r = { cameraPosX, cameraPosY, RENDERING_SCREEN_WIDTH, RENDERING_SCREEN_HEIGHT };
 }
 
 #ifdef FRAMERATE_COUNTER

@@ -1,5 +1,11 @@
 #include "entity.h"
 
+#include "video.h"
+#include "config.h"
+
+extern SDL_Renderer* CREInternalRenderer;
+extern CRE_Video CREVideo;
+
 static unsigned int IDCounter = 0;
 
 vector<CRE_Entity*> entityBlock;
@@ -188,4 +194,115 @@ void CRE_Entity::updateAnimation()
 
 		animFrameCount--;
 	}
+}
+
+void CRE_Entity::render()
+{
+
+	//variables for later use
+	//destination rect of the entire image to draw
+	SDL_Rect baseDest = eTexture.getDestRect();
+
+	//destination rect of the image that will be rendered
+	SDL_Rect onScreenDestRect;
+	SDL_Rect viewportRect;
+	
+	CREVideo.getViewportRect(&viewportRect);
+
+	float xScale = eTexture.getXScale();
+	float yScale = eTexture.getYScale();
+
+	double rotDegree = eTexture.getRotationDegree();
+	SDL_RendererFlip flipFlag = eTexture.getFlipFlag();
+	//printf("Flag flag: %i\n", flipFlag);
+
+	//render set up entity texture for renderering.
+	if (abs(rotDegree) < 0.05 && flipFlag == SDL_FLIP_NONE)
+	{
+		//no rotation and no flipping occurs
+
+		//check if texture is scaled.
+		if (!((xScale > 0.99 && xScale < 1.01) || (yScale > 0.99 && yScale < 1.01)))
+		{
+			//texture is scaled
+
+			//math to scale texture
+			baseDest.x += (1.0 - xScale) * baseDest.w / 2;
+			baseDest.y += (1.0 - yScale) * baseDest.h / 2;
+			baseDest.w *= xScale;
+			baseDest.h *= yScale;
+
+			//convert the position relative to the viewport
+			baseDest.x = baseDest.x - viewportRect.x;
+			baseDest.y = baseDest.y - viewportRect.y;
+
+			if(SDL_RenderCopy(CREInternalRenderer, eTexture.getTexture(), &eTexture.getSourceRect(), &baseDest) != 0)
+			{
+				printf("Failed to render\nSDL_Error: %s\n", SDL_GetError());
+			}
+
+		}
+		else
+		{
+			//texture is not scaled
+
+			if (SDL_IntersectRect(&baseDest, &viewportRect, &onScreenDestRect))
+			{
+				SDL_Rect cutSource;
+
+				//math to determine which part of the source image will be drawn from
+				cutSource.x = onScreenDestRect.x - baseDest.x;
+				cutSource.y = onScreenDestRect.y - baseDest.y;
+				cutSource.w = onScreenDestRect.w;
+				cutSource.h = onScreenDestRect.h;
+
+				//convert the position relative to the viewport
+				onScreenDestRect.x = onScreenDestRect.x - viewportRect.x;
+				onScreenDestRect.y = onScreenDestRect.y - viewportRect.y;
+
+				//render to screen
+				if (SDL_RenderCopy(CREInternalRenderer, eTexture.getTexture(), &cutSource, &onScreenDestRect) != 0)
+				{
+					printf("Failed to render\nSDL_Error: %s\n", SDL_GetError());
+				}
+			}
+		}
+	}
+	else
+	{
+		//rotation or flipping occurs
+
+		if (!((xScale > 0.99 && xScale < 1.01) || (yScale > 0.99 && yScale < 1.01)))
+		{
+			//scale texture
+			baseDest.x += (1.0 - xScale) * baseDest.w / 2;
+			baseDest.y += (1.0 - yScale) * baseDest.h / 2;
+			baseDest.w *= xScale;
+			baseDest.h *= yScale;
+
+			//covert texture position relative to viewport
+			baseDest.x = baseDest.x - viewportRect.x;
+			baseDest.y = baseDest.y - viewportRect.y;
+
+			if (SDL_RenderCopyEx(CREInternalRenderer, eTexture.getTexture(), &eTexture.getSourceRect(), &baseDest,
+				rotDegree, NULL, flipFlag) != 0)
+			{
+				printf("Failed to render\nSDL_Error: %s\n", SDL_GetError());
+			}
+		}
+		else
+		{
+			//convert texture pos relative to viewport
+			baseDest.x = baseDest.x - viewportRect.x;
+			baseDest.y = baseDest.y - viewportRect.y;
+
+			if(SDL_RenderCopyEx(CREInternalRenderer, eTexture.getTexture(), &eTexture.getSourceRect(), &baseDest,
+				rotDegree, NULL, flipFlag) != 0)
+			{
+				printf("Failed to render\nSDL_Error: %s\n", SDL_GetError());
+			}
+		}
+	}
+
+	updateAnimation();
 }
