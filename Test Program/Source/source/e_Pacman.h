@@ -9,6 +9,18 @@ namespace e_Pacman
 {
 	const unsigned short moveVecocity = 1;
 
+	namespace enums
+	{
+		enum direction
+		{
+			NONE,
+			LEFT,
+			RIGHT,
+			UP,
+			DOWN
+		};
+	}
+
 	namespace entityData
 	{
 		struct pacmanData
@@ -51,6 +63,10 @@ namespace e_Pacman
 		void moveRight(const int& ID);
 		void moveLeft(const int& ID);
 		void stop(const int& ID);
+
+		enums::direction getDirection(const int& ID);
+
+		SDL_Rect getCollisionRect(const int& ID);
 	}
 }
 

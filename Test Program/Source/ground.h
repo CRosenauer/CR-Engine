@@ -80,7 +80,7 @@ public:
 	void loadGround(const CRE_GroundData& groundDat);
 
 	//accessors
-	CRE_RenderingFlag getRenderingFlag() { return renderingFlag; }
+	CRE_RenderingFlag getRenderingFlag() const { return renderingFlag; }
 	CRE_Texture* getTexture() { return &gTexture; }
 	void getPosition(int pos[3]) { pos[0] = posX; pos[1] = posY; pos[2] = posZ; }
 	void setPosition(int pos[3]) { posX = pos[0]; posY = pos[2]; posZ = pos[3]; }
@@ -91,7 +91,7 @@ public:
 	void setScale(const float& x, const float& y);
 	void getScale(float scale[2]);
 
-	unsigned int getDepth() { return posZ; }
+	unsigned int getDepth() const { return posZ; }
 
 	//functions to update texture data for animations
 	//to be used at the end of a frame render.

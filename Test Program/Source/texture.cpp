@@ -222,13 +222,8 @@ void CRE_Texture::setAlpha(const Uint8& a)
 	alpha = a;
 	if (SDL_SetTextureAlphaMod(tTexture, alpha) != 0)
 	{
-		printf("Failed to apply alpha to texture.\nSDL Error:%s\n", SDL_GetError());
+		//printf("Failed to apply alpha to texture.\nSDL Error:%s\n", SDL_GetError());
 	}
-
-	Uint8 temp;
-	SDL_GetTextureAlphaMod(tTexture, &temp);
-
-	printf("Alpha: %i\n", temp);
 }
 
 Uint8 CRE_Texture::getAlpha()

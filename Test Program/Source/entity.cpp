@@ -130,12 +130,12 @@ unsigned int CRE_Entity::getEntityID()
 	return entityID;
 }
 
-int CRE_Entity::getDepth()
+int CRE_Entity::getDepth() const
 {
 	return posZ;
 }
 
-CRE_RenderingFlag CRE_Entity::getRenderingFlag()
+CRE_RenderingFlag CRE_Entity::getRenderingFlag() const
 {
 	return eTexture.getRenderingFlag();
 }
@@ -305,4 +305,27 @@ void CRE_Entity::render()
 	}
 
 	updateAnimation();
+}
+
+bool CRE_Entity::operator >(const CRE_Entity& e)
+{
+	CRE_RenderingFlag thisRenderingFlag = eTexture.getRenderingFlag();
+	CRE_RenderingFlag thatRenderingFlag = e.getRenderingFlag();
+
+	return ((thisRenderingFlag & 0x00000006) > (thatRenderingFlag & 0x00000006)) ||
+		   ((thisRenderingFlag & 0x00000006) == (thatRenderingFlag & 0x00000006) && (posZ > e.getDepth()));
+}
+
+void CRE_Entity::setDepth(const int& i)
+{
+	posZ = i;
+}
+
+bool CRE_Entity::operator <(const CRE_Ground& g)
+{
+	CRE_RenderingFlag thisRenderingFlag = eTexture.getRenderingFlag();
+	CRE_RenderingFlag thatRenderingFlag = g.getRenderingFlag();
+
+	return ((thisRenderingFlag & 0x00000006) < (thatRenderingFlag & 0x00000006)) ||
+		((thisRenderingFlag & 0x00000006) == (thatRenderingFlag & 0x00000006) && (posZ < g.getDepth()));
 }

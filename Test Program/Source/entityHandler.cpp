@@ -5,6 +5,23 @@
 
 extern vector<CRE_Entity*> entityBlock;
 
+void swap(vector<CRE_Entity*>& vector, int i, int j)
+{
+	CRE_Entity* temp = vector[i];
+	vector[i] = vector[j];
+	vector[j] = temp;
+}
+
+void sort(vector<CRE_Entity*>& vector)
+{
+	int i, j;
+	int end = vector.size();
+
+	for (i = 1; i < end; i++)
+		for (j = i; j > 0 && (*vector[j - 1]) > (*vector[j]); j--)
+			swap(vector, j - 1, j);
+}
+
 void deleteEntity(const unsigned int& entityID)
 {
 	//cycles through entityBus until an entity is found with the passed ID
@@ -21,12 +38,35 @@ void deleteEntity(const unsigned int& entityID)
 	}
 }
 
+void deleteEntityPtr(const CRE_Entity*& e)
+{
+	//cycles through entityBus until an entity is found with the passed ID
+	//entity with that id is then deallocated from memory and removed from entityBlock.
+	for (vector<CRE_Entity*>::iterator itr = entityBlock.begin(); itr < entityBlock.end(); itr++)
+	{
+		if (e == (*itr))
+		{
+			delete* itr;
+
+			entityBlock.erase(itr);
+			break;
+		}
+	}
+}
+
 unsigned int allocateEntity(const CRE_EntityType& type)
+{
+	return allocateEntityPtr(type)->getEntityID();
+}
+
+CRE_Entity* allocateEntityPtr(const CRE_EntityType& type)
 {
 	//allocates memory to a new entity in entityBlock
 	//then returns the ID of the allocated ID
 
 	CRE_Entity* entity;
+
+	CRE_EntityData tempData;
 
 	switch (type)
 	{
@@ -34,9 +74,11 @@ unsigned int allocateEntity(const CRE_EntityType& type)
 	case PACMAN:
 		entity = new CRE_Entity;
 		entityBlock.push_back(entity);
-		entity->setEntityType(PACMAN);
 		entity->setTexture(e_Pacman::imageDat::pacmanSprite);
-		entity->setPosition(RENDERING_SCREEN_WIDTH / 2, RENDERING_SCREEN_HEIGHT / 2, 0);
+		entity->setPosition(12, 36, 0);
+		tempData.componentData.pacman = e_Pacman::entityData::pacmanData;
+		entity->setEntityData(tempData);
+		entity->setEntityType(PACMAN);
 		e_Pacman::logic::stop(entity->getEntityID());
 		break;
 
@@ -51,9 +93,15 @@ unsigned int allocateEntity(const CRE_EntityType& type)
 
 	case TEXT:
 		break;
+
+	case TILE:
+		entity = new CRE_Entity;
+		entity->setEntityType(TILE);
+		entityBlock.push_back(entity);
+
 	}
 
-	return entityBlock.back()->getEntityID();
+	return entityBlock.back();
 }
 
 CRE_Entity* entityFromID(const unsigned int& id)
@@ -69,4 +117,9 @@ CRE_Entity* entityFromID(const unsigned int& id)
 	//Case for if no entity with the passed ID can be found.
 	//Will return NULL in this case.
 	return NULL;
+}
+
+void sortEntities()
+{
+	sort(entityBlock);
 }

@@ -9,6 +9,9 @@
 
 #include "texture.h"
 #include "animation.h"
+#include "ground.h"
+
+#include "source/e_Pacman.h"
 
 using namespace std;
 
@@ -24,7 +27,7 @@ enum CRE_EntityType
 
 union componentData
 {
-
+	struct e_Pacman::entityData::pacmanData pacman;
 };
 
 struct CRE_EntityData
@@ -39,6 +42,9 @@ public:
 	CRE_Entity();
 
 	~CRE_Entity();
+
+	bool operator >(const CRE_Entity& e);
+	bool operator <(const CRE_Ground& g);
 
 	//sets texture data based on passed data
 	//loads texture of .png image of path
@@ -73,10 +79,10 @@ public:
 	unsigned int getEntityID();
 
 	//returns the z value of the entity. used to speed up entity texture rendering
-	int getDepth();
+	int getDepth() const;
 
 	//returns current rendering mode of the entity
-	CRE_RenderingFlag getRenderingFlag();
+	CRE_RenderingFlag getRenderingFlag() const;
 
 	//sets data.entityType to the passed interger.
 	void setEntityType(const CRE_EntityType& i);
@@ -108,6 +114,11 @@ public:
 
 	void setFlipFlag(const CRE_FlipFlag& flag) { eTexture.setFlipFlag(flag); }
 	void getFlipFlag(bool flag[2]) { eTexture.getFlipFlag(flag); }
+
+	void setDepth(const int& i);
+
+	void getEntityData(CRE_EntityData& d) const { d = data; };
+	void setEntityData(const CRE_EntityData& d) { data = d; };
 
 	//renders entity to screen.
 	void render();

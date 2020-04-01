@@ -482,26 +482,70 @@ void CRE_Video::render()
 	}
 	
 	*/
+
+	int entityIndex  = 0;
+	int groundsIndex = 0;
+	int entitySize   = entityBlock.size();
+	int groundsSize  = background.size();
+
+	while (true)
+	{
+		if (groundsIndex >= groundsSize)
+		{
+			break;
+		}
+
+		while (*entityBlock[entityIndex] < *background[groundsIndex])
+		{
+			entityBlock[entityIndex]->render();
+			entityIndex++;
+		}
+
+		background[groundsIndex]->render();
+		groundsIndex++;
+	}
+
+	groundsSize  = foreground.size();
+	groundsIndex = 0;
+
+	while (true)
+	{
+		if (groundsIndex >= groundsSize)
+		{
+			break;
+		}
+
+		while (*entityBlock[entityIndex] < *foreground[groundsIndex])
+		{
+			entityBlock[entityIndex]->render();
+			entityIndex++;
+		}
+
+		foreground[groundsIndex]->render();
+		groundsIndex++;
+	}
+
+	for (; entityIndex < entitySize; entityIndex++)
+	{
+		entityBlock[entityIndex]->render();
+	}
 	
+
+	/*
 	for (int i = 0; i < background.size(); i++)
 	{
-		//background[i]->render();
+		background[i]->render();
 	}
 
 	for (int i = 0; i < entityBlock.size(); i++)
 	{
-		entityBlock[i]->render();
+		
 	}
 
 	for (int i = 0; i < foreground.size(); i++)
 	{
 		foreground[i]->render();
-	}
-
-	//update animations
-	//updateGrounds();
-	//update entityAnim();
-
+	}*/
 
 	//render frame to screen.
 	SDL_RenderPresent(CREInternalRenderer);

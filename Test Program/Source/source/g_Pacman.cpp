@@ -20,14 +20,14 @@ namespace
 		MENU
 	};
 
-	static CRE_Entity* pacman = entityFromID(allocateEntity(PACMAN));
+	static CRE_Entity* pacman = allocateEntityPtr(PACMAN);
 
 	static GameState gameState = GAMEPLAY;
 
 	static __int8 inputs[INPUTWIDTH] = {0, 0, 0};
 	static bool   repInputs[INPUTWIDTH] = { false, false, false };
 
-	static bool collision[4] = { false, false, false, false };
+	static  e_Pacman::enums::direction dir = e_Pacman::enums::DOWN;
 
 	bool initialized = false;
 
@@ -62,35 +62,27 @@ void g_Pacman()
 			break;
 		}
 
-		//interprent inputs and check collision
-		s_Collision::checkCollision(pacman->getEntityID(), s_Tiling::gameMap, collision);
 
 		if (inputs[INPUT_Y] < 0)
 		{
-			if (!collision[s_Collision::UP])
-				e_Pacman::logic::moveUp(pacman->getEntityID());
-				
+			dir = e_Pacman::enums::UP;
 		}
 		else if(inputs[INPUT_Y] > 0)
 		{
-			if (!collision[s_Collision::DOWN])
-				e_Pacman::logic::moveDown(pacman->getEntityID());
+			dir = e_Pacman::enums::DOWN;
 		}
 
 		if (inputs[INPUT_X] < 0)
 		{
-			if (!collision[s_Collision::LEFT])
-				e_Pacman::logic::moveLeft(pacman->getEntityID());
+			dir = e_Pacman::enums::LEFT;
 		}
 		else if (inputs[INPUT_X] > 0)
 		{
-			if (!collision[s_Collision::RIGHT])
-				e_Pacman::logic::moveRight(pacman->getEntityID());
+			dir = e_Pacman::enums::RIGHT;
 		}
 
-
 		//update pacman movement
-		s_Kinematics::updateKinematics(pacman->getEntityID());
+		s_Collision::moveEntity(pacman->getEntityID(), dir);
 
 		break;
 
@@ -106,4 +98,6 @@ void g_Pacman()
 		//check for enter
 		break;
 	}
+
+	sortEntities();
 }

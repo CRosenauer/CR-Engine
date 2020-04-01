@@ -5,18 +5,25 @@
 
 #include "s_Tiling.h"
 
+#include "e_Pacman.h"
+
 namespace s_Collision
 {
-	const SDL_Rect collisionRect = { 0, 0, 8, 8 };
+	const SDL_Rect mapCollisionRect = { 0, 0, 8, 8 };
 
-	//enum used for referencing specific colission directions
-	enum S_COLLISION
-	{
-		UP,
-		DOWN,
-		LEFT,
-		RIGHT
-	};
+	/*
+	 * moveEntity
+	 *
+	 * This moves the entity of the passed ID and checks for collision with the game map.
+	 * If the entity is to collide with the game map, entity is moved to the position right
+	 * before collision.
+	 *
+	 * @Param ID: the ID of the entity that you want to move.
+	 *
+	 * @Param dir: Direction which the entity will move in.
+	 *
+	 */
+	void moveEntity(const unsigned int& ID, e_Pacman::enums::direction dir);
 
 	/*
 	 * checkCollision
@@ -27,14 +34,24 @@ namespace s_Collision
 	 *
 	 * @Param ID: the entity who's ID you want to check
 	 *
-	 * @Param collision data: Place holder name. Some struct representing maps current collision.
-	 *
-	 * @Param collision: boolean array for the collision of the entity.
+	 * @Param map: Struct representing map's tile set. Tile set used for collision.
 	 *
 	 */
-	void checkCollision(const unsigned int& ID, const s_Tiling::tileMap& map, bool collision[4]);
+	bool checkCollision(const unsigned int& ID, const s_Tiling::tileMap& map);
 
-	bool validateMove();
+	/*
+	 * updateCollisionPosition
+	 *
+	 * This function moves the entity to the position right before colliding with the game map.
+	 * Function is not fully tested if no collision is to occur so don't use this unless you know
+	 * a collision is occuring.
+	 *
+	 * @Param ID: the entity who's ID you want to check
+	 *
+	 * @Param map: Struct representing map's tile set. Tile set used for collision.
+	 *
+	 */
+	void updateCollisionPosition(const unsigned int& ID, const s_Tiling::tileMap& map);
 }
 
 #endif //S_COLLISION_H

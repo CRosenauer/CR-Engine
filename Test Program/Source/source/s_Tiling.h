@@ -8,7 +8,9 @@
 #define GAMEHEIGHT   31
 #define FOOTERHEIHT  2
 
+#define HEADERWIDTH  28
 #define GAMEWIDTH    28
+#define FOOTERWIDTH  28
 
 namespace s_Tiling
 {
@@ -33,7 +35,7 @@ namespace s_Tiling
 
 	struct tileMap
 	{
-		tilingType map[31][28];
+		tilingType map[GAMEHEIGHT][GAMEWIDTH];
 	};
 
 	//data of the maze or "game map" that pac-man and the ghost runs around in.

@@ -8,14 +8,16 @@
 
 #include "file.h"
 
-
+//Bitwise notes:
+//twos and threes bits represent drawing layer of the texture
+//ones bit represnts if the texture is static relative to viewport position
 enum CRE_RenderingFlag
 {
-	RENDERINGFLAG_SPRITE,
-	RENDERINGFLAG_BACKGROUND,
-	RENDERINGFLAG_FOREGROUND,
-	RENDERINGFLAG_STATIC_BACKGROUND,
-	RENDERINGFLAG_STATIC_FOREGROUND
+	RENDERINGFLAG_BACKGROUND        = 0x00000000, //000
+	RENDERINGFLAG_STATIC_BACKGROUND = 0x00000001, //001
+	RENDERINGFLAG_SPRITE            = 0x00000004, //100
+	RENDERINGFLAG_FOREGROUND        = 0x00000006, //110
+	RENDERINGFLAG_STATIC_FOREGROUND = 0x00000007  //111
 };
 
 /* Desciprtion of RENDERING_FLAGS members:
@@ -114,7 +116,7 @@ public:
 
 	void setRenderingFlag(const CRE_RenderingFlag& flag) { renderingFlag = flag; }
 
-	CRE_RenderingFlag getRenderingFlag() { return renderingFlag; }
+	CRE_RenderingFlag getRenderingFlag() const { return renderingFlag; }
 
 	float getXScale() { return xScale; }
 	float getYScale() { return yScale; }

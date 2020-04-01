@@ -60,10 +60,10 @@ void CREInit()
 	Mix_AllocateChannels(8);
 
 	Mix_VolumeMusic(MIX_MAX_VOLUME/4);
-
-	CREVideo.init();
 	
 	//initalizes game logic to read and write inputs, entities, audio, video, etc.
+	CREVideo.init();
+
 
 	pollFrameTimer();
 }

@@ -7,7 +7,8 @@ extern vector<CRE_Entity*> entityBlock;
 
 namespace
 {
-	static bool mapLoaded = false;
+	static bool mapLoaded  = false;
+	static bool mapVisible = false;
 }
 
 namespace s_Tiling
@@ -43,7 +44,7 @@ namespace s_Tiling
 						break;
 
 					case WALL:
-						entity = entityFromID(allocateEntity(TILE));
+						entity = allocateEntityPtr(TILE);
 						entity->setTexture(imageData::wall);
 						entity->setPosition(j * TILEWIDTH, 8 * HEADERHEIGHT + i * TILEWIDTH, 0);
 						entity->setRenderingFlag(RENDERINGFLAG_BACKGROUND);
@@ -51,21 +52,21 @@ namespace s_Tiling
 						break;
 
 					case BORDER_WALL:
-						entity = entityFromID(allocateEntity(TILE));
+						entity = allocateEntityPtr(TILE);
 						entity->setTexture(imageData::wall);
 						entity->setPosition(j * TILEWIDTH, 8 * HEADERHEIGHT + i * TILEWIDTH, 0);
 						entity->setRenderingFlag(RENDERINGFLAG_BACKGROUND);
 						break;
 
 					case DEN_WALL:
-						entity = entityFromID(allocateEntity(TILE));
+						entity = allocateEntityPtr(TILE);
 						entity->setTexture(imageData::wall);
 						entity->setPosition(j * TILEWIDTH, 8 * HEADERHEIGHT + i * TILEWIDTH, 0);
 						entity->setRenderingFlag(RENDERINGFLAG_BACKGROUND);
 						break;
 
 					case DEN_GATE:
-						entity = entityFromID(allocateEntity(TILE));
+						entity = allocateEntityPtr(TILE);
 						entity->setTexture(imageData::wall);
 						entity->setPosition(j * TILEWIDTH, 8 * HEADERHEIGHT + i * TILEWIDTH, 0);
 						entity->setRenderingFlag(RENDERINGFLAG_BACKGROUND);
@@ -76,24 +77,36 @@ namespace s_Tiling
 
 			mapLoaded = true;
 		}
+
+		if (!mapVisible)
+		{
+			int size = entityBlock.size();
+			for (int i = 0; i < size; i++)
+			{
+				if (entityBlock[i]->getEntityType() == TILE)
+				{
+					entityBlock[i]->setAlpha(255);
+				}
+			}
+
+			mapVisible = true;
+		}
 	}
 
 	void unloadMap()
 	{
-
-		printf("%i\n", mapLoaded);
-		if (mapLoaded)
+		if (mapVisible)
 		{
-			for (int i = 0; i < entityBlock.size(); i++)
+			int size = entityBlock.size();
+			for (int i = 0; i < size; i++)
 			{
-				if (entityBlock[i]->getEntityType() == WALL ||
-					entityBlock[i]->getEntityType() == BORDER_WALL ||
-					entityBlock[i]->getEntityType() == DEN_WALL ||
-					entityBlock[i]->getEntityType() == DEN_GATE)
-					deleteEntity(entityBlock[i]->getEntityID());
+				if (entityBlock[i]->getEntityType() == TILE)
+				{
+					entityBlock[i]->setAlpha(0);
+				}
 			}
 
-			mapLoaded = false;
+			mapVisible = false;
 		}
 	}
 }
