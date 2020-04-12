@@ -37,7 +37,7 @@
 #define FRAMECAP
 
 //flag for functions to obtain framerates (currently unimplemented)
-//#define FRAMECOUNTER
+#define FRAMERATE_COUNTER
 
 //flags to enable texture rotating and stretching respectively
 #define TEXTURE_ROTATING

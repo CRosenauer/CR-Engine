@@ -9,7 +9,7 @@
 //deallocates said entity from memory and removes the entity* from the vector
 void deleteEntity(const unsigned int& entityID);
 
-void deleteEntityPtr(const CRE_Entity*& e);
+void deleteEntityPtr(CRE_Entity*& e);
 
 //pushes a new entity to the entity vector and sets it to defined
 //returns the ID of the entity

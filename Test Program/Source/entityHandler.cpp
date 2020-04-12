@@ -38,7 +38,7 @@ void deleteEntity(const unsigned int& entityID)
 	}
 }
 
-void deleteEntityPtr(const CRE_Entity*& e)
+void deleteEntityPtr(CRE_Entity*& e)
 {
 	//cycles through entityBus until an entity is found with the passed ID
 	//entity with that id is then deallocated from memory and removed from entityBlock.
@@ -92,6 +92,9 @@ CRE_Entity* allocateEntityPtr(const CRE_EntityType& type)
 		break;
 
 	case TEXT:
+		entity = new CRE_Entity;
+		entity->setEntityType(TEXT);
+		entityBlock.push_back(entity);
 		break;
 
 	case TILE:

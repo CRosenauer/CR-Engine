@@ -238,7 +238,7 @@ void CRE_Entity::render()
 
 			if(SDL_RenderCopy(CREInternalRenderer, eTexture.getTexture(), &eTexture.getSourceRect(), &baseDest) != 0)
 			{
-				printf("Failed to render\nSDL_Error: %s\n", SDL_GetError());
+				//printf("Failed to render\nSDL_Error: %s\n", SDL_GetError());
 			}
 
 		}
@@ -246,24 +246,12 @@ void CRE_Entity::render()
 		{
 			//texture is not scaled
 
-			if (SDL_IntersectRect(&baseDest, &viewportRect, &onScreenDestRect))
+			if (SDL_HasIntersection(&baseDest, &viewportRect))
 			{
-				SDL_Rect cutSource;
-
-				//math to determine which part of the source image will be drawn from
-				cutSource.x = onScreenDestRect.x - baseDest.x;
-				cutSource.y = onScreenDestRect.y - baseDest.y;
-				cutSource.w = onScreenDestRect.w;
-				cutSource.h = onScreenDestRect.h;
-
-				//convert the position relative to the viewport
-				onScreenDestRect.x = onScreenDestRect.x - viewportRect.x;
-				onScreenDestRect.y = onScreenDestRect.y - viewportRect.y;
-
 				//render to screen
-				if (SDL_RenderCopy(CREInternalRenderer, eTexture.getTexture(), &cutSource, &onScreenDestRect) != 0)
+				if (SDL_RenderCopy(CREInternalRenderer, eTexture.getTexture(), &eTexture.getSourceRect(), &baseDest) != 0)
 				{
-					printf("Failed to render\nSDL_Error: %s\n", SDL_GetError());
+					//printf("Failed to render\nSDL_Error: %s\n", SDL_GetError());
 				}
 			}
 		}

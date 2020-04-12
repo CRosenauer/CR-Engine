@@ -3,14 +3,17 @@
 #include "../entityHandler.h"
 #include "../input.h"
 #include "../audio.h"
+#include "../video.h"
 
 #include "s_Collision.h"
 #include "e_Pacman.h"
 #include "s_kinematics.h"
 #include "s_Tiling.h"
+#include "e_ImgChar.h"
 
 extern CRE_InputHandler CREInput;
 extern CRE_Audio        CREAudio;
+extern CRE_Video		CREVideo;
 
 namespace
 {
@@ -35,6 +38,8 @@ namespace
 	{
 		pacman->setTexture(e_Pacman::imageDat::pacmanSprite);
 	}
+
+	imageString* testImgStr = NULL;
 }
 
 void g_Pacman()
@@ -46,6 +51,18 @@ void g_Pacman()
 	if (!initialized)
 	{
 		init();
+	}
+
+	if (testImgStr == NULL)
+	{
+		testImgStr = new imageString;
+	}
+
+	{
+		char buffer[32];
+		sprintf_s(buffer, "FPS: %.2f\n", CREVideo.getFrameRate());
+
+		testImgStr->loadString(buffer);
 	}
 
 	switch (gameState)
