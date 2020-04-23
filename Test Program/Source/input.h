@@ -20,7 +20,7 @@ public:
 
 	//reads inputs from user and sets input values to the internal input array: inputBus.
 	void pollInputs();
-	
+
 	//sets passed array to the user's inputs
 	//for reading specific inputs use enum INPUTMAP as the index.
 	void getUserInputs(__int8 readInputs[INPUTWIDTH]);
@@ -37,9 +37,6 @@ private:
 	//reads stored keymaps from file and applies said keys to pollInputs logic.
 
 	//internal array for storing user inputs
-	__int8 inputBus[INPUTWIDTH];
-
-	bool repeatInput[INPUTWIDTH];
 
 	const Uint8* currentInputs = NULL;
 

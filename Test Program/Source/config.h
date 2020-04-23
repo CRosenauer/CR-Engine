@@ -3,8 +3,6 @@
 
 	This file contains preprocesor definitions used to active/deactivate/
 	set constant flags and values.
-
-
 */
 
 /* General Definitions */
@@ -18,8 +16,8 @@
 
 //resolution which the game will be displayed in by default
 //rendering resolution will be stretched or scaled to fit or stretch this resolution
-#define DEFAULT_DISPLAY_WIDTH   640
-#define DEFAULT_DISPLAY_HEIGHT  480
+#define DEFAULT_DISPLAY_WIDTH   1280 //640
+#define DEFAULT_DISPLAY_HEIGHT  960  //480
 #define DEFAULT_SCALE_MODE      CRE_SCALE_TO_FIT
 #define DEFAULT_FULLSCREEN_MODE CRE_DISPLAY_WINDOWED
 

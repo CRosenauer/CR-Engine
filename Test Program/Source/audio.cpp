@@ -32,10 +32,11 @@ void CRE_Audio::playAudio()
 		Mix_Chunk*  tempAudio = audioQueue.front();
 		Mix_PlayChannel(-1, tempAudio, 0);
 		audioQueue.pop();
+
+		Mix_FreeChunk(tempAudio);
 	}
 
 	//plays background music if none is playing currently.
-	//broken piece of code?
 	if (Mix_PlayingMusic() == 0)
 	{
 		Mix_PlayMusic(music, 0);

@@ -199,8 +199,6 @@ void CRE_Video::setResolution(const int& width, const int& height)
 		else
 		{
 			//math to determine which area of the window will have graphics
-
-			//likely wrong
 			w = windowXScale * RENDERING_SCREEN_WIDTH;
 			h = windowYScale * RENDERING_SCREEN_HEIGHT;
 
@@ -289,3 +287,8 @@ float CRE_Video::getFrameRate()
 	return frameRate;
 }
 #endif
+
+void CRE_Video::setFrameCap(const int& frameCap)
+{
+	setFrameRate(frameCap);
+}

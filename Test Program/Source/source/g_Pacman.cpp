@@ -4,39 +4,31 @@
 #include "../input.h"
 #include "../audio.h"
 #include "../video.h"
+#include "../eventHandler.h"
 
+#include "s_gameState.h"
 #include "s_Collision.h"
 #include "e_Pacman.h"
 #include "s_kinematics.h"
 #include "s_Tiling.h"
 #include "e_ImgChar.h"
+#include "ev_Pacman.h"
 
 extern CRE_InputHandler CREInput;
 extern CRE_Audio        CREAudio;
 extern CRE_Video		CREVideo;
+extern CRE_EventHandler CREEventHandler;
 
 namespace
 {
-	enum GameState
-	{
-		GAMEPLAY,
-		MENU
-	};
-
 	static CRE_Entity* pacman = allocateEntityPtr(PACMAN);
-
-	static GameState gameState = GAMEPLAY;
-
-	static __int8 inputs[INPUTWIDTH] = {0, 0, 0};
-	static bool   repInputs[INPUTWIDTH] = { false, false, false };
-
-	static  e_Pacman::enums::direction dir = e_Pacman::enums::DOWN;
 
 	bool initialized = false;
 
 	void init()
 	{
 		pacman->setTexture(e_Pacman::imageDat::pacmanSprite);
+		s_Tiling::loadMap();
 	}
 
 	imageString* testImgStr = NULL;
@@ -44,10 +36,6 @@ namespace
 
 void g_Pacman()
 {
-	//retrieve inputs
-	CREInput.getUserInputs(inputs);
-	CREInput.getRepeatInputs(repInputs);
-
 	if (!initialized)
 	{
 		init();
@@ -65,54 +53,20 @@ void g_Pacman()
 		testImgStr->loadString(buffer);
 	}
 
-	switch (gameState)
+	switch (s_gameState::getPauseState())
 	{
 	default:
-	case GAMEPLAY:
+	case s_gameState::GAMEPLAY:
 
-		s_Tiling::loadMap();
-
-		if (inputs[INPUT_ENTER] && !repInputs[INPUT_ENTER])
-		{
-			gameState = MENU;
-			CREAudio.loadSFX("shine.wav");
-			break;
-		}
-
-
-		if (inputs[INPUT_Y] < 0)
-		{
-			dir = e_Pacman::enums::UP;
-		}
-		else if(inputs[INPUT_Y] > 0)
-		{
-			dir = e_Pacman::enums::DOWN;
-		}
-
-		if (inputs[INPUT_X] < 0)
-		{
-			dir = e_Pacman::enums::LEFT;
-		}
-		else if (inputs[INPUT_X] > 0)
-		{
-			dir = e_Pacman::enums::RIGHT;
-		}
-
-		//update pacman movement
-		s_Collision::moveEntity(pacman->getEntityID(), dir);
+		CREEventHandler.queueEvent(ev_Pacman::ev_checkPause);
+		CREEventHandler.queueEvent(ev_Pacman::ev_movePacman, pacman->getEntityID());
 
 		break;
 
-	case MENU:
+	case s_gameState::MENU:
 
-		s_Tiling::unloadMap();
-
-		if (inputs[INPUT_ENTER] && !repInputs[INPUT_ENTER])
-		{
-			gameState = GAMEPLAY;
-		}
-
-		//check for enter
+		CREEventHandler.queueEvent(ev_Pacman::ev_checkPause);
+		
 		break;
 	}
 

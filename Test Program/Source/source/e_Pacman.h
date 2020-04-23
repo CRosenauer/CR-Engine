@@ -68,6 +68,16 @@ namespace e_Pacman
 
 		SDL_Rect getCollisionRect(const int& ID);
 	}
+
+	namespace events
+	{
+		//const CRE_Event movePacman =
+		//{
+		//	CRE_EVENT_FUNCTION,
+
+
+		//};
+	}
 }
 
 #endif //E_PACMAN_H

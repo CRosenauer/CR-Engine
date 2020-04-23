@@ -2,10 +2,12 @@
 
 #include <cmath>
 
+#include "config.h"
+
 static Uint32 ticks;
 
 //default to 17 ms per frame or about 60fps
-static unsigned int msPerFrame = 17;
+static unsigned int msPerFrame = round( (float) DEAFULT_FRAME_RATE / (float) 1000);
 
 void setFrameTimer()
 {

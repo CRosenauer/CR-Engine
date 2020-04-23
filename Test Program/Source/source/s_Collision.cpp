@@ -72,6 +72,22 @@ namespace s_Collision
 		}	
 
 		s_Kinematics::updateKinematics(entity->getEntityID());
+
+		int pos[3];
+
+		entity->getPosition(pos);
+
+		if (pos[0] < -8)
+		{
+			pos[0] = 232;
+		}
+		else if (pos[0] > 232)
+		{
+			pos[0] = -8;
+		}
+
+		entity->setPosition(pos[0], pos[1], pos[2]);
+			
 	}
 
 	//stub.
