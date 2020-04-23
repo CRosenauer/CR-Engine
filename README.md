@@ -1,6 +1,10 @@
 # CR-Engine (WIP)
  A simple game engine developed in C++ build off of SDL.
  
+ Note this project has been discontinued. To see the
+ conclusion and short coming of the CR-Engine see
+ POSTMORTEM.md.
+ 
 # Contents
  Overview
  
